@@ -1001,7 +1001,7 @@ function usarFoto(){
   if (!c || !c.datos || !c.datos.productos) return false;
   COLS.forEach(k => { S[k] = c.datos[k] || []; });
   API.version = Number(c.version) || 0;
-  emparejarFechas();
+  normalizarDatos();
   refrescarReglas();
   API.cola.forEach(o => aplicarLocal(o.op, o.ruta, o.datos));
   S.listo = true; S.deGuardado = true; S.error = '';
@@ -1079,7 +1079,7 @@ async function cargarTodo(){
     }
     API.version = r.version;
     COLS.forEach(c => { S[c] = r.datos[c] || []; });
-    emparejarFechas();
+    normalizarDatos();
     S.deGuardado = false;
     /* lo que todavía no llegó al servidor lo volvemos a pintar encima:
        así no parece que se perdió */
@@ -1107,10 +1107,18 @@ async function mirarVersion(){
   } catch(e){}
 }
 
-/* Si alguna fecha vuelve de la planilla con hora pegada, la dejamos en su
-   forma corta antes de que la use nadie. */
-function emparejarFechas(){
-  S.pedidos.forEach(p => { if (p.tanda) p.tanda = soloFecha(p.tanda); });
+/* Lo que llega de la planilla no siempre tiene la forma que le dimos: una fecha
+   puede volver con hora pegada y un sí/no puede volver como la palabra "false",
+   que para el navegador es texto con letras y por lo tanto un sí. Acá se
+   empareja todo antes de que lo use nadie. */
+const siNo = v => v === true || v === 1 || v === '1'
+  || v === 'true' || v === 'TRUE' || v === 'VERDADERO';
+const BANDERAS = ['preparado', 'entregado', 'cobrado', 'sinCargo'];
+function normalizarDatos(){
+  S.pedidos.forEach(p => {
+    if (p.tanda) p.tanda = soloFecha(p.tanda);
+    BANDERAS.forEach(k => { p[k] = siNo(p[k]); });
+  });
   S.tandas.forEach(t => { t.id = soloFecha(t.id); });
   S.movimientos.forEach(m => { if (m.fecha) m.fecha = soloFecha(m.fecha); });
 }

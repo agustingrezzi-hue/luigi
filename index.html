@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -13,34 +13,2800 @@
 <meta name="apple-mobile-web-app-title" content="Vamos Luigi">
 <meta name="mobile-web-app-capable" content="yes">
 <style>
-  html, body { margin:0; padding:0; height:100%; background:#0B0D10;
-               overscroll-behavior:none; }
-  #app { position:fixed; inset:0; width:100%; height:100%; height:100dvh; border:0; }
-  #aviso { position:fixed; inset:0; display:grid; place-items:center; padding:24px;
-           font:15px/1.5 -apple-system, system-ui, sans-serif; color:#AEB9CB;
-           text-align:center; }
-  #aviso b { color:#48A6E0; }
+:root{color-scheme:light dark}
+html,body{margin:0;padding:0;height:100%}
+img{max-width:100%}
+[hidden]:not([hidden="until-found"]){display:none!important}
+
+#arranque{position:fixed;inset:0;z-index:200;background:#0B0D10;display:grid;
+  place-items:center;transition:opacity .5s ease}
+#arranque.se-va{opacity:0;pointer-events:none}
+#arranque .caja{display:grid;justify-items:center;gap:26px;padding:24px}
+#arranque .logo-arranque{width:172px;height:auto;display:block;
+  animation:respira 2.6s ease-in-out infinite}
+@keyframes respira{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.035)}}
+#arranque .riel{width:132px;height:3px;border-radius:99px;
+  background:rgba(127,139,156,.2);overflow:hidden}
+#arranque .riel i{display:block;height:100%;width:38%;border-radius:99px;background:#2589C8;
+  animation:corre 1.3s ease-in-out infinite}
+@keyframes corre{0%{transform:translateX(-115%)}100%{transform:translateX(370%)}}
+#arranque .pie{font:11px/1.4 ui-monospace,"DM Mono",monospace;color:#5C687A;
+  letter-spacing:.14em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){
+  #arranque .logo-arranque,#arranque .riel i{animation:none}
+  #arranque .riel i{width:100%}
+}
+
+html,body{overscroll-behavior-y:contain}
+#nueva{position:fixed;left:12px;right:12px;bottom:76px;z-index:95;max-width:444px;
+  margin:0 auto;background:#1C77AE;color:#fff;border-radius:16px;padding:13px 15px;
+  display:flex;align-items:center;gap:10px;font:14px/1.35 system-ui,sans-serif;
+  box-shadow:0 12px 30px -14px rgba(0,0,0,.8)}
+#nueva b{flex:1;font-weight:600}
+#nueva button{background:rgba(255,255,255,.22);color:#fff;border:0;font:inherit;
+  font-weight:700;padding:9px 15px;border-radius:99px;cursor:pointer}
 </style>
 </head>
 <body>
+<div id="arranque"><div class="caja"><img class="logo-arranque" src="data:image/png;base64,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" alt="Vamos Luigi"><div class="riel"><i></i></div><div class="pie">abriendo</div></div></div>
+<title>Panel Vamos Luigi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
 
-<div id="aviso">Abriendo <b>Vamos Luigi</b>…</div>
+<style>
+:root{
+  --ground:#EDF2F6; --surface:#FFFFFF; --sunken:#F3F7FA;
+  --ink:#131A26; --ink-2:#4B586B; --ink-3:#8994A6;
+  --line:#DEE7EE; --line-2:#EAF0F5;
+  --marca:#1C77AE; --marca-2:#2589C8; --marca-ink:#17658F; --marca-soft:#E4F1FA;
+  --negro:#0B0D10;
+  --horno:#B96A15; --horno-soft:#FAEEDC; --horno-2:#8A4F10;
+  --ok:#0F6E4A; --ok-soft:#DFF1E8;
+  --alerta:#A81F16; --alerta-soft:#FBE5E2;
+  --c-pre:#2589C8; --c-foc:#B96A15; --c-gan:#0F6E4A; --c-cos:#B7C3D1;
+  --viejo:#8E4640; --viejo-soft:#F0E0DE; --viejo-linea:#D9BDB9;
+  --sombra:0 1px 2px rgba(19,26,38,.05), 0 6px 20px -12px rgba(19,26,38,.25);
+  --sombra-alta:0 2px 4px rgba(19,26,38,.06), 0 18px 40px -22px rgba(19,26,38,.45);
+  --r:18px; --r-s:12px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0B0E15; --surface:#151A24; --sunken:#1B212D;
+  --ink:#E9EDF5; --ink-2:#AEB9CB; --ink-3:#7C889B;
+  --line:#28303F; --line-2:#212836;
+  --marca:#2589C8; --marca-2:#48A6E0; --marca-ink:#7CC6EE; --marca-soft:#123449;
+  --negro:#05070A;
+  --horno:#E0A05B; --horno-soft:#2E2214; --horno-2:#F0BE83;
+  --ok:#5FC69A; --ok-soft:#12301F;
+  --alerta:#F08A80; --alerta-soft:#33170F;
+  --c-pre:#3E9BD8; --c-foc:#BA7F39; --c-gan:#35A073; --c-cos:#3B4657;
+  --viejo:#C08A84; --viejo-soft:#2A1917; --viejo-linea:#4A2E2B;
+  --sombra:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.9);
+  --sombra-alta:0 2px 6px rgba(0,0,0,.55), 0 22px 48px -24px rgba(0,0,0,1);
+}}
+:root[data-theme="dark"]{
+  --ground:#0B0E15; --surface:#151A24; --sunken:#1B212D;
+  --ink:#E9EDF5; --ink-2:#AEB9CB; --ink-3:#7C889B;
+  --line:#28303F; --line-2:#212836;
+  --marca:#2589C8; --marca-2:#48A6E0; --marca-ink:#7CC6EE; --marca-soft:#123449;
+  --negro:#05070A;
+  --horno:#E0A05B; --horno-soft:#2E2214; --horno-2:#F0BE83;
+  --ok:#5FC69A; --ok-soft:#12301F;
+  --alerta:#F08A80; --alerta-soft:#33170F;
+  --c-pre:#3E9BD8; --c-foc:#BA7F39; --c-gan:#35A073; --c-cos:#3B4657;
+  --viejo:#C08A84; --viejo-soft:#2A1917; --viejo-linea:#4A2E2B;
+  --sombra:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.9);
+  --sombra-alta:0 2px 6px rgba(0,0,0,.55), 0 22px 48px -24px rgba(0,0,0,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--ground);color:var(--ink);
+  font-family:"Figtree",-apple-system,system-ui,sans-serif;font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spacing:-.02em}
+:focus-visible{outline:2px solid var(--marca-2);outline-offset:2px}
 
-<iframe id="app"
-        title="Vamos Luigi"
-        src="https://script.google.com/macros/s/AKfycbzT2Kj19u7R72287obeTdvr2Zf3MPkWBG1YckWb1fihL7ulU5mpDGkemJHugaezAd4Z/exec"
-        allow="clipboard-write; geolocation"></iframe>
+.app{max-width:468px;margin:0 auto;min-height:100%;background:var(--ground);
+  position:relative;box-shadow:var(--sombra-alta);display:flex;flex-direction:column}
+.cuerpo{flex:1 0 auto;padding-bottom:14px}
+
+/* ---------- cabecera: barra de marca ---------- */
+.marca{background:var(--negro);padding:11px 16px 12px;display:flex;align-items:center;
+  position:sticky;top:0;z-index:35;
+  justify-content:space-between;gap:12px}
+.marca .logo{height:38px;width:auto;display:block}
+.marca .acc{display:flex;gap:6px;align-items:center}
+.conex{font-family:"DM Mono",monospace;font-size:10px;color:#7F8B9C;display:flex;
+  align-items:center;gap:5px;padding-right:2px;white-space:nowrap}
+.conex::before{content:"";width:7px;height:7px;border-radius:50%;background:#3FAE7E;
+  display:block;flex:0 0 auto}
+.conex.yendo::before{background:#E0A05B}
+.conex.mal{color:#E08A82}
+.conex.mal::before{background:#D9584C}
+.marca .acc button{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+  color:#7F8B9C;background:rgba(255,255,255,.06);transition:.15s}
+.marca .acc button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+.marca .acc button[aria-current="true"]{background:var(--marca-2);color:#fff}
+
+/* ---------- cabecera: módulo de título ---------- */
+.titulo{margin:12px 12px 0;padding:11px 15px;border-radius:15px;background:var(--surface);
+  border:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;
+  gap:10px;box-shadow:var(--sombra);transition:background .25s,color .25s}
+.titulo .pantalla{font-family:"Figtree",sans-serif;font-size:11.5px;font-weight:800;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--marca-ink);line-height:1.2;
+  margin-bottom:2px}
+.titulo .pantalla.solo{font-size:16px;letter-spacing:.09em;margin-bottom:3px;color:var(--ink)}
+.titulo h1{font-size:17px;font-weight:800;line-height:1.2}
+.titulo h1[hidden]{display:none}
+.titulo .sub{font-size:12.5px;color:var(--ink-3);margin-top:1px}
+.titulo .pill{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;padding:5px 10px;border-radius:99px;white-space:nowrap;
+  background:var(--sunken);color:var(--ink-3);font-weight:500}
+.titulo.ahora{background:linear-gradient(135deg,var(--marca) 0%,var(--marca-2) 100%);
+  border-color:transparent;color:#fff;box-shadow:0 6px 20px -8px rgba(37,137,200,.7)}
+.titulo.ahora .sub{color:rgba(255,255,255,.82)}
+.titulo.ahora .pantalla{color:rgba(255,255,255,.78)}
+.titulo.ahora .pill{background:rgba(255,255,255,.22);color:#fff;font-weight:700}
+.titulo.pasada{background:var(--viejo-soft);border-color:var(--viejo-linea)}
+.titulo.pasada h1{color:var(--viejo)}
+.titulo.pasada .sub{color:var(--viejo);opacity:.8}
+.titulo.pasada .pantalla{color:var(--viejo);opacity:.85}
+.titulo.pasada .pill{background:var(--viejo);color:var(--surface);font-weight:700;opacity:.9}
+
+/* ---------- tira de tandas ---------- */
+.tandas-nav{position:sticky;top:0;z-index:30;background:var(--ground);flex:0 0 auto;
+  padding:10px 0 9px;border-bottom:1px solid var(--line-2)}
+.tandas-strip{display:flex;gap:8px;overflow-x:auto;padding:0 12px;scroll-snap-type:x proximity}
+.tandas-strip::-webkit-scrollbar{height:0}
+.tchip{flex:0 0 auto;scroll-snap-align:center;background:var(--surface);
+  border:1px solid var(--line);border-radius:14px;padding:7px 11px;min-width:104px;
+  text-align:left;transition:.15s;user-select:none;-webkit-user-select:none;
+  -webkit-touch-callout:none;touch-action:manipulation}
+.tchip.eligiendo{box-shadow:0 0 0 3px var(--marca-2)}
+.tchip .f{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:13.5px;
+  letter-spacing:-.01em;white-space:nowrap}
+.tchip .u{font-size:10.5px;color:var(--ink-3);margin-top:2px;font-family:"DM Mono",monospace;
+  white-space:nowrap}
+.tchip[aria-pressed="true"]{background:var(--marca);border-color:var(--marca);color:#fff}
+.tchip[aria-pressed="true"] .u{color:rgba(255,255,255,.82)}
+.tchip.esta{border-color:var(--marca-2);box-shadow:0 0 0 2px var(--marca-soft)}
+.tchip.pasada{background:var(--viejo-soft);border-color:var(--viejo-linea);color:var(--viejo)}
+.tchip.pasada .u{color:var(--viejo);opacity:.75}
+.tchip.pasada[aria-pressed="true"]{background:var(--viejo);border-color:var(--viejo);color:var(--surface)}
+.tchip.pasada[aria-pressed="true"] .u{color:var(--surface);opacity:.85}
+.tchip.mas{min-width:46px;display:grid;place-items:center;font-size:20px;color:var(--marca-ink);
+  border-style:dashed;border-color:var(--marca-2)}
+
+/* ---------- vistas ---------- */
+.vista{display:none;padding:14px 12px 0}
+.vista.on{display:block}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sombra);
+  border:1px solid var(--line-2);padding:16px;margin-bottom:12px}
+.card.tight{padding:0;overflow:hidden}
+.rot{font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:10px}
+.hint{font-size:12px;color:var(--ink-3);margin:8px 0 0}
+.vacio{padding:28px 16px;text-align:center;color:var(--ink-3);font-size:14px}
+.motivo{margin-top:12px;font-family:"DM Mono",monospace;font-size:11px;color:var(--alerta);
+  background:var(--alerta-soft);padding:8px 10px;border-radius:9px;word-break:break-word;
+  text-align:left}
+
+/* ---------- día de entrega ---------- */
+.dias{display:flex;gap:5px;flex-wrap:wrap}
+.dias button{flex:1;min-width:38px;padding:8px 2px;border-radius:10px;background:var(--sunken);
+  font-size:12px;font-weight:600;color:var(--ink-2);text-transform:capitalize}
+.dias button[aria-pressed="true"]{background:var(--marca);color:#fff}
+
+/* ---------- medidor ---------- */
+.medidor{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.medidor .n{font-family:"Bricolage Grotesque",sans-serif;font-size:38px;font-weight:800;
+  line-height:1;font-variant-numeric:tabular-nums}
+.medidor .de{font-size:14px;color:var(--ink-3)}
+.medidor .edita-n,.medidor .edita-cap{font-family:"Bricolage Grotesque",sans-serif;
+  font-weight:800;line-height:1;font-variant-numeric:tabular-nums;padding:2px 8px;
+  border-radius:11px;border:1px dashed var(--line);transition:.15s}
+.medidor .edita-n{font-size:38px;color:var(--ink)}
+.medidor .edita-cap{font-size:22px;color:var(--ink-2)}
+.medidor .edita-n:hover,.medidor .edita-cap:hover{background:var(--marca-soft);
+  border-color:var(--marca-2);color:var(--marca-ink)}
+.barra{height:12px;border-radius:99px;background:var(--sunken);overflow:hidden}
+.barra>i{display:block;height:100%;border-radius:99px;background:var(--ok);transition:width .4s}
+.barra.alta>i{background:var(--horno)} .barra.pasado>i{background:var(--alerta)}
+.pie{display:flex;justify-content:space-between;margin-top:8px;font-size:12.5px;color:var(--ink-2)}
+.estado{display:inline-block;font-size:12.5px;font-weight:700;padding:5px 11px;
+  border-radius:99px;margin-top:11px}
+.estado.ok{background:var(--ok-soft);color:var(--ok)}
+.estado.alta{background:var(--horno-soft);color:var(--horno)}
+.estado.mal{background:var(--alerta-soft);color:var(--alerta)}
+
+/* ---------- tiles ---------- */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.tile{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-s);
+  padding:12px 14px;box-shadow:var(--sombra)}
+.tile .l{font-size:11.5px;color:var(--ink-3);font-weight:600}
+.tile .v{font-family:"Bricolage Grotesque",sans-serif;font-size:22px;font-weight:800;
+  margin-top:2px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.tile .p{font-size:11px;color:var(--ink-3);font-family:"DM Mono",monospace;margin-top:2px}
+.tile.plata .v{color:var(--marca-ink)} .tile.acento .v{color:var(--ok)}
+.tile.pend .v{color:var(--alerta)} .tile.env .v{color:var(--horno)}
+.tile.ancho{grid-column:1 / -1}
+
+/* ---------- producción ---------- */
+.fila{display:grid;grid-template-columns:6px 1fr auto;gap:11px;align-items:center;
+  padding:11px 16px 11px 0;border-bottom:1px solid var(--line-2)}
+.fila:last-child{border-bottom:0}
+.fila .tira{width:6px;height:34px;border-radius:0 4px 4px 0;background:var(--marca-2)}
+.fila.med .tira{background:var(--horno-soft);border:1px solid var(--horno)}
+.fila.gra .tira{background:var(--horno)}
+.fila .nom{font-size:14px;font-weight:500;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.fila .q{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:19px;
+  font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
+.fila .sub{font-size:11.5px;color:var(--ink-3);font-family:"DM Mono",monospace;margin-top:3px}
+.tam{font-family:"DM Mono",monospace;font-size:10px;font-weight:500;padding:2px 7px;
+  border-radius:99px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.tam.m{background:var(--horno-soft);color:var(--horno-2);border:1px solid var(--horno-soft)}
+.tam.g{background:var(--horno);color:#fff}
+.tam.u{background:var(--marca-soft);color:var(--marca-ink)}
+
+/* ---------- recetas ---------- */
+.rec-cab{margin:4px 0 10px}
+.rec-cab.con-kg{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.kg-chip{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:17px;
+  padding:6px 13px;border-radius:12px;background:var(--sunken);color:var(--ink);
+  border:1px dashed var(--line);white-space:nowrap;transition:.15s}
+.kg-chip:hover{background:var(--marca-soft);border-color:var(--marca-2);color:var(--marca-ink)}
+.kg-chip.amano{background:var(--marca);border-color:var(--marca);color:#fff;border-style:solid}
+.rec-cab .t{display:block;font-weight:700;font-size:15.5px}
+.rec-cab .s{display:block;font-size:12px;color:var(--ink-3);font-family:"DM Mono",monospace;
+  margin-top:2px}
+.tiradas{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+  margin:0 -16px;padding:2px 16px 8px}
+.tiradas::-webkit-scrollbar{height:0}
+.tirada{flex:0 0 76%;scroll-snap-align:start;background:var(--sunken);
+  border:1px solid var(--line-2);border-radius:var(--r-s);padding:13px 15px}
+.tirada .cab{display:flex;justify-content:space-between;align-items:baseline;
+  padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+.tirada .cab .t{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:15px}
+.tirada .cab .s{font-family:"DM Mono",monospace;font-size:11.5px;color:var(--ink-3)}
+.rec-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;
+  border-bottom:1px solid var(--line-2);font-size:13.5px}
+.rec-row:last-child{border-bottom:0}
+.rec-row b{font-family:"DM Mono",monospace;font-weight:500;font-variant-numeric:tabular-nums}
+.rec-row.agua-l,.rec-row.agua-l b{color:var(--marca-ink)}
+.rec-sep{height:1px;background:var(--line);margin:16px 0 4px}
+.swipe{font-size:11.5px;color:var(--ink-3);text-align:center;margin:2px 0 0;
+  font-family:"DM Mono",monospace}
+.clima{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+.clima input{text-align:center;font-size:17px;font-weight:600}
+.agua{display:flex;align-items:baseline;gap:9px;padding:14px 16px;
+  background:var(--marca-soft);border-radius:var(--r-s)}
+.agua .n{font-family:"Bricolage Grotesque",sans-serif;font-size:32px;font-weight:800;
+  line-height:1;color:var(--marca-ink);font-variant-numeric:tabular-nums}
+.agua .l{font-size:13px;color:var(--ink-2);font-weight:600}
+
+/* ---------- editor de recetas ---------- */
+.ed{display:grid;grid-template-columns:1fr 108px 30px;gap:8px;align-items:center;
+  padding:7px 0;border-bottom:1px solid var(--line-2)}
+.ed:last-of-type{border-bottom:0}
+.ed .n{font-size:14px;font-weight:500}
+.ed .campo{position:relative}
+.ed input{padding:8px 40px 8px 9px;font-size:14px;text-align:right;
+  font-family:"DM Mono",monospace}
+.ed .un{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;
+  color:var(--ink-3);pointer-events:none;font-family:"DM Mono",monospace}
+.ed .x{width:30px;height:30px;border-radius:9px;color:var(--ink-3);font-size:16px;
+  display:grid;place-items:center}
+.ed .x:hover{background:var(--alerta-soft);color:var(--alerta)}
+.plegable>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;
+  align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line-2);
+  font-weight:600;font-size:14.5px}
+.plegable>summary::-webkit-details-marker{display:none}
+.plegable>summary::after{content:"›";color:var(--ink-3);font-size:19px;transition:.2s}
+.plegable[open]>summary::after{transform:rotate(90deg)}
+.plegable[open]>summary{border-bottom-color:transparent}
+.plegable .cuerpo{padding:2px 0 12px}
+.badge-costo{font-family:"DM Mono",monospace;font-size:11px;padding:3px 8px;border-radius:99px;
+  background:var(--marca-soft);color:var(--marca-ink);font-weight:600;white-space:nowrap}
+
+/* ---------- pedidos ---------- */
+.ped{background:var(--surface);border:1px solid var(--line-2);border-left:5px solid var(--line);
+  border-radius:var(--r);padding:14px 15px;margin-bottom:10px;box-shadow:var(--sombra);
+  transition:background .2s,border-color .2s}
+.ped.s-prep{background:var(--marca-soft);border-left-color:var(--marca-2)}
+.ped.s-entr{background:var(--horno-soft);border-left-color:var(--horno)}
+.ped.s-list{background:var(--ok-soft);border-left-color:var(--ok)}
+.ped .cab{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ped .nombre{font-weight:700;font-size:15.5px}
+.ped .meta{font-size:12px;color:var(--ink-2);margin-top:1px}
+.ped .tot{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:17px;
+  font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.ped .tot .tachado{display:block;font-size:11.5px;font-weight:500;color:var(--ink-3);
+  text-decoration:line-through;font-family:"DM Mono",monospace}
+.ped .sello{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  font-family:"DM Mono",monospace;margin-top:6px;display:inline-block;color:var(--ink-3)}
+.ped.s-prep .sello{color:var(--marca-ink)} .ped.s-entr .sello{color:var(--horno-2)}
+.ped.s-list .sello{color:var(--ok)}
+.items{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;padding:4px 9px;border-radius:99px;background:var(--sunken);
+  color:var(--ink-2);font-weight:500;display:inline-flex;align-items:center;gap:5px}
+.chip.f{background:var(--horno-soft);color:var(--horno-2)}
+.chip.regalo{background:var(--ok-soft);color:var(--ok);font-weight:700}
+.obs{margin-top:8px;font-size:12.5px;color:var(--ink-2);font-style:italic;
+  padding-left:9px;border-left:2px solid var(--line)}
+.acciones{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap;align-items:center}
+.tog{font-size:12px;font-weight:600;padding:6px 11px;border-radius:99px;
+  border:1px solid var(--line);color:var(--ink-3);background:var(--surface);transition:.15s}
+.tog[aria-pressed="true"]{background:var(--ok);color:#fff;border-color:var(--ok)}
+.mini{font-size:12px;color:var(--ink-3);padding:6px 9px;border-radius:99px;
+  border:1px solid var(--line);background:var(--surface)}
+.del{margin-left:auto;font-size:12px;color:var(--ink-3);padding:6px 9px;border-radius:99px}
+.del:hover{background:var(--alerta-soft);color:var(--alerta)}
+.confirm{margin-top:10px;padding:11px 12px;background:var(--alerta-soft);border-radius:var(--r-s);
+  font-size:13px;color:var(--alerta);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.confirm b{font-weight:700}
+.confirm button{font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:99px}
+.confirm .si{background:var(--alerta);color:#fff}
+.confirm .no{border:1px solid var(--line);color:var(--ink-2);background:var(--surface)}
+.panelito{margin-top:10px;padding:12px;background:var(--sunken);border-radius:var(--r-s)}
+
+/* ---------- formularios ---------- */
+label.f{display:block;font-size:12px;font-weight:700;color:var(--ink-2);margin:0 0 6px}
+input,select,textarea{width:100%;padding:11px 13px;border-radius:var(--r-s);
+  border:1px solid var(--line);background:var(--sunken);color:var(--ink);font:inherit;font-size:15px}
+textarea{min-height:66px;resize:vertical}
+input:focus,select:focus,textarea:focus{background:var(--surface)}
+.sug{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.sug button{font-size:12.5px;padding:6px 11px;border-radius:99px;background:var(--marca-soft);
+  color:var(--marca-ink);font-weight:600}
+.seg{display:flex;gap:4px;background:var(--sunken);padding:4px;border-radius:var(--r-s);
+  margin-bottom:11px}
+.seg button{flex:1;padding:9px 6px;border-radius:9px;font-size:13.5px;font-weight:600;
+  color:var(--ink-3)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);
+  box-shadow:var(--sombra)}
+.step{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;
+  border-bottom:1px solid var(--line-2)}
+.step:last-of-type{border-bottom:0}
+.step .t{font-size:14.5px;font-weight:500;display:flex;align-items:center;gap:7px}
+.step .p{font-size:11.5px;color:var(--ink-3);font-family:"DM Mono",monospace}
+.mas{display:flex;align-items:center;gap:10px}
+.mas button{width:34px;height:34px;border-radius:11px;background:var(--sunken);
+  font-size:19px;font-weight:700;color:var(--ink-2);display:grid;place-items:center;line-height:1}
+.mas .n{min-width:22px;text-align:center;font-family:"Bricolage Grotesque",sans-serif;
+  font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
+.linea{background:var(--sunken);border-radius:var(--r-s);padding:11px;margin-bottom:9px;
+  display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center}
+.linea .sel{display:grid;grid-template-columns:1fr 98px;gap:6px}
+.linea select{background:var(--surface);font-size:14px;padding:9px 4px 9px 10px}
+.linea .mas{gap:7px} .linea .mas button{width:30px;height:30px;border-radius:9px;font-size:17px}
+.borrar{width:32px;height:32px;border-radius:10px;color:var(--ink-3);font-size:17px;
+  display:grid;place-items:center}
+.agregar{width:100%;padding:12px;border-radius:var(--r-s);border:1.5px dashed var(--marca-2);
+  color:var(--marca-ink);font-weight:700;font-size:14px;background:transparent}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 0;border-bottom:1px solid var(--line-2)}
+.sw{width:50px;height:29px;border-radius:99px;background:var(--line);position:relative;
+  transition:.2s;flex:0 0 auto}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;
+  background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw[aria-pressed="true"]{background:var(--ok)}
+.sw[aria-pressed="true"]::after{transform:translateX(21px)}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:15px 16px;
+  background:var(--marca);color:#fff;border-radius:var(--r);margin-bottom:12px}
+.total.regalo{background:var(--ok)}
+.total .l{font-size:13px;opacity:.88;font-weight:600}
+.total .v{font-family:"Bricolage Grotesque",sans-serif;font-size:26px;font-weight:800;
+  font-variant-numeric:tabular-nums}
+.guardar{width:100%;padding:15px;border-radius:var(--r);background:var(--ink);color:var(--ground);
+  font-weight:700;font-size:15.5px;box-shadow:var(--sombra)}
+.guardar[disabled]{opacity:.4}
+.peligro{background:var(--alerta-soft);color:var(--alerta);box-shadow:none}
+
+/* ---------- stock ---------- */
+.grupo{padding:13px 16px 7px;font-family:"DM Mono",monospace;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);background:var(--sunken);
+  border-bottom:1px solid var(--line-2)}
+.st{padding:12px 16px;border-bottom:1px solid var(--line-2)}
+.st:last-child{border-bottom:0}
+.st .lin{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.st .n{font-weight:600;font-size:14.5px}
+.st .q{font-family:"DM Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums}
+.st .d{font-size:11.5px;color:var(--ink-3);margin-top:3px;display:flex;gap:8px;
+  align-items:center;flex-wrap:wrap}
+.st .bar{height:6px;border-radius:99px;background:var(--sunken);margin-top:7px;overflow:hidden}
+.st .bar>i{display:block;height:100%;border-radius:99px;background:var(--ok)}
+.st.justo .bar>i{background:var(--horno)} .st.falta .bar>i{background:var(--alerta)}
+.st.falta .n{color:var(--alerta)}
+.precio{font-family:"DM Mono",monospace;font-size:11.5px;padding:3px 9px;border-radius:99px;
+  background:var(--marca-soft);color:var(--marca-ink);font-weight:600}
+.precio:hover{background:var(--marca-2);color:#fff}
+.edit-precio{display:flex;gap:7px;margin-top:9px;align-items:center;flex-wrap:wrap}
+.edit-precio input{padding:8px 11px;font-size:14px;flex:1;min-width:96px}
+.edit-precio button{padding:8px 14px;border-radius:var(--r-s);background:var(--marca);
+  color:#fff;font-weight:700;font-size:13px;white-space:nowrap}
+.compra{display:grid;grid-template-columns:1fr 118px;gap:9px;margin-bottom:11px}
+.mov{display:grid;grid-template-columns:1fr auto 30px;gap:9px;align-items:center;
+  padding:9px 16px;border-bottom:1px solid var(--line-2);font-size:13px}
+.mov:last-child{border-bottom:0}
+.mov .q{font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums;font-weight:500}
+.mov .q.neg{color:var(--alerta)} .mov .q.pos{color:var(--ok)}
+.mov .s{font-size:11px;color:var(--ink-3);font-family:"DM Mono",monospace}
+
+/* ---------- clientes ---------- */
+.cli{display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:center;
+  padding:11px 16px;border-bottom:1px solid var(--line-2);width:100%;text-align:left}
+.cli:last-child{border-bottom:0}
+.ini{width:38px;height:38px;border-radius:12px;background:var(--marca-soft);color:var(--marca-ink);
+  display:grid;place-items:center;font-weight:800;font-size:14px;
+  font-family:"Bricolage Grotesque",sans-serif}
+.cli .n{font-weight:600;font-size:14.5px}
+.cli .d{font-size:12px;color:var(--ink-3)}
+.cli .hx{display:block;font-family:"DM Mono",monospace;font-size:10.5px;margin-top:2px}
+.cli .hx em{color:var(--viejo);font-style:normal;font-weight:600}
+.cli .r{font-size:16px;color:var(--ink-3)}
+.campos{display:grid;gap:11px}
+
+/* ---------- gráficos ---------- */
+.chart{margin-top:4px}
+.leyenda{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:var(--ink-2)}
+.leyenda span{display:inline-flex;align-items:center;gap:6px}
+.leyenda i{width:11px;height:11px;border-radius:3px;display:block}
+.cols{display:flex;align-items:flex-end;gap:8px;height:150px;padding-top:20px;
+  justify-content:flex-start}
+.col{flex:1;max-width:54px;display:flex;flex-direction:column;justify-content:flex-end;height:100%;
+  position:relative;min-width:0}
+.col .pila{display:flex;flex-direction:column;justify-content:flex-end;gap:2px;height:100%}
+.col .seg-g{background:var(--c-gan);border-radius:4px 4px 0 0;min-height:2px}
+.col .seg-c{background:var(--c-cos);border-radius:0 0 4px 4px;min-height:2px}
+.col .seg-c.solo{border-radius:4px}
+.col .val{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:10px;
+  font-family:"DM Mono",monospace;color:var(--ink-2);white-space:nowrap}
+.ejes{display:flex;gap:8px;margin-top:7px;justify-content:flex-start}
+.ejes span{flex:1;max-width:54px;text-align:center;font-size:10px;color:var(--ink-3);
+  font-family:"DM Mono",monospace;min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.ejes span.hoy{color:var(--marca-ink);font-weight:700}
+.hb{margin-bottom:11px}
+.hb .lin{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:5px}
+.hb .lin b{font-family:"DM Mono",monospace;font-weight:500;font-variant-numeric:tabular-nums;
+  color:var(--ink-2)}
+.hb .pista{height:9px;border-radius:99px;background:var(--sunken);overflow:hidden}
+.hb .pista>i{display:block;height:100%;border-radius:99px;background:var(--marca-2);
+  transition:width .4s}
+.hb.foc .pista>i{background:var(--c-foc)}
+.hb.pre .pista>i{background:var(--c-pre)}
+.hero{padding:18px 16px;border-radius:var(--r);background:var(--marca);color:#fff;
+  margin-bottom:12px;box-shadow:var(--sombra)}
+.hero .l{font-size:12.5px;opacity:.85;font-weight:600}
+.hero .v{font-family:"Bricolage Grotesque",sans-serif;font-size:36px;font-weight:800;
+  line-height:1.05;margin-top:3px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.hero .p{font-size:12.5px;opacity:.85;margin-top:5px}
+.tabla{width:100%;border-collapse:collapse;font-size:13px}
+.tabla th{text-align:left;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);font-family:"DM Mono",monospace;font-weight:500;padding:0 0 7px}
+.tabla td{padding:7px 0;border-top:1px solid var(--line-2);
+  font-variant-numeric:tabular-nums}
+.tabla td.num{text-align:right;font-family:"DM Mono",monospace}
+
+/* ---------- amasado ---------- */
+.grados{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}
+.grados.tres{grid-template-columns:1fr 1fr 1fr}
+.grados input{text-align:center;font-size:18px;font-weight:600}
+.grados.chico input{font-size:15px;font-weight:500}
+.termo{display:flex;align-items:baseline;gap:10px;padding:16px;border-radius:var(--r-s);
+  background:var(--marca-soft)}
+.termo .n{font-family:"Bricolage Grotesque",sans-serif;font-size:44px;font-weight:800;
+  line-height:1;color:var(--marca-ink);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.termo .l{font-size:13.5px;color:var(--ink-2);font-weight:600}
+.termo.frio{background:var(--alerta-soft)}
+.termo.frio .n{color:var(--alerta)}
+.termo.caliente{background:var(--horno-soft)}
+.termo.caliente .n{color:var(--horno-2)}
+.cuenta{font-family:"DM Mono",monospace;font-size:11.5px;color:var(--ink-3);
+  margin:9px 0 0;text-align:center}
+.reloj{font-family:"Bricolage Grotesque",sans-serif;font-size:58px;font-weight:800;
+  text-align:center;font-variant-numeric:tabular-nums;letter-spacing:-.04em;
+  line-height:1.05;margin:2px 0 0}
+.reloj.corriendo{color:var(--marca-ink)}
+.mandos{display:grid;grid-template-columns:2fr 1fr;gap:9px;margin-top:12px}
+.mandos button{padding:14px 8px;border-radius:var(--r-s);font-weight:700;font-size:15px}
+.mandos .go{background:var(--marca);color:#fff}
+.mandos .go.pausa{background:var(--horno);color:#1a1206}
+.mandos .cero{background:var(--sunken);color:var(--ink-2)}
+.paso{display:grid;grid-template-columns:60px 1fr 30px;gap:9px;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--line-2)}
+.paso:last-of-type{border-bottom:0}
+.paso input{padding:8px 9px;font-size:14px}
+.paso input.m{text-align:center;font-family:"DM Mono",monospace}
+.paso .x{width:30px;height:30px;border-radius:9px;color:var(--ink-3);font-size:16px;
+  display:grid;place-items:center}
+.paso .x:hover{background:var(--alerta-soft);color:var(--alerta)}
+.paso.ya input{opacity:.45}
+.paso.cab-paso{padding:0 0 6px;font-family:"DM Mono",monospace;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);border-bottom:0}
+.paso.cab-paso span:first-child{text-align:center}
+.alarma{position:fixed;left:0;right:0;bottom:64px;z-index:90;background:var(--horno);
+  color:#1a1206;padding:16px;display:flex;align-items:center;gap:12px;
+  max-width:468px;margin:0 auto;
+  box-shadow:0 -10px 30px -12px rgba(0,0,0,.6);animation:latir 1s ease-in-out infinite}
+@keyframes latir{50%{filter:brightness(1.14)}}
+.alarma .txt{flex:1;min-width:0}
+.alarma .t{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:18px}
+.alarma .m{font-family:"DM Mono",monospace;font-size:11.5px;opacity:.75}
+.alarma button{background:rgba(0,0,0,.2);padding:11px 17px;border-radius:99px;
+  font-weight:700;font-size:14px;color:inherit;flex:0 0 auto}
+
+/* ---------- esqueletos mientras llega ---------- */
+.esq{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);
+  padding:16px;margin-bottom:12px;box-shadow:var(--sombra)}
+.hueso{height:12px;border-radius:99px;background:var(--sunken);position:relative;
+  overflow:hidden;margin:10px 0}
+.hueso.alto{height:34px;border-radius:12px}
+.hueso.titulo{height:15px;width:42%;margin:0 0 14px}
+.hueso::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(127,139,156,.16),transparent);
+  animation:brillo 1.4s infinite}
+@keyframes brillo{100%{transform:translateX(100%)}}
+.esq-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.esq-tiles .esq{margin:0}
+
+/* ---------- tirar para actualizar ---------- */
+#tirar{position:fixed;top:0;left:0;right:0;z-index:50;display:grid;place-items:center;
+  pointer-events:none;height:0;overflow:visible}
+#tirar .rueda{width:32px;height:32px;border-radius:50%;background:var(--surface);
+  border:1px solid var(--line);box-shadow:var(--sombra);display:grid;place-items:center;
+  transform:translateY(-44px);opacity:0}
+#tirar .rueda svg{width:17px;height:17px;stroke:var(--marca-ink);fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round}
+#tirar.girando .rueda svg{animation:vuelta .9s linear infinite}
+@keyframes vuelta{100%{transform:rotate(360deg)}}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;bottom:0;margin-top:auto;flex:0 0 auto;width:100%;
+  background:var(--surface);border-top:1px solid var(--line);display:grid;
+  grid-template-columns:repeat(5,1fr);z-index:40;padding-bottom:env(safe-area-inset-bottom)}
+.nav button{padding:11px 2px 13px;display:grid;justify-items:center;gap:4px;
+  font-size:10.5px;font-weight:600;color:var(--ink-3)}
+.nav button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+.nav button[aria-current="true"]{color:var(--marca-ink)}
+.nav .nuevo{gap:5px;color:var(--marca-ink);font-weight:700}
+.nav .nuevo .fab{width:50px;height:50px;border-radius:17px;margin-top:-27px;
+  background:var(--marca-2);color:#fff;display:grid;place-items:center;
+  border:3px solid var(--surface);box-shadow:0 8px 18px -6px rgba(37,137,200,.6)}
+.nav .nuevo .fab svg{width:26px;height:26px;stroke-width:2.6}
+.nav .nuevo:active .fab{transform:scale(.93)}
+
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--ink);color:var(--ground);padding:11px 18px;border-radius:99px;
+  font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.28s;z-index:60}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.aviso{margin:0 0 12px;padding:12px 15px;background:var(--horno-soft);color:var(--horno-2);
+  border-radius:var(--r-s);font-size:13px;font-weight:500}
+.fondo{position:fixed;inset:0;background:rgba(9,13,20,.5);z-index:80;display:grid;
+  place-items:end center;padding:0 0 max(14px, env(safe-area-inset-bottom))}
+.hoja{width:100%;max-width:468px;background:var(--surface);border-radius:20px 20px 0 0;
+  padding:18px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:var(--sombra-alta);
+  border-top:1px solid var(--line-2)}
+.hoja .tirador{width:38px;height:4px;border-radius:99px;background:var(--line);
+  margin:-6px auto 13px}
+.hoja h2{font-size:17px;font-weight:800;margin-bottom:2px}
+.hoja .s{font-size:12.5px;color:var(--ink-3);margin-bottom:13px}
+#tt{position:fixed;z-index:70;background:var(--ink);color:var(--ground);padding:7px 11px;
+  border-radius:9px;font-size:12px;pointer-events:none;opacity:0;transition:opacity .12s;
+  white-space:nowrap;font-family:"DM Mono",monospace}
+#tt.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<script>window.__VL_BASE="https://script.google.com/macros/s/AKfycbzT2Kj19u7R72287obeTdvr2Zf3MPkWBG1YckWb1fihL7ulU5mpDGkemJHugaezAd4Z/exec";window.__VL_PIN="";</script>
+<div class="app">
+  <header style="flex:0 0 auto">
+    <div class="marca">
+      <img class="logo" alt="Vamos Luigi Pizza" src="data:image/png;base64,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">
+      <div class="acc">
+        <span class="conex" id="conex" hidden></span>
+        <button id="b-masa" title="Amasado" aria-current="false"><svg viewBox="0 0 24 24"><path d="M10 13.5V5a2 2 0 1 1 4 0v8.5a4 4 0 1 1-4 0z"/><path d="M12 9v4.8"/></svg></button>
+        <button id="b-stats" title="Estadísticas" aria-current="false"><svg viewBox="0 0 24 24"><path d="M4 19V10M10 19V5M16 19v-6M22 19H2"/></svg></button>
+        <button id="b-recetas" title="Recetas y reglas" aria-current="false"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+      </div>
+    </div>
+    <div class="titulo" id="titulo-bar">
+      <div><div class="pantalla" id="pantalla">TANDA</div>
+        <h1 id="titulo">La tanda</h1><div class="sub" id="subtitulo">—</div></div>
+      <span class="pill" id="pill"></span>
+    </div>
+  </header>
+
+  <div class="tandas-nav" id="tandas-nav"><div class="tandas-strip" id="tandas-strip"></div></div>
+
+  <div class="cuerpo">
+    <section class="vista on" id="v-tanda"></section>
+    <section class="vista" id="v-pedidos"></section>
+    <section class="vista" id="v-nuevo"></section>
+    <section class="vista" id="v-stock"></section>
+    <section class="vista" id="v-clientes"></section>
+    <section class="vista" id="v-amasado"></section>
+    <section class="vista" id="v-stats"></section>
+    <section class="vista" id="v-recetas"></section>
+  </div>
+
+  <nav class="nav" id="nav">
+    <button data-v="tanda" aria-current="true"><svg viewBox="0 0 24 24"><path d="M3 13h6v8H3zM9 3h6v18H9zM15 9h6v12h-6z"/></svg>Tanda</button>
+    <button data-v="pedidos"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Pedidos</button>
+    <button data-v="nuevo" class="nuevo"><span class="fab"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>Nuevo</button>
+    <button data-v="stock"><svg viewBox="0 0 24 24"><path d="M3 8.5 12 4l9 4.5v7L12 20l-9-4.5z"/><path d="M3 8.5 12 13l9-4.5M12 13v7"/></svg>Stock</button>
+    <button data-v="clientes"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0M17 11.5a2.6 2.6 0 1 0-1.6-4.7M16.5 20h4a4.4 4.4 0 0 0-3-4.2"/></svg>Clientes</button>
+  </nav>
+</div>
+<div class="toast" id="toast"></div>
+<div id="tt"></div>
 
 <script>
-  document.getElementById('app').addEventListener('load', function () {
-    var a = document.getElementById('aviso');
-    if (a) a.remove();
+/* ============ valores de arranque: solo se usan si la base está vacía ============ */
+const REGLA_BASE = {
+  capacidadBollos:65, maxAmasadora:7, kgTiradaDefault:4,
+  grPrepizza:320, grFocMediana:350, grFocGrande:1175,
+  lugarPrepizza:1, lugarFocMediana:1, lugarFocGrande:3,
+  tdm:24, friccion:9, envio:2000,
+};
+const MASA_BASE = {
+  masa_prepizza:{'Harina 00':900,'Sémola rimacinata':100,'Agua':650,'Sal':30,
+                 'Extracto de malta':10,'Aceite de oliva':10,'Levadura':4},
+  masa_focaccia:{'Harina 00':500,'Harina 000':500,'Agua':700,'Sal':25,
+                 'Aceite de oliva':15,'Levadura':6},
+  por_unidad:{'Gas':80,'Bolsa polipropileno':1,'Bandeja de cartón':1,'Etiqueta impresa':1},
+};
+const TOP_BASE = {
+  'PRE-TOM':{'Tomate':80,'Albahaca':10},
+  'PRE-CEB':{'Cebolla':100},
+  'FOC-ROM-M':{'Romero':5,'Aceite de oliva':10},   'FOC-ROM-G':{'Romero':16,'Aceite de oliva':30},
+  'FOC-CHE-M':{'Tomates cherry':45,'Aceite de oliva':10}, 'FOC-CHE-G':{'Tomates cherry':200,'Aceite de oliva':30},
+  'FOC-VER-M':{'Verdeo':28,'Aceite de oliva':10},  'FOC-VER-G':{'Verdeo':90,'Aceite de oliva':30},
+  'FOC-ACE-M':{'Aceitunas verdes':25,'Aceitunas negras':25,'Aceite de oliva':10},
+  'FOC-ACE-G':{'Aceitunas verdes':60,'Aceitunas negras':60,'Aceite de oliva':30},
+  'FOC-PIC-M':{'Picante':1,'Aceite de oliva':10},  'FOC-PIC-G':{'Picante':3,'Aceite de oliva':30},
+  'FOC-ROQ-M':{'Roquefort':30,'Nueces':8,'Miel':5,'Aceite de oliva':10},
+  'FOC-ROQ-G':{'Roquefort':98,'Nueces':26,'Miel':16,'Aceite de oliva':30},
+  'FOC-PES-M':{'Pesto':23,'Queso sardo':14,'Aceite de oliva':10},
+  'FOC-PES-G':{'Pesto':75,'Queso sardo':45,'Aceite de oliva':30},
+};
+/* el orden en que Agus los pone en la amasadora */
+const ORDEN_ING = ['Harina 00','Harina 000','Sémola rimacinata','Agua','Levadura',
+                   'Extracto de malta','Sal','Aceite de oliva'];
+const ZONAS = ['Centro','Hospital','UNLu','Barrio Arroyo','La Concepción','Valle Verde',
+               'San Juan de Dios','Hostería Norte','Otros'];
+const PAGOS = ['Transferencia','Efectivo','Mercado Pago','Pendiente'];
+const NOM_DIA = ['lun','mar','mié','jue','vie','sáb','dom'];
+
+/* ================================ estado ================================ */
+let DB = null;
+let REGLA = Object.assign({}, REGLA_BASE);
+const S = {productos:[], insumos:[], clientes:[], tandas:[], pedidos:[], movimientos:[],
+           recetas:[], config:[], semanaSel:null, vista:'tanda', listo:false, error:'',
+           sembrado:{}, deGuardado:false};
+const nuevo = {cliente:null, items:{}, focaccias:[], conEnvio:true, direccion:'', dirOtra:'',
+               formaPago:'', obs:'', semana:null, sinCargo:false, totalManual:''};
+const ui = {borrando:null, editaPrecio:null, editaCliente:null, borraCliente:false,
+            editaCobro:null, compraSel:0, compraCant:1, compraSigno:1,
+            masa:{amb:20, harina:20, pref:20, usaPref:false, canilla:18,
+                  cual:'masa_prepizza', kg:4},
+            nuevaTanda:false, rangoStats:0, abiertos:{}, tiraEn:null,
+            editaBollos:false, editaCap:false, editaKg:null, largo:false,
+            pasoNuevo:false};
+
+/* ================================ utilidades ================================ */
+const $ = s => document.querySelector(s);
+const pesos = n => '$' + Math.round(n||0).toLocaleString('es-AR');
+const pesosK = n => Math.abs(n) >= 1000 ? '$'+(n/1000).toFixed(0)+'k' : pesos(n);
+const gr = n => Math.abs(n)>=1000 ? (n/1000).toFixed(2).replace('.',',')+' kg'
+                        : (Math.abs(n)>=10?Math.round(n):(n||0).toFixed(1).replace('.',','))+' g';
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
+               'septiembre','octubre','noviembre','diciembre'];
+const MES3 = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+const iso = d => d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+const soloFecha = s => String(s == null ? '' : s).slice(0, 10);
+const deIso = s => { const p = soloFecha(s).split('-').map(Number);
+                     return new Date(p[0], (p[1]||1)-1, p[2]||1); };
+const hoyIso = () => iso(new Date());
+const suma = (f, n) => { const d = deIso(f); d.setDate(d.getDate()+n); return iso(d); };
+
+/* --- semanas: la referencia es la semana, no el día --- */
+function lunesDe(f){
+  const d = deIso(f), dow = (d.getDay()+6)%7;   // 0 = lunes
+  d.setDate(d.getDate()-dow); return iso(d);
+}
+const semanaHoy = () => lunesDe(hoyIso());
+function rotuloSemana(sem){
+  const a = deIso(sem), b = deIso(suma(sem,5));
+  return a.getMonth()===b.getMonth()
+    ? a.getDate()+' al '+b.getDate()+' '+MES3[a.getMonth()]
+    : a.getDate()+' '+MES3[a.getMonth()]+' al '+b.getDate()+' '+MES3[b.getMonth()];
+}
+const tandaDoc = sem => S.tandas.find(t => t.id === sem) || {};
+const diaEntrega = sem => Number(tandaDoc(sem).diaEntrega || 5);   // 1 lun … 7 dom
+const fechaEntrega = sem => suma(sem, diaEntrega(sem)-1);
+function rotuloEntrega(sem){
+  const f = fechaEntrega(sem), d = deIso(f);
+  return NOM_DIA[diaEntrega(sem)-1]+' '+d.getDate()+'/'+(d.getMonth()+1);
+}
+function semanasVisibles(){
+  const base = semanaHoy(), out = [];
+  for (let i=-3;i<=4;i++) out.push(suma(base, i*7));
+  S.pedidos.forEach(p => { const s = lunesDe(p.tanda); if (out.indexOf(s)<0) out.push(s); });
+  S.tandas.forEach(t => { const s = lunesDe(t.id); if (out.indexOf(s)<0) out.push(s); });
+  return out.sort();
+}
+const esPasada = sem => sem < semanaHoy();
+
+function toast(t){ const e = $('#toast'); e.textContent = t; e.classList.add('on');
+  setTimeout(()=>e.classList.remove('on'), 1900); }
+
+/* --- recetas vivas (de la base, con los valores de arranque como respaldo) --- */
+function receta(clave){
+  const d = S.recetas.find(r => r.id === clave);
+  return d && d.items ? d.items : (MASA_BASE[clave] || {});
+}
+function topping(sku){
+  const d = S.recetas.find(r => r.id === 'top_'+sku);
+  return d && d.items ? d.items : (TOP_BASE[sku] || {});
+}
+/* el gramaje manda: de la receta sale la masa, y de la masa los bollos */
+function clavesOrdenadas(items){
+  return Object.keys(items).sort((a,b) => {
+    const ia = ORDEN_ING.indexOf(a), ib = ORDEN_ING.indexOf(b);
+    if (ia >= 0 && ib >= 0) return ia - ib;
+    if (ia >= 0) return -1;
+    if (ib >= 0) return 1;
+    return a.localeCompare(b);
   });
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('sw.js').catch(function () {});
+}
+function masaTotal(clave){
+  const r = receta(clave); let t = 0;
+  for (const k in r) t += Number(r[k])||0;
+  return t;
+}
+const nGr = n => Number(n||0).toLocaleString('es-AR')+' g';
+const plu = (n, uno, muchos) => n + ' ' + (n===1 ? uno : muchos);
+const gramajeDe = p => p.tipo === 'Prepizza' ? REGLA.grPrepizza
+  : (p.tamano === 'Grande' ? REGLA.grFocGrande : REGLA.grFocMediana);
+const rindePre = () => masaTotal('masa_prepizza')/REGLA.grPrepizza;
+const rindeMed = () => masaTotal('masa_focaccia')/REGLA.grFocMediana;
+const rindeGra = () => masaTotal('masa_focaccia')/REGLA.grFocGrande;
+/* cuántos lugares de cámara ocupa cada bollo. Es un dato declarado, no calculado:
+   la grande se compara contra la mediana, que es su misma masa. */
+const lugarDe = p => Number(p.tipo === 'Prepizza' ? REGLA.lugarPrepizza
+  : (p.tamano === 'Grande' ? REGLA.lugarFocGrande : REGLA.lugarFocMediana)) || 1;
+
+function precioGr(){
+  const p = {};
+  S.insumos.forEach(i => { p[i.nombre] = Number(i.precio_compra)/Number(i.contenido_gr||1); });
+  return p;
+}
+function costoSku(sku, pg){
+  const p = S.productos.find(x => x.sku === sku); if (!p) return 0;
+  const esPre = p.tipo === 'Prepizza';
+  const porKg = esPre ? rindePre() : (p.tamano === 'Grande' ? rindeGra() : rindeMed());
+  let c = 0;
+  const rec = esPre ? receta('masa_prepizza') : receta('masa_focaccia');
+  for (const k in rec) if (k !== 'Agua') c += rec[k]/porKg * (pg[k]||0);
+  const pu = receta('por_unidad');
+  for (const k in pu) c += pu[k] * (pg[k]||0);
+  const t = topping(sku);
+  for (const k in t) c += t[k] * (pg[k]||0);
+  return Math.round(c);
+}
+const productoDe = sku => S.productos.find(p => p.sku === sku) || {};
+function badgeTam(p){
+  if (p.tipo === 'Prepizza') return '<span class="tam u">única</span>';
+  return p.tamano === 'Grande' ? '<span class="tam g">G · grande</span>'
+                               : '<span class="tam m">M · mediana</span>';
+}
+
+/* --- plata de un pedido --- */
+const brutoDe = p => (p.lineas||[]).reduce((a,l)=>a+l.cantidad*l.precioUnit, Number(p.envio||0));
+function totalDe(p){
+  if (p.sinCargo) return 0;
+  if (p.totalManual != null && p.totalManual !== '') return Number(p.totalManual);
+  return brutoDe(p);
+}
+const costoDe = p => (p.lineas||[]).reduce((a,l)=>a+l.cantidad*l.costoUnit, 0);
+
+/* ---------------------- números de una semana ---------------------- */
+function calcular(sem){
+  const peds = S.pedidos.filter(p => lunesDe(p.tanda) === sem);
+  const unidades = {};
+  let bollos=0, bruto=0, cobrar=0, costo=0, envios=0, cobrado=0;
+  peds.forEach(p => {
+    (p.lineas||[]).forEach(l => {
+      const prod = productoDe(l.sku);
+      unidades[l.sku] = (unidades[l.sku]||0) + l.cantidad;
+      bollos += l.cantidad * lugarDe(prod);
+      costo += l.cantidad * l.costoUnit;
     });
+    bruto += brutoDe(p); cobrar += totalDe(p);
+    if (!p.sinCargo) envios += Number(p.envio||0);
+    if (p.cobrado) cobrado += totalDe(p);
+  });
+  let pre=0, med=0, gra=0;
+  Object.keys(unidades).forEach(sku => {
+    const p = productoDe(sku);
+    if (p.tipo === 'Prepizza') pre += unidades[sku];
+    else if (p.tamano === 'Grande') gra += unidades[sku];
+    else med += unidades[sku];
+  });
+  const t = tandaDoc(sem);
+  /* los pedidos dan un piso de harina; casi siempre amasamos más que eso,
+     así que el número final se puede fijar a mano y todo lo demás lo sigue */
+  const puesto = v => (v != null && v !== '' && !isNaN(Number(v))) ? Number(v) : null;
+  const kgPreAuto = pre ? Math.ceil(pre/rindePre() - 1e-9) : 0;
+  const harinaFoc = med/rindeMed() + gra/rindeGra();
+  const kgFocAuto = harinaFoc ? Math.ceil(harinaFoc - 1e-9) : 0;
+  const kgPreManual = puesto(t.kgPreManual), kgFocManual = puesto(t.kgFocManual);
+  const kgPre = kgPreManual != null ? kgPreManual : kgPreAuto;
+  const kgFoc = kgFocManual != null ? kgFocManual : kgFocAuto;
+  const kgTirada = Number(t.kg_tirada) || REGLA.kgTiradaDefault;
+  const perd = Number(t.perdidas||0);
+  const salen = Math.floor(kgPre * masaTotal('masa_prepizza')/REGLA.grPrepizza + 1e-9);
+  const focDeMas = Math.max(0, Math.floor((kgFoc - harinaFoc)*rindeMed() + 1e-9));
+  /* lo que va a ocupar la cámara es lo que sale de la masa, no lo que pidieron:
+     los bollos de más también ocupan lugar */
+  const bollosPedidos = bollos;
+  const bollosAuto = salen*Number(REGLA.lugarPrepizza||1)
+    + (med + focDeMas)*Number(REGLA.lugarFocMediana||1)
+    + gra*Number(REGLA.lugarFocGrande||3);
+  bollos = bollosAuto;
+  const manual = puesto(t.bollosManual);
+  if (manual != null) bollos = manual;
+
+  const consumo = {};
+  const sumarC = (k,g) => { if (k !== 'Agua') consumo[k] = (consumo[k]||0)+g; };
+  const rp = receta('masa_prepizza'), rf = receta('masa_focaccia'), pu = receta('por_unidad');
+  for (const k in rp) sumarC(k, rp[k]*kgPre);
+  for (const k in rf) sumarC(k, rf[k]*kgFoc);
+  const totalUn = Object.keys(unidades).reduce((a,s)=>a+unidades[s],0);
+  for (const k in pu) sumarC(k, pu[k]*totalUn);
+  Object.keys(unidades).forEach(sku => {
+    const t2 = topping(sku);
+    for (const k in t2) sumarC(k, t2[k]*unidades[sku]);
+  });
+
+  return {sem, pedidos:peds, unidades, pre, med, gra, kgPre, kgFoc, kgTirada, harinaFoc,
+    kgPreAuto, kgFocAuto, kgPreManual, kgFocManual, bollosPedidos,
+    bollos, bollosAuto, manual,
+    uso:bollos/REGLA.capacidadBollos, totalUn,
+    plata:{bruto, aCobrar:cobrar, bonificado:bruto-cobrar, envios, costo,
+           ganancia:cobrar-costo, cobrado, pendiente:cobrar-cobrado},
+    sobrantes:{salen, pedidas:pre, sobran:salen-pre, perdidas:perd,
+               libres:Math.max(0, salen-pre-perd), focDeMas},
+    consumo};
+}
+function repartirKg(kg, tope){
+  if (!kg) return [];
+  tope = Math.min(tope||REGLA.kgTiradaDefault, REGLA.maxAmasadora);
+  const n = Math.ceil(kg/tope), base = Math.floor(kg/n), resto = kg - base*n, out = [];
+  for (let i=0;i<n;i++) out.push(i<resto ? base+1 : base);
+  return out;
+}
+const stockDe = nombre =>
+  S.movimientos.reduce((a,m)=> a + (m.insumo===nombre ? Number(m.gramos)||0 : 0), 0);
+
+/* los insumos del amasado primero: son los que más se mueven */
+const GRUPOS = ['De las masas','Por unidad horneada','Toppings y otros'];
+function ordenDeMasa(){
+  const peso = {};
+  [receta('masa_prepizza'), receta('masa_focaccia')].forEach(r =>
+    Object.keys(r).forEach(k => { if (k!=='Agua') peso[k] = (peso[k]||0) + r[k]; }));
+  return Object.keys(peso).sort((a,b) => peso[b]-peso[a]);
+}
+function insumosOrdenados(){
+  const masa = ordenDeMasa(), pu = Object.keys(receta('por_unidad'));
+  const grupo = n => masa.indexOf(n)>=0 ? 0 : pu.indexOf(n)>=0 ? 1 : 2;
+  return S.insumos.slice().sort((a,b) => {
+    const ga = grupo(a.nombre), gb = grupo(b.nombre);
+    if (ga !== gb) return ga - gb;
+    if (ga === 0) return masa.indexOf(a.nombre) - masa.indexOf(b.nombre);
+    if (ga === 1) return pu.indexOf(a.nombre) - pu.indexOf(b.nombre);
+    return a.nombre.localeCompare(b.nombre);
+  }).map(i => Object.assign({__g:grupo(i.nombre)}, i));
+}
+
+/* ================================ persistencia ================================
+   El panel corre en dos casas: dentro de Claude (capacidad db) o servido por
+   Apps Script desde el Drive de Agus. Todo lo de abajo es lo único que cambia. */
+const COLS = ['productos','insumos','clientes','tandas','pedidos','movimientos',
+              'recetas','config'];
+const API = {activo:false, base:'', pin:'', pidePin:false, version:0, cola:[],
+             enviando:false, cargando:false, falla:0, motivo:'', via:''};
+const guardaLocal = (k,v) => { try { localStorage.setItem(k,v); } catch(e){} };
+const leeLocal = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
+const guardaCola = () => guardaLocal('vl_cola', JSON.stringify(API.cola));
+
+/* Le hablamos al servidor por HTTP común. El POST va como texto plano a
+   propósito: así el navegador no pide permiso previo y Apps Script contesta. */
+async function pedir(params){
+  const partes = [];
+  for (const k in params) partes.push(k + '=' + encodeURIComponent(params[k]));
+  const res = await fetch(API.base + '?' + partes.join('&'), {method:'GET'});
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+async function porPost(cuerpo){
+  const res = await fetch(API.base, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify(cuerpo),
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+/* La dirección tiene un largo máximo, así que partimos el lote en tandas
+   que entren cómodas. */
+function enGrupos(ops){
+  const largo = a => encodeURIComponent(JSON.stringify(a)).length;
+  const out = []; let g = [];
+  ops.forEach(o => {
+    if (g.length && largo(g.concat([o])) > 6000){ out.push(g); g = []; }
+    g.push(o);
+  });
+  if (g.length) out.push(g);
+  return out;
+}
+async function porGet(cuerpo){
+  let ultima = {ok:true, version:API.version, hechas:0};
+  const grupos = enGrupos(cuerpo.ops || []);
+  for (let i = 0; i < grupos.length; i++){
+    const r = await pedir({r:'escribir', pin:cuerpo.pin, ops:JSON.stringify(grupos[i])});
+    if (!r.ok) return r;
+    ultima = r;
   }
+  return ultima;
+}
+/* Guardar por POST es lo prolijo, pero algunos teléfonos no lo dejan salir.
+   Si falla, mandamos lo mismo por la vía de la lectura, que sabemos que anda,
+   y nos quedamos ahí. Repetir una orden no hace daño: cada una dice cómo tiene
+   que quedar el dato, no "sumale uno". */
+async function mandar(cuerpo){
+  if (API.via === 'get') return porGet(cuerpo);
+  let fallo = '';
+  try {
+    const r = await porPost(cuerpo);
+    if (r && r.ok){ API.via = 'post'; guardaLocal('vl_via','post'); return r; }
+    if (r && r.error === 'pin') return r;
+    fallo = 'POST: ' + ((r && r.error) || 'sin respuesta');
+  } catch(e){
+    fallo = 'POST: ' + String((e && e.message) || e).slice(0, 90);
+  }
+  const r2 = await porGet(cuerpo);
+  if (r2 && r2.ok){ API.via = 'get'; guardaLocal('vl_via','get'); API.motivo = fallo; }
+  return r2;
+}
+
+/* La última foto de los datos queda en el teléfono. Al abrir, la app se dibuja
+   con eso al instante y recién después sale a buscar lo nuevo: no hay pantalla
+   en blanco esperando a Google. */
+function guardarFoto(){
+  try { guardaLocal('vl_datos', JSON.stringify({
+    version: API.version, cuando: Date.now(),
+    datos: COLS.reduce((a,k) => { a[k] = S[k]; return a; }, {}),
+  })); } catch(e){}
+}
+function usarFoto(){
+  let c = null;
+  try { c = JSON.parse(leeLocal('vl_datos') || 'null'); } catch(e){ return false; }
+  if (!c || !c.datos || !c.datos.productos) return false;
+  COLS.forEach(k => { S[k] = c.datos[k] || []; });
+  API.version = Number(c.version) || 0;
+  emparejarFechas();
+  refrescarReglas();
+  API.cola.forEach(o => aplicarLocal(o.op, o.ruta, o.datos));
+  S.listo = true; S.deGuardado = true; S.error = '';
+  return true;
+}
+
+async function conectar(){
+  const base = (typeof window.__VL_BASE === 'string' &&
+                window.__VL_BASE.indexOf('http') === 0) ? window.__VL_BASE : '';
+  if (base){ API.base = base; return conectarApps(); }
+  try { DB = await claude.use('db'); } catch(e){ DB = null; }
+  if (!DB){ S.error = 'sin-db'; render(); return; }
+  const col = (nombre, destino, alLlegar) => DB.collection(nombre).onSnapshot(
+    snap => { S[destino] = snap.docs.map(d => Object.assign({id:d.id}, d.data()));
+              if (alLlegar) alLlegar();
+              S.listo = true; render(); },
+    () => { S.error = 'sin-db'; render(); });
+  col('productos','productos');
+  col('insumos','insumos');
+  col('clientes','clientes');
+  col('tandas','tandas');
+  col('pedidos','pedidos');
+  col('movimientos','movimientos');
+  col('recetas','recetas', sembrarRecetas);
+  col('config','config', sembrarConfig);
+}
+
+/* Apps Script dibuja la página a 980 px de ancho y después la encoge al ancho
+   real del teléfono. Adentro no puedo tocar eso, así que agrando la app en la
+   misma proporción: queda del tamaño que corresponde y ocupando todo el ancho. */
+function ajustarEscala(){
+  if (!API.activo) return;
+  const raiz = document.documentElement;
+  const pantalla = (window.screen && window.screen.width) || window.innerWidth;
+  const z = pantalla ? window.innerWidth / pantalla : 1;
+  if (z > 1.15 && z < 6){
+    raiz.style.zoom = z;
+    raiz.dataset.escala = z.toFixed(2);
+  } else {
+    raiz.style.zoom = '';
+    delete raiz.dataset.escala;
+  }
+}
+
+/* ---------------------- casa propia: Apps Script ---------------------- */
+function conectarApps(){
+  API.activo = true;
+  API.pidePin = window.__VL_PIN === '1';
+  API.pin = leeLocal('vl_pin') || '';
+  try { API.cola = JSON.parse(leeLocal('vl_cola') || '[]') || []; } catch(e){ API.cola = []; }
+  API.via = leeLocal('vl_via') || '';
+  ajustarEscala();
+  window.addEventListener('resize', ajustarEscala);
+  window.addEventListener('orientationchange', () => setTimeout(ajustarEscala, 300));
+  setInterval(mirarVersion, 25000);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden){ mirarVersion(); vaciarCola(); } });
+  window.addEventListener('online', () => { API.falla = 0; vaciarCola(); });
+  pintarConex();
+  const punto = document.getElementById('conex');
+  if (punto){ punto.style.cursor = 'pointer'; punto.onclick = hojaConexion; }
+  if (API.pidePin && !API.pin) return pantallaPin(false);
+  if (usarFoto()){ recordarPantalla(); render(); }
+  cargarTodo();
+}
+
+async function cargarTodo(){
+  if (API.cargando) return;
+  API.cargando = true; pintarConex();
+  try {
+    const r = await pedir({r:'todo', pin:API.pin});
+    if (!r.ok){
+      if (r.error === 'pin'){ API.pin = ''; guardaLocal('vl_pin',''); return pantallaPin(true); }
+      throw new Error(r.error || 'no pude leer');
+    }
+    API.version = r.version;
+    COLS.forEach(c => { S[c] = r.datos[c] || []; });
+    emparejarFechas();
+    S.deGuardado = false;
+    /* lo que todavía no llegó al servidor lo volvemos a pintar encima:
+       así no parece que se perdió */
+    API.cola.forEach(o => aplicarLocal(o.op, o.ruta, o.datos));
+    S.listo = true; S.error = ''; API.falla = 0;
+    sembrarRecetas(); sembrarConfig();
+    guardarFoto();
+    render();
+  } catch(e){
+    API.falla++;
+    API.motivo = String((e && e.message) || e || '').slice(0, 160);
+    if (!S.listo) S.error = 'sin-db';
+    render();
+  } finally {
+    API.cargando = false; pintarConex();
+    if (API.cola.length) vaciarCola();
+  }
+}
+
+async function mirarVersion(){
+  if (!API.activo || !S.listo || API.cola.length || API.cargando || document.hidden) return;
+  try {
+    const r = await pedir({r:'version', pin:API.pin});
+    if (r.ok && r.version !== API.version) cargarTodo();
+  } catch(e){}
+}
+
+/* Si alguna fecha vuelve de la planilla con hora pegada, la dejamos en su
+   forma corta antes de que la use nadie. */
+function emparejarFechas(){
+  S.pedidos.forEach(p => { if (p.tanda) p.tanda = soloFecha(p.tanda); });
+  S.tandas.forEach(t => { t.id = soloFecha(t.id); });
+  S.movimientos.forEach(m => { if (m.fecha) m.fecha = soloFecha(m.fecha); });
+}
+
+const partes = ruta => { const i = ruta.indexOf('/');
+  return [ruta.slice(0,i), ruta.slice(i+1)]; };
+
+function aplicarLocal(op, ruta, datos){
+  const p = partes(ruta), lista = S[p[0]];
+  if (!lista) return;
+  let i = -1;
+  for (let k=0;k<lista.length;k++) if (lista[k].id === p[1]) { i = k; break; }
+  if (op === 'delete'){ if (i >= 0) lista.splice(i,1); return; }
+  const base = (op === 'update' && i >= 0) ? Object.assign({}, lista[i]) : {};
+  Object.assign(base, datos || {});
+  base.id = p[1];
+  if (i >= 0) lista[i] = base; else lista.push(base);
+  if (p[0] === 'config') refrescarReglas();
+}
+
+async function vaciarCola(){
+  if (!API.activo || API.enviando || !API.cola.length) return;
+  API.enviando = true; pintarConex();
+  const lote = API.cola.slice(0, 40);
+  try {
+    const ops = lote.map(o => { const p = partes(o.ruta);
+      return {op:o.op, col:p[0], id:p[1], datos:o.datos}; });
+    const r = await mandar({pin:API.pin, ops:ops});
+    if (!r.ok) throw new Error(r.error || 'no pude guardar');
+    API.cola.splice(0, lote.length); guardaCola();
+    API.version = r.version; API.falla = 0;
+  } catch(e){
+    API.falla++;
+    API.motivo = String((e && e.message) || e || '').slice(0, 160);
+  } finally {
+    API.enviando = false; pintarConex();
+    if (API.cola.length){
+      if (API.falla) setTimeout(vaciarCola, Math.min(15000, 2500*API.falla));
+      else vaciarCola();
+    }
+  }
+}
+
+function pintarConex(){
+  const e = document.getElementById('conex');
+  if (!e) return;
+  e.hidden = !API.activo;
+  if (!API.activo) return;
+  const n = API.cola.length;
+  e.className = 'conex' + (API.falla ? ' mal' : (n || API.cargando) ? ' yendo' : '');
+  e.textContent = API.falla
+      ? (n ? n + (n===1?' cambio sin guardar':' cambios sin guardar') : 'sin conexión')
+      : n ? 'guardando…' : '';
+}
+
+/* Tocando el puntito de la cabecera se ve qué está pasando por detrás.
+   Sirve para cuando algo no guarda y hay que saber por qué. */
+function hojaConexion(){
+  const viejo = document.querySelector('.fondo'); if (viejo) viejo.remove();
+  const f = document.createElement('div');
+  f.className = 'fondo';
+  const via = API.via === 'get' ? 'por dirección' : API.via === 'post' ? 'directa' : 'sin probar';
+  const fila = (l, v) => '<div class="rec-row"><span>'+l+'</span><b>'+esc(v)+'</b></div>';
+  f.innerHTML = '<div class="hoja"><div class="tirador"></div>'
+    + '<h2>Conexión</h2><div class="s">Cómo viene hablando la app con la planilla.</div>'
+    + fila('Servidor', API.base ? 'conectado' : 'no hay')
+    + fila('Datos cargados', S.listo ? 'sí' : 'no')
+    + fila('Vía para guardar', via)
+    + fila('Cambios sin guardar', String(API.cola.length))
+    + (API.motivo ? '<div class="aviso" style="margin-top:12px">'+esc(API.motivo)+'</div>' : '')
+    + '<button class="guardar" id="cx-probar" style="margin-top:12px">Probar guardado</button>'
+    + '<button class="guardar" id="cx-cerrar" style="margin-top:8px;background:var(--sunken);color:var(--ink-2)">Cerrar</button>'
+    + '</div>';
+  document.body.appendChild(f);
+  f.onclick = e => { if (e.target === f) f.remove(); };
+  f.querySelector('#cx-cerrar').onclick = () => f.remove();
+  f.querySelector('#cx-probar').onclick = async () => {
+    const b = f.querySelector('#cx-probar');
+    b.textContent = 'Probando…'; b.disabled = true;
+    const prueba = {pin:API.pin, ops:[{op:'set', col:'config', id:'_prueba',
+      datos:{valores:{cuando:new Date().toISOString()}}}]};
+    let dice = '';
+    try { const r = await porPost(prueba); dice = r && r.ok ? 'directa: anda' : 'directa: ' + ((r&&r.error)||'no'); }
+    catch(e){ dice = 'directa: ' + String((e && e.message) || e).slice(0,70); }
+    try { const r = await porGet(prueba); dice += ' · por dirección: ' + (r && r.ok ? 'anda' : ((r&&r.error)||'no')); }
+    catch(e){ dice += ' · por dirección: ' + String((e && e.message) || e).slice(0,70); }
+    /* no dejamos basura en la planilla */
+    try { await porGet({pin:API.pin, ops:[{op:'delete', col:'config', id:'_prueba'}]}); } catch(e){}
+    b.disabled = false; b.textContent = 'Probar de nuevo';
+    const av = document.createElement('div');
+    av.className = 'aviso'; av.style.marginTop = '12px'; av.textContent = dice;
+    b.parentNode.insertBefore(av, b);
+  };
+}
+
+function pantallaPin(malo){
+  sacarArranque();          /* si hay que pedir el PIN, la tapa negra estorba */
+  const v = document.querySelector('.fondo-pin'); if (v) v.remove();
+  const f = document.createElement('div');
+  f.className = 'fondo fondo-pin';
+  f.style.placeItems = 'center';
+  f.innerHTML = '<div class="hoja" style="border-radius:20px;max-width:290px;margin:0 16px">'
+    + '<h2>Vamos Luigi</h2>'
+    + '<div class="s">' + (malo ? 'Ese PIN no es.' : 'Poné el PIN para entrar.') + '</div>'
+    + '<input type="tel" id="pin-in" inputmode="numeric" autocomplete="off" '
+    + 'style="text-align:center;font-size:22px;letter-spacing:.3em">'
+    + '<button class="guardar" id="pin-ok" style="margin-top:12px">Entrar</button></div>';
+  document.body.appendChild(f);
+  const entrar = () => {
+    const val = document.getElementById('pin-in').value.trim();
+    if (!val) return;
+    API.pin = val; guardaLocal('vl_pin', val);
+    f.remove(); cargarTodo();
+  };
+  document.getElementById('pin-ok').onclick = entrar;
+  document.getElementById('pin-in').onkeydown = ev => { if (ev.key === 'Enter') entrar(); };
+  setTimeout(() => { const i = document.getElementById('pin-in'); if (i) i.focus(); }, 80);
+}
+
+/* ---------------------- lo que usa todo el panel ---------------------- */
+function escribir(op, ruta, datos){
+  if (!API.activo){
+    if (!DB) return Promise.resolve();
+    const d = DB.doc(ruta);
+    return op === 'set' ? d.set(datos) : op === 'update' ? d.update(datos) : d.delete();
+  }
+  aplicarLocal(op, ruta, datos);
+  API.cola.push({op, ruta, datos}); guardaCola();
+  render(); vaciarCola();
+  return Promise.resolve();
+}
+const guardar = (ruta, datos) => escribir('set', ruta, datos);
+const parchar = (ruta, datos) => escribir('update', ruta, datos);
+const borrar  = ruta => escribir('delete', ruta);
+const nuevoId = pref => pref + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+
+function sembrarRecetas(){
+  if (S.sembrado.recetas || !S.productos.length) return;
+  if (S.recetas.length) { S.sembrado.recetas = true; return; }
+  S.sembrado.recetas = true;
+  Object.keys(MASA_BASE).forEach(k => guardar('recetas/'+k, {items:MASA_BASE[k]}));
+  Object.keys(TOP_BASE).forEach(k => guardar('recetas/top_'+k, {items:TOP_BASE[k]}));
+}
+/* Las reglas vuelven a leerse cada vez que cambian, sin esperar a que el
+   servidor conteste: si tocás un gramaje, el número de al lado cambia solo. */
+function refrescarReglas(){
+  const doc = S.config.find(c => c.id === 'reglas');
+  if (doc) REGLA = Object.assign({}, REGLA_BASE, doc.valores || {});
+}
+function sembrarConfig(){
+  if (!S.config.find(c => c.id === 'pasos') && !S.sembrado.pasos){
+    S.sembrado.pasos = true;
+    guardarPasos(PASOS_BASE);
+  }
+  const doc = S.config.find(c => c.id === 'reglas');
+  if (doc) { refrescarReglas(); return; }
+  if (S.sembrado.config) return;
+  S.sembrado.config = true;
+  guardar('config/reglas', {valores:REGLA_BASE});
+}
+
+/* ================================ armado ================================ */
+/* La pantalla negra del arranque se retira sola cuando ya hay algo que mostrar. */
+function sacarArranque(){
+  const a = document.getElementById('arranque');
+  if (!a || a.classList.contains('se-va')) return;
+  a.classList.add('se-va');
+  setTimeout(() => { if (a.parentNode) a.parentNode.removeChild(a); }, 520);
+}
+
+function render(){
+  if (S.listo || S.error) sacarArranque();
+  if (!S.semanaSel) S.semanaSel = semanaHoy();
+  pintarCabecera(); pintarStrip();
+  ({tanda:vistaTanda, pedidos:vistaPedidos, nuevo:vistaNuevo, stock:vistaStock,
+    clientes:vistaClientes, stats:vistaStats, recetas:vistaRecetas,
+    amasado:vistaAmasado})[S.vista]();
+  engancharReintento();
+}
+
+function pintarCabecera(){
+  const sem = S.semanaSel, ahora = sem === semanaHoy(), pasada = esPasada(sem);
+  const conTira = S.vista==='tanda' || S.vista==='pedidos';
+  const T = {
+    tanda:   ['Tanda', 'entrega ' + rotuloEntrega(sem)],
+    pedidos: ['Pedidos', 'pedidos de la semana'],
+    nuevo:   ['Nuevo pedido', 'elegí para qué semana es'],
+    stock:   ['Stock', 'compras, salidas y precios'],
+    clientes:['Clientes', S.clientes.length + ' en la base'],
+    amasado: ['Amasado', 'temperatura del agua y tiempos'],
+    stats:   ['Estadísticas', 'cómo viene el negocio'],
+    recetas: ['Recetas y reglas', 'lo que define los costos'],
+  }[S.vista];
+  $('#pantalla').textContent = T[0];
+  $('#pantalla').className = 'pantalla' + (conTira ? '' : ' solo');
+  $('#titulo').textContent = conTira ? rotuloSemana(sem) : '';
+  $('#titulo').hidden = !conTira;
+  $('#subtitulo').textContent = T[1];
+  const bar = $('#titulo-bar');
+  bar.className = 'titulo' + (conTira && ahora ? ' ahora' : conTira && pasada ? ' pasada' : '');
+  $('#pill').textContent = !conTira ? '' : ahora ? 'esta semana' : pasada ? 'cerrada' : 'próxima';
+  $('#pill').style.display = conTira ? '' : 'none';
+  $('#tandas-nav').style.display = conTira ? '' : 'none';
+  $('#b-masa').setAttribute('aria-current', String(S.vista==='amasado'));
+  $('#b-stats').setAttribute('aria-current', String(S.vista==='stats'));
+  $('#b-recetas').setAttribute('aria-current', String(S.vista==='recetas'));
+}
+
+function pintarStrip(){
+  const hoy = semanaHoy();
+  const chips = semanasVisibles().map(sem => {
+    const c = calcular(sem);
+    const clase = [sem===hoy?'esta':'', esPasada(sem)?'pasada':''].join(' ');
+    return '<button class="tchip '+clase+'" data-s="'+sem+'" aria-pressed="'+(sem===S.semanaSel)+'">'
+      + '<div class="f">'+rotuloSemana(sem)+'</div>'
+      + '<div class="u">'+(sem===hoy?'esta semana · ':'')+(c.bollos? c.bollos+' bollos':'sin pedidos')+'</div></button>';
+  }).join('');
+  $('#tandas-strip').innerHTML = chips + '<button class="tchip mas" id="mas-tanda" title="Crear otra tanda">+</button>';
+  $('#tandas-strip').querySelectorAll('[data-s]').forEach(b => {
+    b.onclick = () => {
+      if (ui.largo){ ui.largo = false; return; }
+      S.semanaSel = b.dataset.s; ui.nuevaTanda = false;
+      guardaLocal('vl_semana', S.semanaSel); render();
+      b.scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'});
+    };
+    alMantener(b, () => hojaEntrega(b.dataset.s));
+  });
+  $('#mas-tanda').onclick = () => { ui.nuevaTanda = true; irA('tanda'); };
+  if (ui.tiraEn !== S.semanaSel){
+    ui.tiraEn = S.semanaSel;
+    const el = $('#tandas-strip [data-s="'+S.semanaSel+'"]');
+    if (el) el.scrollIntoView({inline:'center', block:'nearest'});
+  }
+}
+
+/* ------------------------------ TANDA ------------------------------ */
+function vistaTanda(){
+  if (!S.listo) return $('#v-tanda').innerHTML = esperando();
+  if (ui.nuevaTanda) return pantallaNuevaTanda();
+  const c = calcular(S.semanaSel);
+  const prods = Object.keys(c.unidades)
+    .sort((a,b)=>(productoDe(a).orden||99)-(productoDe(b).orden||99));
+
+  const produccion = prods.length ? prods.map(sku => {
+    const p = productoDe(sku);
+    const cls = p.tipo==='Prepizza' ? '' : (p.tamano==='Grande'?'gra':'med');
+    return '<div class="fila '+cls+'"><div class="tira"></div>'
+      + '<div><div class="nom">'+esc(p.nombre)+' '+badgeTam(p)+'</div>'
+      + '<div class="sub">'+c.unidades[sku]+' × '+nGr(gramajeDe(p))+' = '
+      + gr(c.unidades[sku]*gramajeDe(p))+' de masa</div></div>'
+      + '<div class="q">'+c.unidades[sku]+'</div></div>';
+  }).join('') : '<div class="vacio">Todavía no hay pedidos en esta semana.</div>';
+
+  const masas = [];
+  if (c.kgPre || c.kgPreManual != null) masas.push(bloqueMasa({
+    clave:'pre', titulo:'Masa de prepizzas',
+    detalle:c.pre+' pedidas · salen '+c.sobrantes.salen,
+    rec:receta('masa_prepizza'), kg:c.kgPre, auto:c.kgPreAuto,
+    manual:c.kgPreManual, kgTirada:c.kgTirada}));
+  if (c.kgFoc || c.kgFocManual != null) masas.push(bloqueMasa({
+    clave:'foc', titulo:'Masa de focaccias',
+    detalle:[c.med?c.med+(c.med===1?' mediana':' medianas'):'',
+             c.gra?c.gra+(c.gra===1?' grande':' grandes'):''].filter(Boolean).join(' + ') || 'sin pedidos',
+    rec:receta('masa_focaccia'), kg:c.kgFoc, auto:c.kgFocAuto,
+    manual:c.kgFocManual, kgTirada:c.kgTirada}));
+
+  $('#v-tanda').innerHTML =
+    '<div class="card tight"><div class="rot" style="padding:16px 16px 0">Qué hay que hacer</div>'
+    + produccion+'</div>'
+
+    + (c.kgPre||c.kgFoc ? '<div class="card"><div class="rot">Las masas</div>'
+      + '<div class="step" style="padding-top:0">'
+      + '<div><div class="t">Kilos por tirada</div><div class="p">la amasadora banca hasta '+REGLA.maxAmasadora+'</div></div>'
+      + '<div class="mas"><button id="k-menos">−</button><span class="n">'+c.kgTirada+'</span>'
+      + '<button id="k-mas">+</button></div></div>'
+      + masas.join('<div class="rec-sep"></div>')+'</div>' : '')
+
+    + (c.kgPre||c.kgFoc ? '<div class="card"><div class="rot">Bolleo</div>'
+      + (c.kgPre ? '<div class="rec-cab"><span class="t">Prepizzas</span>'
+        + '<span class="s">'+c.kgPre+' kg de masa · bollos de '+nGr(REGLA.grPrepizza)+'</span></div>'
+        + '<div class="rec-row"><span>Salen de la masa</span><b>'+plu(c.sobrantes.salen,'bollo','bollos')+'</b></div>'
+        + '<div class="rec-row"><span>Pedidas</span><b>'+c.sobrantes.pedidas+'</b></div>'
+        + '<div class="rec-row"><span>'+(c.kgPreManual!=null
+            ? 'De más, porque amasás '+c.kgPre+' kg' : 'Sobran por el redondeo')
+        + '</span><b>'+c.sobrantes.sobran+'</b></div>'
+        + '<div class="step" style="margin-top:4px">'
+        + '<div><div class="t">Se perdieron en producción</div><div class="p">falladas, masa pasada</div></div>'
+        + '<div class="mas"><button id="p-menos">−</button><span class="n">'+c.sobrantes.perdidas+'</span>'
+        + '<button id="p-mas">+</button></div></div>'
+        + '<div class="agua" style="background:var(--ok-soft)">'
+        + '<span class="n" style="color:var(--ok)">'+c.sobrantes.libres+'</span>'
+        + '<span class="l">prepizzas libres para ubicar</span></div>'
+        + '<p class="hint">Si ubicás alguna, cargala como pedido y este número baja solo.</p>' : '')
+      + (c.kgFoc ? (c.kgPre?'<div class="rec-sep"></div>':'')
+        + '<div class="rec-cab"><span class="t">Focaccias</span>'
+        + '<span class="s">'+c.kgFoc+' kg de masa</span></div>'
+        + (c.med?'<div class="rec-row"><span>Medianas de '+nGr(REGLA.grFocMediana)+'</span><b>'+plu(c.med,'bollo','bollos')+'</b></div>':'')
+        + (c.gra?'<div class="rec-row"><span>Grandes de '+nGr(REGLA.grFocGrande)+'</span><b>'+plu(c.gra,'bollo','bollos')+'</b></div>':'')
+        + '<div class="rec-row"><span>Masa que sobra</span><b>'
+        + gr(Math.round((c.kgFoc-c.harinaFoc)*masaTotal('masa_focaccia')))
+        + (c.sobrantes.focDeMas?' · ~'+c.sobrantes.focDeMas+(c.sobrantes.focDeMas===1?' mediana':' medianas'):'')+'</b></div>' : '')
+      + '</div>' : '')
+
+    + '<div class="card"><div class="rot">Producción de la tanda</div>'
+    + '<div class="medidor"><button class="edita-n" id="b-bollos">'+c.bollos+'</button>'
+    + '<span class="de">de</span>'
+    + '<button class="edita-cap" id="b-cap">'+REGLA.capacidadBollos+'</button>'
+    + '<span class="de">bollos</span></div>'
+    + (ui.editaBollos ? '<div class="edit-precio" style="margin:0 0 11px">'
+        + '<input type="number" id="in-bollos" value="'+c.bollos+'" min="0" aria-label="bollos de esta tanda">'
+        + '<button id="ok-bollos">Fijar</button>'
+        + (c.manual!=null?'<button id="auto-bollos" style="background:var(--sunken);color:var(--ink-2)">Volver a '+c.bollosAuto+'</button>':'')
+        + '</div>' : '')
+    + (ui.editaCap ? '<div class="edit-precio" style="margin:0 0 11px">'
+        + '<input type="number" id="in-cap" value="'+REGLA.capacidadBollos+'" min="1" aria-label="capacidad de la cámara">'
+        + '<button id="ok-cap">Guardar capacidad</button></div>' : '')
+    + '<div class="barra '+(c.uso>1?'pasado':c.uso>.85?'alta':'')+'">'
+    + '<i style="width:'+Math.min(100,c.uso*100)+'%"></i></div>'
+    + '<div class="pie"><span>'+Math.round(c.uso*100)+'% de la capacidad</span>'
+    + '<span>'+(repartirKg(c.kgPre,c.kgTirada).length + repartirKg(c.kgFoc,c.kgTirada).length)+' tiradas</span></div>'
+    + '<div class="estado '+(c.uso>1?'mal':c.uso>.85?'alta':'ok')+'">'
+    + (c.bollos===0?'Sin pedidos':c.uso>1?'Te pasaste de la capacidad':c.uso>.85?'Casi llena':'Entra cómodo')+'</div>'
+    + '<p class="hint">'+(c.manual!=null
+        ? 'Número puesto a mano. Por la masa que estás haciendo salen '+c.bollosAuto+'.'
+        : 'Es lo que sale de la masa, no lo que pidieron: los pedidos ocupan '
+          + plu(c.bollosPedidos,'lugar','lugares')+'. '
+          + 'Una focaccia grande ocupa el lugar de '+REGLA.lugarFocGrande
+          + ' bollos de focaccia mediana.')
+    + ' Tocá cualquiera de los dos de arriba para cambiarlos a mano.</p></div>'
+    + '<p class="hint" style="text-align:center;margin-bottom:18px">'
+    + 'Mantené apretada una semana de la tira de arriba para cambiarle el día de entrega.</p>';
+
+  const escribirTanda = campos => escribirSemana(S.semanaSel, campos);
+  if ($('#k-menos')){
+    $('#k-menos').onclick = ()=>escribirTanda({kg_tirada:Math.max(1,c.kgTirada-1)});
+    $('#k-mas').onclick   = ()=>escribirTanda({kg_tirada:Math.min(REGLA.maxAmasadora,c.kgTirada+1)});
+  }
+  if ($('#p-menos')){
+    $('#p-menos').onclick = ()=>escribirTanda({perdidas:Math.max(0,c.sobrantes.perdidas-1)});
+    $('#p-mas').onclick   = ()=>escribirTanda({perdidas:c.sobrantes.perdidas+1});
+  }
+  $('#b-bollos').onclick = () => { ui.editaBollos = !ui.editaBollos; ui.editaCap = false; vistaTanda(); };
+  $('#b-cap').onclick = () => { ui.editaCap = !ui.editaCap; ui.editaBollos = false; vistaTanda(); };
+  if ($('#ok-bollos')) $('#ok-bollos').onclick = async () => {
+    const v = Number($('#in-bollos').value);
+    if (isNaN(v) || v < 0) return toast('Poné un número válido');
+    ui.editaBollos = false;
+    await escribirTanda({bollosManual:v}); toast('Bollos fijados en '+v); };
+  if ($('#auto-bollos')) $('#auto-bollos').onclick = async () => {
+    ui.editaBollos = false;
+    await escribirTanda({bollosManual:null}); toast('Vuelve al cálculo por gramaje'); };
+  if ($('#ok-cap')) $('#ok-cap').onclick = async () => {
+    const v = Number($('#in-cap').value);
+    if (!(v > 0)) return toast('Poné un número válido');
+    ui.editaCap = false;
+    await guardar('config/reglas', {valores:Object.assign({}, REGLA, {capacidadBollos:v})});
+    toast('Capacidad actualizada'); };
+  $('#v-tanda').querySelectorAll('[data-kg]').forEach(b => b.onclick = () => {
+    ui.editaKg = ui.editaKg === b.dataset.kg ? null : b.dataset.kg;
+    ui.editaBollos = false; ui.editaCap = false; vistaTanda();
+    const i = $('#in-kg'); if (i){ i.focus(); i.select(); }
+  });
+  if ($('#ok-kg')) $('#ok-kg').onclick = async () => {
+    const v = Number($('#in-kg').value), cual = ui.editaKg;
+    if (isNaN(v) || v < 0) return toast('Poné un número válido');
+    ui.editaKg = null;
+    await escribirTanda(cual === 'pre' ? {kgPreManual:v} : {kgFocManual:v});
+    toast(v + ' kg de masa de ' + (cual === 'pre' ? 'prepizza' : 'focaccia'));
+  };
+  if ($('#auto-kg')) $('#auto-kg').onclick = async () => {
+    const cual = ui.editaKg; ui.editaKg = null;
+    await escribirTanda(cual === 'pre' ? {kgPreManual:null} : {kgFocManual:null});
+    toast('Vuelve a lo que piden los pedidos');
+  };
+}
+
+function escribirSemana(sem, campos){
+  const t = tandaDoc(sem);
+  return guardar('tandas/'+sem, Object.assign(
+    {semana:sem, diaEntrega:diaEntrega(sem),
+     kg_tirada:Number(t.kg_tirada)||REGLA.kgTiradaDefault,
+     perdidas:Number(t.perdidas)||0, estado:t.estado||'abierta',
+     bollosManual:(t.bollosManual==null?null:t.bollosManual),
+     kgPreManual:(t.kgPreManual==null?null:t.kgPreManual),
+     kgFocManual:(t.kgFocManual==null?null:t.kgFocManual)}, campos));
+}
+
+function hojaEntrega(sem){
+  const viejo = document.querySelector('.fondo'); if (viejo) viejo.remove();
+  const f = document.createElement('div');
+  f.className = 'fondo';
+  f.innerHTML = '<div class="hoja"><div class="tirador"></div>'
+    + '<h2>' + rotuloSemana(sem) + '</h2>'
+    + '<div class="s">¿Qué día entregás esta semana?</div>'
+    + '<div class="dias">' + NOM_DIA.map((d,i) =>
+        '<button data-dia="'+(i+1)+'" aria-pressed="'+(diaEntrega(sem)===i+1)+'">'+d+'</button>').join('')
+    + '</div></div>';
+  document.body.appendChild(f);
+  f.onclick = e => { if (e.target === f) f.remove(); };
+  f.querySelectorAll('[data-dia]').forEach(b => b.onclick = async () => {
+    await escribirSemana(sem, {diaEntrega:Number(b.dataset.dia)});
+    f.remove(); toast('Entrega el '+rotuloEntrega(sem));
+  });
+}
+
+function alMantener(el, fn){
+  let t = null;
+  const soltar = () => { if (t){ clearTimeout(t); t = null; } };
+  el.addEventListener('pointerdown', () => {
+    soltar(); ui.largo = false;
+    t = setTimeout(() => {
+      t = null; ui.largo = true; el.classList.add('eligiendo'); fn();
+      setTimeout(() => { ui.largo = false; el.classList.remove('eligiendo'); }, 800);
+    }, 450);
+  });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev => el.addEventListener(ev, soltar));
+  el.addEventListener('contextmenu', e => e.preventDefault());
+}
+
+function pantallaNuevaTanda(){
+  const sug = suma(hoyIso(), 84);
+  $('#v-tanda').innerHTML =
+    '<div class="card"><div class="rot">Crear una tanda</div>'
+    + '<p class="hint" style="margin:0 0 12px">Elegí cualquier fecha, aunque sea dentro de tres meses. '
+    + 'Se va a guardar la semana que contiene esa fecha.</p>'
+    + '<label class="f" for="nt-fecha">Fecha del pedido</label>'
+    + '<input type="date" id="nt-fecha" value="'+sug+'">'
+    + '<div id="nt-vista" class="agua" style="margin-top:12px"><span class="l">—</span></div>'
+    + '<button class="guardar" id="nt-ok" style="margin-top:12px">Crear la tanda</button>'
+    + '<button class="guardar" id="nt-no" style="margin-top:8px;background:var(--sunken);color:var(--ink-2)">Cancelar</button></div>';
+  const refrescar = () => {
+    const sem = lunesDe($('#nt-fecha').value || sug);
+    $('#nt-vista').innerHTML = '<span class="n" style="font-size:19px">'+rotuloSemana(sem)+'</span>'
+      + '<span class="l">semana '+(esPasada(sem)?'pasada':'a futuro')+'</span>';
+  };
+  refrescar();
+  $('#nt-fecha').oninput = refrescar;
+  $('#nt-no').onclick = () => { ui.nuevaTanda = false; render(); };
+  $('#nt-ok').onclick = async () => {
+    const sem = lunesDe($('#nt-fecha').value || sug);
+    await guardar('tandas/'+sem, {semana:sem, diaEntrega:5,
+      kg_tirada:REGLA.kgTiradaDefault, perdidas:0, estado:'abierta'});
+    ui.nuevaTanda = false; S.semanaSel = sem; render(); toast('Tanda creada');
+  };
+}
+
+function bloqueMasa(o){
+  const t = repartirKg(o.kg, o.kgTirada);
+  const cards = t.map((k,i) => '<div class="tirada">'
+      + '<div class="cab"><span class="t">Tirada '+(i+1)+'</span><span class="s">'+k+' kg de harina</span></div>'
+      + clavesOrdenadas(o.rec).map(x=>'<div class="rec-row '+(x==='Agua'?'agua-l':'')+'">'
+        + '<span>'+esc(x)+'</span><b>'+gr(o.rec[x]*k)+'</b></div>').join('')+'</div>').join('');
+  const abierto = ui.editaKg === o.clave;
+  return '<div class="rec-cab con-kg"><div><span class="t">'+o.titulo+'</span>'
+      + '<span class="s">'+o.detalle+' en '+t.length+' tirada'+(t.length>1?'s':'')+'</span></div>'
+      + '<button class="kg-chip'+(o.manual!=null?' amano':'')+'" data-kg="'+o.clave+'">'
+      + o.kg+' kg</button></div>'
+    + (abierto ? '<div class="edit-precio" style="margin:0 0 11px">'
+        + '<input type="number" id="in-kg" value="'+o.kg+'" min="0" step="1" '
+        + 'aria-label="kilos de harina de esta masa">'
+        + '<button id="ok-kg">Fijar</button>'
+        + (o.manual!=null ? '<button id="auto-kg" style="background:var(--sunken);color:var(--ink-2)">'
+            + 'Volver a '+o.auto+'</button>' : '')
+        + '</div>'
+        + '<p class="hint" style="margin:-4px 0 10px">Los pedidos piden '+o.auto+' kg. '
+        + 'Lo que pongas acá manda: cambia las tiradas, el stock y los bollos.</p>' : '')
+    + '<div class="tiradas">'+cards+'</div>'
+    + (t.length>1?'<p class="swipe">← deslizá para ver las '+t.length+' tiradas →</p>':'');
+}
+
+
+/* ============================== AMASADO ==============================
+   Dos cosas que se usan con las manos en la masa: a cuánto va el agua y
+   un cronómetro que avisa cuándo toca cada cosa. */
+
+const PASOS_BASE = [
+  {min:4,  que:'Agregar el agua de a poco'},
+  {min:9,  que:'Sal'},
+  {min:13, que:'Aceite de oliva'},
+];
+function pasos(){
+  const d = S.config.find(c => c.id === 'pasos');
+  return ((d && d.lista) || []).slice()
+    .filter(x => x && x.que !== undefined)
+    .sort((a,b) => Number(a.min) - Number(b.min));
+}
+const guardarPasos = lista => guardar('config/pasos', {lista:lista});
+
+/* --- la cuenta de siempre: los factores suman y el agua compensa --- */
+function tempAgua(){
+  const m = ui.masa;
+  const n = m.usaPref ? 4 : 3;
+  const partes = [Number(m.amb)||0, Number(m.harina)||0];
+  if (m.usaPref) partes.push(Number(m.pref)||0);
+  partes.push(Number(REGLA.friccion)||0);
+  const suma = partes.reduce((a,b)=>a+b, 0);
+  return {n, partes, suma, t: (Number(REGLA.tdm)||24)*n - suma};
+}
+/* Cuánto de esa agua conviene poner en hielo para llegar al número.
+   El hielo tiene que derretirse antes de enfriar: por eso el 80. */
+function hielo(objetivo, canilla, gramosAgua){
+  if (!(canilla > objetivo) || !(gramosAgua > 0)) return 0;
+  return Math.round(gramosAgua * (canilla - objetivo) / (80 + canilla));
+}
+const guardaMasa = () => guardaLocal('vl_masa', JSON.stringify(ui.masa));
+
+/* ------------------------------ cronómetro ------------------------------ */
+const CRONO = {corriendo:false, desde:0, acumulado:0, sonados:{}, ctx:null, wake:null};
+const cronoMs = () => CRONO.acumulado + (CRONO.corriendo ? Date.now()-CRONO.desde : 0);
+const mmss = ms => { const t = Math.max(0, Math.floor(ms/1000));
+  return Math.floor(t/60)+':'+('0'+(t%60)).slice(-2); };
+const claveDe = p => p.min + '\u00b7' + p.que;
+
+function guardaCrono(){ guardaLocal('vl_crono', JSON.stringify({
+  corriendo:CRONO.corriendo, desde:CRONO.desde,
+  acumulado:CRONO.acumulado, sonados:CRONO.sonados})); }
+function cargaCrono(){
+  try {
+    const c = JSON.parse(leeLocal('vl_crono') || 'null');
+    if (!c) return;
+    CRONO.corriendo = !!c.corriendo; CRONO.desde = Number(c.desde)||0;
+    CRONO.acumulado = Number(c.acumulado)||0; CRONO.sonados = c.sonados || {};
+  } catch(e){}
+}
+async function pantallaDespierta(){
+  try { if (navigator.wakeLock && !CRONO.wake)
+    CRONO.wake = await navigator.wakeLock.request('screen'); } catch(e){}
+}
+function soltarPantalla(){
+  try { if (CRONO.wake){ CRONO.wake.release(); CRONO.wake = null; } } catch(e){}
+}
+function arrancarCrono(){
+  if (CRONO.corriendo) return;
+  /* el navegador solo deja hacer ruido si nace de un toque: lo abrimos acá */
+  try {
+    CRONO.ctx = CRONO.ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (CRONO.ctx.state === 'suspended') CRONO.ctx.resume();
+  } catch(e){}
+  CRONO.corriendo = true; CRONO.desde = Date.now();
+  guardaCrono(); pantallaDespierta();
+}
+function pausarCrono(){
+  if (!CRONO.corriendo) return;
+  CRONO.acumulado = cronoMs(); CRONO.corriendo = false;
+  guardaCrono(); soltarPantalla();
+}
+function cerarCrono(){
+  CRONO.corriendo = false; CRONO.acumulado = 0; CRONO.desde = 0; CRONO.sonados = {};
+  guardaCrono(); soltarPantalla();
+  const v = document.getElementById('alarma'); if (v) v.remove();
+}
+function pitar(){
+  try {
+    const ctx = CRONO.ctx || (CRONO.ctx = new (window.AudioContext || window.webkitAudioContext)());
+    if (ctx.state === 'suspended') ctx.resume();
+    [0, .38, .76].forEach(d => {
+      const o = ctx.createOscillator(), g = ctx.createGain(), t0 = ctx.currentTime + d;
+      o.type = 'sine'; o.frequency.value = 880;
+      g.gain.setValueAtTime(.0001, t0);
+      g.gain.exponentialRampToValueAtTime(.45, t0 + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, t0 + .3);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t0); o.stop(t0 + .32);
+    });
+  } catch(e){}
+}
+function avisar(paso){
+  pitar();
+  notificar(paso);
+  try { if (navigator.vibrate) navigator.vibrate([300,150,300,150,600]); } catch(e){}
+  const viejo = document.getElementById('alarma'); if (viejo) viejo.remove();
+  const d = document.createElement('div');
+  d.className = 'alarma'; d.id = 'alarma';
+  d.innerHTML = '<div class="txt"><div class="m">minuto '+esc(paso.min)+'</div>'
+    + '<div class="t">'+esc(paso.que)+'</div></div><button id="alarma-ok">Listo</button>';
+  document.body.appendChild(d);
+  /* justo arriba de la botonera, para no taparte los botones */
+  const nav = document.getElementById('nav');
+  if (nav) d.style.bottom = nav.offsetHeight + 'px';
+  const cerrar = () => { const x = document.getElementById('alarma'); if (x) x.remove(); };
+  d.querySelector('#alarma-ok').onclick = cerrar;
+  setTimeout(cerrar, 90000);
+}
+/* Late siempre, esté la pantalla de amasado a la vista o no: el aviso tiene que
+   llegar aunque estés cargando un pedido. */
+function latidoCrono(){
+  const ms = cronoMs();
+  const el = document.getElementById('reloj');
+  if (el) el.textContent = mmss(ms);
+  if (!CRONO.corriendo || !S.listo) return;
+  let sonoAlguno = false;
+  pasos().forEach(paso => {
+    const k = claveDe(paso);
+    if (CRONO.sonados[k]) return;
+    if (ms >= Number(paso.min)*60000){
+      CRONO.sonados[k] = true; sonoAlguno = true; avisar(paso);
+    }
+  });
+  if (sonoAlguno){ guardaCrono(); pintarPasos(); }
+}
+function pintarPasos(){
+  const c = document.getElementById('lista-pasos');
+  if (c) c.innerHTML = filasPasos();
+  engancharPasos();
+}
+
+/* ------------------------------ la pantalla ------------------------------ */
+function filasPasos(){
+  const l = pasos();
+  if (!l.length) return '<div class="vacio" style="padding:16px">Sin avisos todavía.</div>';
+  return l.map((x,i) => '<div class="paso'+(CRONO.sonados[claveDe(x)]?' ya':'')+'">'
+    + '<input class="m" type="number" min="0" step="1" value="'+esc(x.min)+'" '
+    + 'data-pmin="'+i+'" aria-label="minuto">'
+    + '<input type="text" value="'+esc(x.que)+'" data-pque="'+i+'" aria-label="qué hacer">'
+    + '<button class="x" data-pdel="'+i+'" title="Sacar">×</button></div>').join('');
+}
+
+function vistaAmasado(){
+  if (!S.listo) return $('#v-amasado').innerHTML = esperando();
+  const m = ui.masa, r = tempAgua(), obj = Math.round(r.t);
+  const rec = receta(m.cual);
+  const aguaTot = (Number(rec['Agua'])||0) * (Number(m.kg)||0);
+  const hi = obj > 0 ? hielo(obj, Number(m.canilla)||0, aguaTot) : 0;
+  const clase = obj < 5 ? ' frio' : obj > 45 ? ' caliente' : '';
+  const cuenta = r.n + ' × ' + (REGLA.tdm||24) + ' − (' + r.partes.join(' + ') + ') = ' + obj;
+
+  $('#v-amasado').innerHTML =
+    '<div class="card"><div class="rot">Temperatura del agua</div>'
+    + '<div class="grados">'
+    + '<div><label class="f" for="g-amb">Ambiente °C</label>'
+    + '<input type="number" id="g-amb" value="'+esc(m.amb)+'"></div>'
+    + '<div><label class="f" for="g-har">Harina °C</label>'
+    + '<input type="number" id="g-har" value="'+esc(m.harina)+'"></div></div>'
+    + '<div class="switch"><div><div class="t">Uso biga o prefermento</div>'
+    + '<div class="p">entra como un factor más en la cuenta</div></div>'
+    + '<button class="sw" id="g-usapref" aria-pressed="'+(m.usaPref?'true':'false')+'" '
+    + 'aria-label="uso prefermento"></button></div>'
+    + (m.usaPref ? '<div style="margin-top:11px"><label class="f" for="g-pref">Prefermento °C</label>'
+        + '<input type="number" id="g-pref" value="'+esc(m.pref)+'"></div>' : '')
+    + '<div class="termo'+clase+'" style="margin-top:12px">'
+    + '<span class="n" id="termo-n">'+obj+'</span>'
+    + '<span class="l">°C tiene que salir el agua</span></div>'
+    + '<p class="cuenta" id="termo-cuenta">'+esc(cuenta)+'</p>'
+    + '<div class="grados chico" style="margin:13px 0 0">'
+    + '<div><label class="f" for="g-tdm">Masa deseada °C</label>'
+    + '<input type="number" id="g-tdm" value="'+esc(REGLA.tdm)+'"></div>'
+    + '<div><label class="f" for="g-fri">Fricción °C</label>'
+    + '<input type="number" id="g-fri" value="'+esc(REGLA.friccion)+'"></div></div>'
+    + '<p class="hint">Estos dos son de la casa y quedan guardados para los dos teléfonos.</p></div>'
+
+    + '<div class="card"><div class="rot">Cuánta agua y cuánto hielo</div>'
+    + '<div class="seg">'
+    + '<button data-masa="masa_prepizza" aria-pressed="'+(m.cual==='masa_prepizza')+'">Prepizza</button>'
+    + '<button data-masa="masa_focaccia" aria-pressed="'+(m.cual==='masa_focaccia')+'">Focaccia</button>'
+    + '</div>'
+    + '<div class="grados">'
+    + '<div><label class="f" for="g-kg">Kilos de harina</label>'
+    + '<input type="number" id="g-kg" value="'+esc(m.kg)+'" min="0" step="1"></div>'
+    + '<div><label class="f" for="g-can">Canilla °C</label>'
+    + '<input type="number" id="g-can" value="'+esc(m.canilla)+'"></div></div>'
+    + '<div id="agua-linea">'+lineaAgua(aguaTot, obj, hi, m)+'</div></div>'
+
+    + '<div class="card"><div class="rot">Cronómetro</div>'
+    + '<div class="reloj'+(CRONO.corriendo?' corriendo':'')+'" id="reloj">'+mmss(cronoMs())+'</div>'
+    + '<div class="mandos">'
+    + '<button class="go'+(CRONO.corriendo?' pausa':'')+'" id="c-go">'
+    + (CRONO.corriendo?'Pausar':(cronoMs()?'Seguir':'Arrancar'))+'</button>'
+    + '<button class="cero" id="c-cero">A cero</button></div>'
+    + '<p class="hint" style="text-align:center">'
+    + (CRONO.corriendo ? 'Dejá la app abierta y te aviso con sonido en cada paso.'
+                       : 'Los avisos suenan aunque estés en otra pantalla de la app.')
+    + '</p>'
+    + (avisosSistema()
+        ? '<p class="hint" style="text-align:center;color:var(--ok)">Avisos del sistema activados.</p>'
+        : '<button class="mini" id="c-avisos" style="width:100%;margin-top:4px">'
+          + 'Activar avisos del sistema</button>'
+          + '<p class="hint" style="text-align:center">Salen como notificación del teléfono. '
+          + 'Ayudan si te vas a otra app, aunque no te los puedo garantizar.</p>')
+    + '</div>'
+
+    + '<div class="card"><div class="rot">Los avisos del amasado</div>'
+    + '<div class="paso cab-paso"><span>min</span><span>qué toca</span><span></span></div>'
+    + '<div id="lista-pasos">'+filasPasos()+'</div>'
+    + '<button class="agregar" id="p-nuevo" style="margin-top:11px">+ Agregar un aviso</button>'
+    + '<p class="hint">El minuto se cuenta desde que arranca el cronómetro. '
+    + 'Lo que pongas acá lo ve tu compañera también.</p></div>';
+
+  const refrescar = () => {
+    const rr = tempAgua(), oo = Math.round(rr.t);
+    const ag = (Number(receta(ui.masa.cual)['Agua'])||0) * (Number(ui.masa.kg)||0);
+    const hh = oo > 0 ? hielo(oo, Number(ui.masa.canilla)||0, ag) : 0;
+    const n = $('#termo-n'); if (n) n.textContent = oo;
+    const cu = $('#termo-cuenta');
+    if (cu) cu.textContent = rr.n+' × '+(REGLA.tdm||24)+' − ('+rr.partes.join(' + ')+') = '+oo;
+    const caja = n && n.parentNode;
+    if (caja) caja.className = 'termo' + (oo < 5 ? ' frio' : oo > 45 ? ' caliente' : '');
+    const li = $('#agua-linea'); if (li) li.innerHTML = lineaAgua(ag, oo, hh, ui.masa);
+  };
+  const campo = (id, k) => { const e = $(id); if (!e) return;
+    e.oninput = () => { ui.masa[k] = e.value === '' ? '' : Number(e.value); guardaMasa(); refrescar(); }; };
+  campo('#g-amb','amb'); campo('#g-har','harina'); campo('#g-pref','pref');
+  campo('#g-kg','kg');   campo('#g-can','canilla');
+
+  $('#g-usapref').onclick = () => { ui.masa.usaPref = !ui.masa.usaPref; guardaMasa(); vistaAmasado(); };
+  $('#v-amasado').querySelectorAll('[data-masa]').forEach(b => b.onclick = () => {
+    ui.masa.cual = b.dataset.masa; guardaMasa(); vistaAmasado(); });
+
+  const regla = (id, k) => { const e = $(id); if (!e) return;
+    e.onchange = async () => {
+      const v = Number(e.value);
+      if (isNaN(v)) return;
+      await guardar('config/reglas', {valores:Object.assign({}, REGLA, {[k]:v})});
+      vistaAmasado(); }; };
+  regla('#g-tdm','tdm'); regla('#g-fri','friccion');
+
+  if ($('#c-avisos')) $('#c-avisos').onclick = async () => {
+    const ok = await pedirAvisos();
+    toast(ok ? 'Listo, te aviso por el teléfono' : 'El teléfono no los dejó activar');
+    vistaAmasado(); };
+  $('#c-go').onclick = () => { CRONO.corriendo ? pausarCrono() : arrancarCrono(); vistaAmasado(); };
+  $('#c-cero').onclick = () => { cerarCrono(); vistaAmasado(); };
+  $('#p-nuevo').onclick = () => {
+    const l = pasos();
+    const ultimo = l.length ? Number(l[l.length-1].min)||0 : 0;
+    guardarPasos(l.concat([{min:ultimo+5, que:'Nuevo aviso'}]));
+    vistaAmasado();
+  };
+  engancharPasos();
+}
+
+function lineaAgua(aguaTot, obj, hi, m){
+  if (!aguaTot) return '<p class="hint" style="margin:0">Poné los kilos de harina de la tirada.</p>';
+  const nombre = m.cual === 'masa_prepizza' ? 'prepizza' : 'focaccia';
+  const can = Number(m.canilla)||0;
+  let nota;
+  if (obj <= 0){
+    nota = '<div class="l" style="margin-top:7px;color:var(--alerta)">Con esos números el agua '
+      + 'tendría que salir bajo cero, y eso no existe. Enfriá la harina, bajá la masa deseada '
+      + 'o hacé el amasado más corto.</div>';
+  } else if (obj > 60){
+    nota = '<div class="l" style="margin-top:7px;color:var(--alerta)">Te está pidiendo agua '
+      + 'casi hirviendo. Revisá los grados que cargaste.</div>';
+  } else if (hi > 0){
+    nota = '<div class="l" style="margin-top:7px;color:var(--alerta)">Con la canilla a '+can
+      + ' °C no llegás a '+obj+' °C: poné '+gr(hi)+' en hielo y el resto, '
+      + gr(aguaTot-hi)+', de agua.</div>';
+  } else {
+    nota = '<div class="l" style="margin-top:7px">La canilla a '+can
+      + ' °C ya está por debajo de '+obj+' °C: templala hasta ahí y listo, sin hielo.</div>';
+  }
+  return '<div class="agua" style="display:block">'
+    + '<div><span class="n">'+gr(aguaTot)+'</span> <span class="l">de agua para '
+    + (Number(m.kg)||0)+' kg de harina · masa de '+nombre+'</span></div>' + nota + '</div>';
+}
+
+function engancharPasos(){
+  const cont = document.getElementById('lista-pasos');
+  if (!cont) return;
+  const guardarUno = (i, campo, valor) => {
+    const l = pasos();
+    if (!l[i]) return;
+    l[i] = Object.assign({}, l[i], {[campo]:valor});
+    guardarPasos(l);
+  };
+  cont.querySelectorAll('[data-pmin]').forEach(e => e.onchange = () => {
+    guardarUno(Number(e.dataset.pmin), 'min', Math.max(0, Number(e.value)||0));
+    vistaAmasado(); });
+  cont.querySelectorAll('[data-pque]').forEach(e => e.onchange = () => {
+    guardarUno(Number(e.dataset.pque), 'que', e.value.trim() || 'Aviso'); });
+  cont.querySelectorAll('[data-pdel]').forEach(b => b.onclick = () => {
+    const l = pasos(); l.splice(Number(b.dataset.pdel), 1);
+    guardarPasos(l); vistaAmasado(); });
+}
+
+
+/* ========================= TIRAR PARA ACTUALIZAR =========================
+   El gesto de siempre: desde arriba de todo, tirás hacia abajo y suelta.
+   No se mete con la tira de semanas ni con los carruseles de tiradas. */
+const TIRO = {y0:0, x0:0, activo:false, dist:0, girando:false};
+const TOPE = 72;
+
+function cajaTiro(){
+  let c = document.getElementById('tirar');
+  if (!c){
+    c = document.createElement('div');
+    c.id = 'tirar';
+    c.innerHTML = '<div class="rueda"><svg viewBox="0 0 24 24">'
+      + '<path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg></div>';
+    document.body.appendChild(c);
+  }
+  return c;
+}
+function pintarTiro(d){
+  const r = cajaTiro().querySelector('.rueda');
+  const y = Math.min(d, TOPE*1.5);
+  r.style.transform = 'translateY('+(y-44)+'px) rotate('+(y*3)+'deg)';
+  r.style.opacity = Math.min(1, d/TOPE);
+}
+function soltarTiro(){
+  const c = cajaTiro(), r = c.querySelector('.rueda');
+  c.classList.remove('girando');
+  r.style.transform = 'translateY(-44px)';
+  r.style.opacity = 0;
+}
+/* dentro de algo que se desliza al costado, el gesto es de eso, no nuestro */
+function enCarrusel(el){
+  for (let n = el; n && n !== document.body; n = n.parentElement){
+    if (n.scrollWidth > n.clientWidth + 4){
+      const o = getComputedStyle(n).overflowX;
+      if (o === 'auto' || o === 'scroll') return true;
+    }
+  }
+  return false;
+}
+function engancharTiro(){
+  document.addEventListener('touchstart', e => {
+    if (TIRO.girando || e.touches.length !== 1) return;
+    if (window.scrollY > 2) return;
+    if (document.querySelector('.fondo, .fondo-pin')) return;
+    if (enCarrusel(e.target)) return;
+    TIRO.y0 = e.touches[0].clientY; TIRO.x0 = e.touches[0].clientX;
+    TIRO.activo = true; TIRO.dist = 0;
+  }, {passive:true});
+
+  document.addEventListener('touchmove', e => {
+    if (!TIRO.activo) return;
+    const dy = e.touches[0].clientY - TIRO.y0;
+    const dx = Math.abs(e.touches[0].clientX - TIRO.x0);
+    if (dy < 0 || dx > Math.abs(dy)){ TIRO.activo = false; soltarTiro(); return; }
+    TIRO.dist = dy * .55;           /* con resistencia, como corresponde */
+    pintarTiro(TIRO.dist);
+  }, {passive:true});
+
+  const fin = () => {
+    if (!TIRO.activo) return;
+    TIRO.activo = false;
+    if (TIRO.dist >= TOPE) actualizarTirando(); else soltarTiro();
+  };
+  ['touchend','touchcancel'].forEach(ev => document.addEventListener(ev, fin, {passive:true}));
+}
+async function actualizarTirando(){
+  if (TIRO.girando) return;
+  TIRO.girando = true;
+  const c = cajaTiro(), r = c.querySelector('.rueda');
+  c.classList.add('girando');
+  r.style.transform = 'translateY(16px)'; r.style.opacity = 1;
+  if (API.activo){ API.falla = 0; API.motivo = ''; await cargarTodo(); await vaciarCola(); }
+  /* un respiro para que se vea que pasó algo */
+  setTimeout(() => { TIRO.girando = false; soltarTiro(); toast('Al día'); }, 420);
+}
+
+/* ===================== AVISOS DEL SISTEMA (cronómetro) ===================== */
+const avisosSistema = () => typeof Notification !== 'undefined' && Notification.permission === 'granted';
+async function pedirAvisos(){
+  try {
+    if (typeof Notification === 'undefined') return false;
+    const r = await Notification.requestPermission();
+    return r === 'granted';
+  } catch(e){ return false; }
+}
+function notificar(paso){
+  if (!avisosSistema()) return;
+  try {
+    new Notification('Vamos Luigi · minuto ' + paso.min, {
+      body: paso.que, tag: 'vl-amasado', renotify: true,
+      icon: 'icono-192.png', badge: 'icono-192.png',
+    });
+  } catch(e){}
+}
+
+/* ------------------------------ PEDIDOS ------------------------------ */
+function vistaPedidos(){
+  if (!S.listo) return $('#v-pedidos').innerHTML = esperando();
+  const c = calcular(S.semanaSel);
+  const cards = c.pedidos.length ? c.pedidos.map(p => {
+    const estado = p.cobrado && p.entregado ? 's-list' : p.entregado ? 's-entr'
+                 : p.preparado ? 's-prep' : '';
+    const sello = p.cobrado && p.entregado ? 'Listo' : p.entregado ? 'Entregado · falta cobrar'
+                : p.preparado ? 'Preparado' : 'Pendiente';
+    const chips = (p.lineas||[]).slice()
+      .sort((a,b)=>(productoDe(a.sku).orden||99)-(productoDe(b.sku).orden||99)).map(l => {
+      const prod = productoDe(l.sku);
+      return '<span class="chip '+(prod.tipo==='Prepizza'?'':'f')+'">'+l.cantidad+' '+esc(prod.nombre||l.sku)
+        + (prod.tipo==='Prepizza'?'':badgeTam(prod))+'</span>';
+    }).join('');
+    const bruto = brutoDe(p), tot = totalDe(p), ajustado = tot !== bruto;
+    const conf = ui.borrando === p.id ? '<div class="confirm">'
+        + '<b>¿Borrar el pedido de '+esc(p.cliente)+'?</b>'
+        + '<button class="si" data-si="'+p.id+'">Sí, borrar</button>'
+        + '<button class="no" data-no="1">Cancelar</button></div>' : '';
+    const cobro = ui.editaCobro === p.id ? '<div class="panelito">'
+        + '<div class="rot" style="margin-bottom:8px">Cuánto se cobra</div>'
+        + '<div class="seg"><button data-cm="normal" aria-pressed="'+(!p.sinCargo && (p.totalManual==null||p.totalManual===''))+'">Precio normal</button>'
+        + '<button data-cm="manual" aria-pressed="'+(!p.sinCargo && p.totalManual!=null && p.totalManual!=='')+'">Otro monto</button>'
+        + '<button data-cm="sin" aria-pressed="'+(!!p.sinCargo)+'">Sin cargo</button></div>'
+        + '<div class="edit-precio"><input type="number" id="cm-'+p.id+'" placeholder="'+bruto+'" value="'+(p.totalManual!=null?p.totalManual:'')+'" step="100">'
+        + '<button data-cmok="'+p.id+'">Guardar monto</button></div>'
+        + '<p class="hint">La producción, el stock y el costo no cambian: solo cambia lo que entra.</p></div>' : '';
+    return '<div class="ped '+estado+'">'
+      + '<div class="cab"><div><div class="nombre">'+esc(p.cliente)+'</div>'
+      + '<div class="meta">'+(p.envio? esc(p.direccion||'con envío') : 'Retira')+' · '+esc(p.formaPago||'sin forma de pago')+'</div>'
+      + '<div class="sello">'+sello+'</div></div>'
+      + '<div class="tot">'+(ajustado?'<span class="tachado">'+pesos(bruto)+'</span>':'')+pesos(tot)+'</div></div>'
+      + '<div class="items">'+chips
+      + (p.sinCargo?'<span class="chip regalo">sin cargo</span>'
+         : ajustado?'<span class="chip regalo">bonificado '+pesos(bruto-tot)+'</span>':'')+'</div>'
+      + (p.observaciones?'<div class="obs">'+esc(p.observaciones)+'</div>':'')
+      + '<div class="acciones">'
+      + '<button class="tog" data-id="'+p.id+'" data-k="preparado" aria-pressed="'+(!!p.preparado)+'">Preparado</button>'
+      + '<button class="tog" data-id="'+p.id+'" data-k="entregado" aria-pressed="'+(!!p.entregado)+'">Entregado</button>'
+      + '<button class="tog" data-id="'+p.id+'" data-k="cobrado" aria-pressed="'+(!!p.cobrado)+'">Cobrado</button>'
+      + '<button class="mini" data-cobro="'+p.id+'">$</button>'
+      + '<button class="del" data-del="'+p.id+'">Borrar</button></div>'
+      + cobro + conf + '</div>';
+  }).join('') : '<div class="card"><div class="vacio">No hay pedidos para esta semana.</div></div>';
+
+  $('#v-pedidos').innerHTML =
+    '<div class="tiles">'
+    + '<div class="tile plata"><div class="l">A cobrar</div><div class="v">'+pesos(c.plata.aCobrar)+'</div></div>'
+    + '<div class="tile env"><div class="l">Envíos</div><div class="v">'+pesos(c.plata.envios)+'</div></div>'
+    + '<div class="tile"><div class="l">Costo de insumos</div><div class="v">'+pesos(c.plata.costo)+'</div></div>'
+    + '<div class="tile acento"><div class="l">Ganancia</div><div class="v">'+pesos(c.plata.ganancia)+'</div></div>'
+    + '<div class="tile pend"><div class="l">Falta cobrar</div><div class="v">'+pesos(c.plata.pendiente)+'</div></div>'
+    + '<div class="tile"><div class="l">'+(c.plata.bonificado?'Bonificado':'Pedidos')+'</div><div class="v">'
+    + (c.plata.bonificado? pesos(c.plata.bonificado) : c.pedidos.length)+'</div>'
+    + (c.plata.bonificado?'<div class="p">'+c.pedidos.length+' pedidos</div>':'')+'</div>'
+    + '</div>'+cards;
+
+  $('#v-pedidos').querySelectorAll('.tog').forEach(b => b.onclick = () => {
+    const p = S.pedidos.find(x=>x.id===b.dataset.id);
+    parchar('pedidos/'+p.id, {[b.dataset.k]: !p[b.dataset.k]});
+  });
+  $('#v-pedidos').querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+    ui.borrando = b.dataset.del; ui.editaCobro = null; vistaPedidos(); });
+  $('#v-pedidos').querySelectorAll('[data-no]').forEach(b => b.onclick = () => {
+    ui.borrando = null; vistaPedidos(); });
+  $('#v-pedidos').querySelectorAll('[data-si]').forEach(b => b.onclick = async () => {
+    await borrar('pedidos/'+b.dataset.si); ui.borrando = null; toast('Pedido borrado'); });
+  $('#v-pedidos').querySelectorAll('[data-cobro]').forEach(b => b.onclick = () => {
+    ui.editaCobro = ui.editaCobro === b.dataset.cobro ? null : b.dataset.cobro;
+    ui.borrando = null; vistaPedidos(); });
+  $('#v-pedidos').querySelectorAll('[data-cm]').forEach(b => b.onclick = async () => {
+    const id = ui.editaCobro, m = b.dataset.cm;
+    if (m==='sin')    await parchar('pedidos/'+id, {sinCargo:true, totalManual:null});
+    if (m==='normal') await parchar('pedidos/'+id, {sinCargo:false, totalManual:null});
+    if (m==='manual') { vistaPedidos(); $('#cm-'+id) && $('#cm-'+id).focus(); return; }
+    toast(m==='sin'?'Queda sin cargo':'Vuelve al precio normal'); });
+  $('#v-pedidos').querySelectorAll('[data-cmok]').forEach(b => b.onclick = async () => {
+    const id = b.dataset.cmok, v = Number($('#cm-'+id).value);
+    if (!(v >= 0)) return toast('Poné un monto válido');
+    await parchar('pedidos/'+id, {sinCargo:false, totalManual:v});
+    ui.editaCobro = null; toast('Monto actualizado'); });
+}
+
+/* ------------------------------ NUEVO ------------------------------ */
+function vistaNuevo(){
+  if (!S.listo) return $('#v-nuevo').innerHTML = esperando();
+  if (!nuevo.semana) nuevo.semana = S.semanaSel;
+  const pre = S.productos.filter(p=>p.tipo==='Prepizza')
+    .sort((a,b)=>(a.orden||99)-(b.orden||99));
+  const sabores = [];
+  S.productos.filter(p=>p.tipo==='Focaccia').forEach(p => {
+    const s = p.nombre.replace('Focaccia ',''); if (sabores.indexOf(s)<0) sabores.push(s); });
+  const cli = nuevo.cliente;
+  const dirs = cli ? [cli.direccion1, cli.direccion2].filter(Boolean) : [];
+  const semanas = semanasVisibles();
+  if (semanas.indexOf(nuevo.semana) < 0) semanas.push(nuevo.semana), semanas.sort();
+
+  $('#v-nuevo').innerHTML =
+    '<div class="card"><div class="rot">¿Para qué semana?</div>'
+    + '<select id="n-semana">'+semanas.map(s =>
+        '<option value="'+s+'"'+(s===nuevo.semana?' selected':'')+'>'+rotuloSemana(s)
+        + (s===semanaHoy()?' (esta semana)':'')+' · entrega '+rotuloEntrega(s)+'</option>').join('')
+    + '</select>'
+    + '<p class="hint">¿Es para más adelante? Creá la tanda con el <b>+</b> del final de la tira de arriba.</p></div>'
+
+    + '<div class="card"><label class="f" for="cli">Cliente</label>'
+    + '<input type="search" id="cli" placeholder="Escribí el nombre…" autocomplete="off" value="'+esc(cli?cli.nombre:'')+'">'
+    + '<div class="sug" id="sug"></div></div>'
+
+    + '<div class="card"><div class="rot">Prepizzas · van de a 2</div>'
+    + pre.map(p=>'<div class="step"><div><div class="t">'+esc(p.nombre.replace('Prepizza ',''))+'</div>'
+      + '<div class="p">'+pesos(p.precio)+' c/u</div></div>'
+      + '<div class="mas"><button data-sku="'+p.sku+'" data-d="-1">−</button>'
+      + '<span class="n">'+(nuevo.items[p.sku]||0)+'</span>'
+      + '<button data-sku="'+p.sku+'" data-d="1">+</button></div></div>').join('')+'</div>'
+
+    + '<div class="card"><div class="rot">Focaccias</div>'
+    + nuevo.focaccias.map((l,i)=>'<div class="linea">'
+      + '<div class="sel">'
+      + '<select data-i="'+i+'" data-k="sabor">'+sabores.map(s=>'<option'+(l.sabor===s?' selected':'')+'>'+esc(s)+'</option>').join('')+'</select>'
+      + '<select data-i="'+i+'" data-k="tam"><option'+(l.tam==='Mediana'?' selected':'')+'>Mediana</option>'
+      + '<option'+(l.tam==='Grande'?' selected':'')+'>Grande</option></select></div>'
+      + '<div style="display:flex;align-items:center;gap:6px">'
+      + '<div class="mas"><button data-fi="'+i+'" data-d="-1">−</button><span class="n">'+l.cant+'</span>'
+      + '<button data-fi="'+i+'" data-d="1">+</button></div>'
+      + '<button class="borrar" data-fdel="'+i+'">×</button></div></div>').join('')
+    + '<button class="agregar" id="add-foc">+ Agregar focaccia</button></div>'
+
+    + '<div class="card"><div class="rot">Entrega</div>'
+    + '<div class="switch"><div><div class="t" style="font-weight:600">Con envío</div>'
+    + '<div class="p" style="font-size:11.5px;color:var(--ink-3)">'+pesos(REGLA.envio)+'</div></div>'
+    + '<button class="sw" id="sw-envio" aria-pressed="'+nuevo.conEnvio+'"></button></div>'
+    + (nuevo.conEnvio ? (dirs.length ? '<div style="margin-top:11px">'
+        + '<label class="f">¿A qué dirección?</label>'
+        + '<select id="n-dir">'+dirs.map(d=>'<option'+(nuevo.direccion===d?' selected':'')+'>'+esc(d)+'</option>').join('')
+        + '<option value="__otra__"'+(nuevo.direccion==='__otra__'?' selected':'')+'>Otra dirección…</option></select>'
+        + (nuevo.direccion==='__otra__'?'<input id="n-dir-otra" placeholder="Escribí la dirección" value="'+esc(nuevo.dirOtra)+'" style="margin-top:8px">':'')+'</div>'
+      : '<div style="margin-top:11px"><label class="f">Dirección</label>'
+        + '<input id="n-dir-libre" placeholder="Dirección de entrega" value="'+esc(nuevo.direccion)+'">'
+        + (cli?'<p class="hint">Este cliente no tiene direcciones cargadas. Podés agregárselas en Clientes.</p>':'')+'</div>')
+      : '<p class="hint">Retira por casa. Sin cargo de envío.</p>')
+    + '<div style="margin-top:12px"><label class="f">Forma de pago</label>'
+    + '<select id="n-pago"><option value="">—</option>'
+    + PAGOS.map(p=>'<option'+(nuevo.formaPago===p?' selected':'')+'>'+p+'</option>').join('')+'</select></div></div>'
+
+    + '<div class="card"><div class="rot">Cuánto se cobra</div>'
+    + '<div class="seg"><button data-nm="normal" aria-pressed="'+(!nuevo.sinCargo && !nuevo.totalManual)+'">Precio normal</button>'
+    + '<button data-nm="manual" aria-pressed="'+(!nuevo.sinCargo && !!nuevo.totalManual)+'">Otro monto</button>'
+    + '<button data-nm="sin" aria-pressed="'+nuevo.sinCargo+'">Sin cargo</button></div>'
+    + (nuevo.sinCargo ? '<p class="hint" style="margin:0">Va de regalo. Se produce igual y descuenta stock igual; no entra plata.</p>'
+       : '<div><label class="f" for="n-monto">Total a cobrar</label>'
+         + '<input type="number" id="n-monto" placeholder="'+Math.round(brutoNuevo())+'" value="'+esc(nuevo.totalManual)+'" step="100">'
+         + '<p class="hint">Dejalo vacío para cobrar el precio de lista.</p></div>')+'</div>'
+
+    + '<div class="card"><label class="f" for="n-obs">Observaciones</label>'
+    + '<textarea id="n-obs" placeholder="Por ejemplo: la de cebolla sin chimi">'+esc(nuevo.obs)+'</textarea></div>'
+
+    + '<div class="total'+(nuevo.sinCargo?' regalo':'')+'"><span class="l">'
+    + (nuevo.sinCargo?'Va sin cargo':'Total del pedido')+'</span><span class="v">'+pesos(totalNuevo())+'</span></div>'
+    + '<button class="guardar" id="guardar"'+(puedeGuardar()?'':' disabled')+'>Guardar pedido</button>'
+    + '<p class="hint" style="text-align:center;margin-bottom:18px">Se suma a la semana del '+rotuloSemana(nuevo.semana)+'</p>';
+
+  $('#n-semana').onchange = e => { nuevo.semana = e.target.value; vistaNuevo(); };
+  $('#cli').oninput = e => { nuevo.cliente = null; sugerir(e.target.value); };
+  $('#v-nuevo').querySelectorAll('[data-sku]').forEach(b => b.onclick = () => {
+    const k = b.dataset.sku;
+    nuevo.items[k] = Math.max(0, (nuevo.items[k]||0) + Number(b.dataset.d));
+    vistaNuevo(); });
+  $('#add-foc').onclick = () => { nuevo.focaccias.push({sabor:sabores[0], tam:'Mediana', cant:1});
+    vistaNuevo(); };
+  $('#v-nuevo').querySelectorAll('.linea select').forEach(s => s.onchange = () => {
+    nuevo.focaccias[+s.dataset.i][s.dataset.k] = s.value; vistaNuevo(); });
+  $('#v-nuevo').querySelectorAll('[data-fi]').forEach(b => b.onclick = () => {
+    const l = nuevo.focaccias[+b.dataset.fi];
+    l.cant = Math.max(1, l.cant + Number(b.dataset.d)); vistaNuevo(); });
+  $('#v-nuevo').querySelectorAll('[data-fdel]').forEach(b => b.onclick = () => {
+    nuevo.focaccias.splice(+b.dataset.fdel,1); vistaNuevo(); });
+  $('#sw-envio').onclick = () => { nuevo.conEnvio = !nuevo.conEnvio;
+    if (nuevo.conEnvio && !nuevo.direccion && dirs.length) nuevo.direccion = dirs[0];
+    vistaNuevo(); };
+  if ($('#n-dir')) $('#n-dir').onchange = e => { nuevo.direccion = e.target.value; vistaNuevo(); };
+  if ($('#n-dir-otra')) $('#n-dir-otra').oninput = e => { nuevo.dirOtra = e.target.value; };
+  if ($('#n-dir-libre')) $('#n-dir-libre').oninput = e => { nuevo.direccion = e.target.value; };
+  $('#n-pago').onchange = e => { nuevo.formaPago = e.target.value; };
+  $('#v-nuevo').querySelectorAll('[data-nm]').forEach(b => b.onclick = () => {
+    const m = b.dataset.nm;
+    nuevo.sinCargo = m==='sin';
+    if (m!=='manual') nuevo.totalManual = '';
+    vistaNuevo();
+    if (m==='manual' && $('#n-monto')) $('#n-monto').focus(); });
+  if ($('#n-monto')) $('#n-monto').oninput = e => {
+    nuevo.totalManual = e.target.value;
+    $('.total .v').textContent = pesos(totalNuevo()); };
+  $('#n-obs').oninput = e => { nuevo.obs = e.target.value; };
+  $('#guardar').onclick = guardarPedido;
+  if (document.activeElement === document.body && $('#cli').value) sugerir($('#cli').value);
+}
+function sugerir(q){
+  const t = (q||'').toLowerCase();
+  const lista = S.clientes.filter(c => c.nombre.toLowerCase().indexOf(t) >= 0).slice(0,4);
+  const existe = lista.some(c => c.nombre.toLowerCase() === t);
+  $('#sug').innerHTML = lista.map(c=>'<button data-id="'+c.id+'">'+esc(c.nombre)+'</button>').join('')
+    + (q && !existe ? '<button data-nuevo="'+esc(q)+'" style="background:var(--ok-soft);color:var(--ok)">+ '+esc(q)+' (nuevo)</button>' : '');
+  $('#sug').querySelectorAll('[data-id]').forEach(b => b.onclick = () => {
+    nuevo.cliente = S.clientes.find(c=>c.id===b.dataset.id);
+    nuevo.direccion = nuevo.cliente.direccion1 || '';
+    vistaNuevo(); });
+  $('#sug').querySelectorAll('[data-nuevo]').forEach(b => b.onclick = async () => {
+    const id = nuevoId('CL');
+    const c = {nombre:b.dataset.nuevo, tipo:'Particular', telefono:'', zona:'',
+               direccion1:'', direccion2:'', notas:'alta desde el panel'};
+    await guardar('clientes/'+id, c);
+    nuevo.cliente = Object.assign({id}, c); nuevo.direccion = '';
+    vistaNuevo(); toast('Cliente creado'); });
+}
+function lineasNuevo(){
+  const pg = precioGr(), out = [];
+  for (const sku in nuevo.items) if (nuevo.items[sku] > 0)
+    out.push({sku, cantidad:nuevo.items[sku], precioUnit:productoDe(sku).precio,
+              costoUnit:costoSku(sku,pg)});
+  nuevo.focaccias.forEach(l => {
+    const p = S.productos.find(x=>x.tipo==='Focaccia' && x.nombre==='Focaccia '+l.sabor
+                               && x.tamano===l.tam);
+    if (p) out.push({sku:p.sku, cantidad:l.cant, precioUnit:p.precio,
+                     costoUnit:costoSku(p.sku,pg)});
+  });
+  return out;
+}
+const brutoNuevo = () => lineasNuevo().reduce((a,l)=>a+l.cantidad*l.precioUnit, 0)
+  + (nuevo.conEnvio ? REGLA.envio : 0);
+function totalNuevo(){
+  if (nuevo.sinCargo) return 0;
+  if (nuevo.totalManual !== '' && nuevo.totalManual != null) return Number(nuevo.totalManual)||0;
+  return brutoNuevo();
+}
+const puedeGuardar = () => !!nuevo.cliente && lineasNuevo().length > 0;
+
+async function guardarPedido(){
+  const dir = nuevo.direccion === '__otra__' ? nuevo.dirOtra : nuevo.direccion;
+  const id = nuevoId('P');
+  const lineas = lineasNuevo();
+  await guardar('pedidos/'+id, {
+    tanda:nuevo.semana, clienteId:nuevo.cliente.id, cliente:nuevo.cliente.nombre,
+    envio: nuevo.conEnvio ? REGLA.envio : 0, direccion: nuevo.conEnvio ? dir : '',
+    formaPago:nuevo.formaPago, observaciones:nuevo.obs, lineas,
+    sinCargo: !!nuevo.sinCargo,
+    totalManual: (!nuevo.sinCargo && nuevo.totalManual !== '' && nuevo.totalManual != null)
+                 ? Number(nuevo.totalManual) : null,
+    preparado:false, entregado:false, cobrado:false, creado:new Date().toISOString()});
+  const impares = lineas.filter(l=>productoDe(l.sku).tipo==='Prepizza')
+                    .reduce((a,l)=>a+l.cantidad,0) % 2;
+  S.semanaSel = nuevo.semana;
+  nuevo.cliente = null; nuevo.items = {}; nuevo.focaccias = []; nuevo.obs = '';
+  nuevo.direccion = ''; nuevo.dirOtra = ''; nuevo.formaPago = '';
+  nuevo.sinCargo = false; nuevo.totalManual = '';
+  irA('pedidos');
+  toast(impares ? 'Guardado · prepizzas impares' : 'Pedido guardado');
+}
+
+/* ------------------------------ STOCK ------------------------------ */
+function vistaStock(){
+  if (!S.listo) return $('#v-stock').innerHTML = esperando();
+  const c = calcular(S.semanaSel);
+  const ins = insumosOrdenados();
+  const sel = ins[ui.compraSel] || {};
+  const movs = S.movimientos.slice()
+    .sort((a,b)=>String(b.fecha||'').localeCompare(String(a.fecha||''))).slice(0,10);
+
+  $('#v-stock').innerHTML =
+    '<div class="card"><div class="rot">Mover stock</div>'
+    + '<div class="seg"><button data-sg="1" aria-pressed="'+(ui.compraSigno>0)+'">Entra (compra)</button>'
+    + '<button data-sg="-1" aria-pressed="'+(ui.compraSigno<0)+'">Sale (corrección)</button></div>'
+    + '<div class="compra">'
+    + '<select id="s-insumo">'+GRUPOS.map((g,gi)=>{
+        const dentro = ins.map((i,n)=>({i,n})).filter(x=>x.i.__g===gi);
+        return dentro.length ? '<optgroup label="'+g+'">'+dentro.map(x=>
+          '<option value="'+x.n+'"'+(x.n===ui.compraSel?' selected':'')+'>'+esc(x.i.nombre)+'</option>').join('')+'</optgroup>' : '';
+      }).join('')+'</select>'
+    + '<div class="mas" style="justify-content:flex-end"><button id="s-menos">−</button>'
+    + '<span class="n">'+ui.compraCant+'</span><button id="s-mas">+</button></div></div>'
+    + '<p class="hint" style="margin:0 0 12px">'+(ui.compraSigno>0?'Suma':'Descuenta')+' '
+    + ui.compraCant+' × '+esc(sel.unidad_compra||'')+' = '+gr((sel.contenido_gr||0)*ui.compraCant)+'</p>'
+    + '<button class="guardar" id="s-cargar">'+(ui.compraSigno>0?'Sumar al stock':'Descontar del stock')+'</button></div>'
+
+    + '<div class="card tight"><div class="rot" style="padding:16px 16px 0">Stock actual</div>'
+    + ins.map((i,n) => {
+        const cab = (n===0 || ins[n-1].__g !== i.__g)
+          ? '<div class="grupo">'+GRUPOS[i.__g]+'</div>' : '';
+        const tiene = stockDe(i.nombre), usa = c.consumo[i.nombre]||0;
+        const tandas = usa ? tiene/usa : Infinity;
+        const clase = (!usa || !tiene) ? '' : tandas<1 ? 'falta' : tandas<2 ? 'justo' : '';
+        const editando = ui.editaPrecio === i.id;
+        return cab + '<div class="st '+clase+'">'
+          + '<div class="lin"><span class="n">'+esc(i.nombre)+'</span><span class="q">'+gr(tiene)+'</span></div>'
+          + '<div class="bar"><i style="width:'+Math.max(0,Math.min(100, tiene/((i.contenido_gr||1)*1.2)*100))+'%"></i></div>'
+          + '<div class="d"><span>'+(!tiene ? 'stock sin cargar'
+              : usa ? 'esta tanda usa '+gr(usa)+' · '+(tandas<1?'NO ALCANZA':'te quedan '+Math.floor(tandas)+(Math.floor(tandas)===1?' tanda':' tandas'))
+              : 'no entra en las masas')+'</span>'
+          + '<button class="precio" data-precio="'+i.id+'">'+pesos(i.precio_compra)+' / '+esc(i.unidad_compra)+'</button></div>'
+          + (editando?'<div class="edit-precio">'
+            + '<input type="number" id="np-'+i.id+'" value="'+i.precio_compra+'" step="10" aria-label="precio">'
+            + '<button data-save="'+i.id+'">Precio</button></div>'
+            + '<div class="edit-precio">'
+            + '<input type="number" id="ns-'+i.id+'" value="'+Math.round(tiene)+'" step="10" aria-label="stock en gramos">'
+            + '<button data-fix="'+i.id+'">Corregir stock (g)</button></div>'
+            + '<p class="hint">Cambiar el precio recalcula los costos de todos los productos. '
+            + 'Corregir el stock anota la diferencia como ajuste.</p>':'')
+          + '</div>';}).join('')+'</div>'
+
+    + '<div class="card tight"><div class="rot" style="padding:16px 16px 0">Últimos movimientos</div>'
+    + (movs.length ? movs.map(m => {
+        const g = Number(m.gramos)||0;
+        return '<div class="mov"><div>'+esc(m.insumo)+'<div class="s">'+esc(m.origen||'')
+          + (m.fecha?' · '+String(m.fecha).slice(8,10)+'/'+String(m.fecha).slice(5,7):'')+'</div></div>'
+          + '<div class="q '+(g<0?'neg':'pos')+'">'+(g>0?'+':'')+gr(g)+'</div>'
+          + '<button class="borrar" data-mdel="'+m.id+'" title="Deshacer">×</button></div>';
+      }).join('') : '<div class="vacio">Todavía no cargaste ningún movimiento.</div>')
+    + '</div>';
+
+  $('#v-stock').querySelectorAll('[data-sg]').forEach(b => b.onclick = () => {
+    ui.compraSigno = Number(b.dataset.sg); vistaStock(); });
+  $('#s-insumo').onchange = e => { ui.compraSel = +e.target.value; vistaStock(); };
+  $('#s-menos').onclick = () => { ui.compraCant = Math.max(1, ui.compraCant-1); vistaStock(); };
+  $('#s-mas').onclick = () => { ui.compraCant++; vistaStock(); };
+  $('#s-cargar').onclick = async () => {
+    const i = ins[ui.compraSel];
+    await guardar('movimientos/'+nuevoId('M'), {insumo:i.nombre,
+      gramos:(i.contenido_gr||0)*ui.compraCant*ui.compraSigno,
+      origen: ui.compraSigno>0 ? 'compra' : 'salida manual', fecha:new Date().toISOString()});
+    ui.compraCant = 1; toast(ui.compraSigno>0?'Compra cargada':'Stock descontado'); };
+  $('#v-stock').querySelectorAll('[data-precio]').forEach(b => b.onclick = () => {
+    ui.editaPrecio = ui.editaPrecio === b.dataset.precio ? null : b.dataset.precio; vistaStock(); });
+  $('#v-stock').querySelectorAll('[data-save]').forEach(b => b.onclick = async () => {
+    const v = Number($('#np-'+b.dataset.save).value);
+    if (!(v > 0)) return toast('Poné un precio válido');
+    ui.editaPrecio = null;
+    await parchar('insumos/'+b.dataset.save, {precio_compra:v});
+    toast('Precio actualizado'); });
+  $('#v-stock').querySelectorAll('[data-fix]').forEach(b => b.onclick = async () => {
+    const i = S.insumos.find(x=>x.id===b.dataset.fix);
+    const v = Number($('#ns-'+b.dataset.fix).value);
+    if (isNaN(v) || v < 0) return toast('Poné una cantidad válida');
+    const dif = v - stockDe(i.nombre);
+    if (!dif) { ui.editaPrecio = null; return vistaStock(); }
+    ui.editaPrecio = null;
+    await guardar('movimientos/'+nuevoId('M'), {insumo:i.nombre, gramos:dif,
+      origen:'ajuste', fecha:new Date().toISOString()});
+    toast('Stock corregido'); });
+  $('#v-stock').querySelectorAll('[data-mdel]').forEach(b => b.onclick = async () => {
+    await borrar('movimientos/'+b.dataset.mdel); toast('Movimiento deshecho'); });
+}
+
+/* ------------------------------ CLIENTES ------------------------------ */
+function vistaClientes(){
+  if (!S.listo) return $('#v-clientes').innerHTML = esperando();
+  if (ui.editaCliente){
+    const c = S.clientes.find(x=>x.id===ui.editaCliente);
+    if (!c){ ui.editaCliente = null; return vistaClientes(); }
+    const cuantos = S.pedidos.filter(p=>p.clienteId===c.id).length;
+    $('#v-clientes').innerHTML =
+      '<div class="card"><div class="rot">Editar cliente</div>'
+      + '<div class="campos">'
+      + '<div><label class="f">Nombre</label><input id="c-nombre" value="'+esc(c.nombre)+'"></div>'
+      + '<div><label class="f">Tipo</label><select id="c-tipo">'
+      + ['Particular','Comercio','Institución','Evento','Otro'].map(t=>'<option'+(c.tipo===t?' selected':'')+'>'+t+'</option>').join('')+'</select></div>'
+      + '<div><label class="f">Teléfono</label><input id="c-tel" value="'+esc(c.telefono)+'"></div>'
+      + '<div><label class="f">Zona</label><select id="c-zona"><option value="">—</option>'
+      + ZONAS.map(z=>'<option'+(c.zona===z?' selected':'')+'>'+z+'</option>').join('')+'</select></div>'
+      + '<div><label class="f">Dirección 1</label><input id="c-dir1" value="'+esc(c.direccion1)+'" placeholder="Por ejemplo: Gral. Paz 1458"></div>'
+      + '<div><label class="f">Dirección 2 (opcional)</label><input id="c-dir2" value="'+esc(c.direccion2)+'" placeholder="El trabajo, la casa de la madre…"></div>'
+      + '<div><label class="f">Notas</label><textarea id="c-notas">'+esc(c.notas)+'</textarea></div>'
+      + '</div>'
+      + (hist(c)?'<div class="agua" style="margin-top:13px;display:block">'
+        + '<div class="l" style="margin-bottom:4px">De las planillas viejas</div>'
+        + '<div class="rec-row"><span>Pedidos entre enero y septiembre</span><b>'+hist(c).pedidos+'</b></div>'
+        + '<div class="rec-row"><span>Prepizzas</span><b>'+hist(c).prepizzas+'</b></div>'
+        + '<div class="rec-row"><span>Último pedido</span><b>'+mesCorto(hist(c).ultima)+'</b></div></div>':'')
+      + '<button class="guardar" id="c-guardar" style="margin-top:14px">Guardar cambios</button>'
+      + '<button class="guardar" id="c-volver" style="margin-top:8px;background:var(--sunken);color:var(--ink-2)">Volver</button>'
+      + (ui.borraCliente
+        ? '<div class="confirm" style="margin-top:12px"><b>¿Eliminar a '+esc(c.nombre)+'?</b>'
+          + (cuantos?'<span>Tiene '+cuantos+' pedido'+(cuantos===1?'':'s')+' cargado'+(cuantos===1?'':'s')+'. Los pedidos quedan con el nombre, pero pierde la ficha.</span>':'')
+          + '<button class="si" id="c-borrar-si">Sí, eliminar</button>'
+          + '<button class="no" id="c-borrar-no">Cancelar</button></div>'
+        : '<button class="guardar peligro" id="c-borrar" style="margin-top:8px">Eliminar cliente</button>')
+      + '</div>';
+    $('#c-guardar').onclick = async () => {
+      await parchar('clientes/'+c.id, {nombre:$('#c-nombre').value.trim(), tipo:$('#c-tipo').value,
+        telefono:$('#c-tel').value.trim(), zona:$('#c-zona').value,
+        direccion1:$('#c-dir1').value.trim(), direccion2:$('#c-dir2').value.trim(),
+        notas:$('#c-notas').value.trim()});
+      ui.editaCliente = null; ui.borraCliente = false; vistaClientes(); toast('Cliente actualizado'); };
+    $('#c-volver').onclick = () => { ui.editaCliente = null; ui.borraCliente = false; vistaClientes(); };
+    if ($('#c-borrar')) $('#c-borrar').onclick = () => { ui.borraCliente = true; vistaClientes(); };
+    if ($('#c-borrar-no')) $('#c-borrar-no').onclick = () => { ui.borraCliente = false; vistaClientes(); };
+    if ($('#c-borrar-si')) $('#c-borrar-si').onclick = async () => {
+      await borrar('clientes/'+c.id);
+      ui.editaCliente = null; ui.borraCliente = false; vistaClientes(); toast('Cliente eliminado'); };
+    return;
+  }
+  const lista = S.clientes.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  $('#v-clientes').innerHTML =
+    '<div class="aviso">Tocá un cliente para editarlo o eliminarlo. Las direcciones que cargues acá aparecen como opción al hacer un pedido.</div>'
+    + '<div class="card tight">'+(lista.map(c=>{
+      const dirs = [c.direccion1, c.direccion2].filter(Boolean);
+      const h = hist(c);
+      return '<button class="cli" data-id="'+c.id+'">'
+        + '<span class="ini">'+esc(iniciales(c.nombre))+'</span>'
+        + '<span><span class="n" style="display:block">'+esc(c.nombre)+'</span>'
+        + '<span class="d">'+esc(c.zona||'sin zona')+(dirs.length?' · '+dirs.length+(dirs.length===1?' dirección':' direcciones'):' · sin dirección')+'</span>'
+        + (h?'<span class="d hx">'+plu(h.pedidos,'pedido','pedidos')+' · '+h.prepizzas+' prepizzas · '
+           + (dormido(h.ultima)?'<em>dormido desde '+mesCorto(h.ultima)+'</em>':'última '+mesCorto(h.ultima))+'</span>':'')
+        + '</span><span class="r">›</span></button>';}).join('')
+      || '<div class="vacio">Todavía no hay clientes.</div>')+'</div>';
+  $('#v-clientes').querySelectorAll('.cli').forEach(b => b.onclick = () => {
+    ui.editaCliente = b.dataset.id; ui.borraCliente = false; vistaClientes(); });
+}
+/* lo que quedó de las planillas viejas, guardado en la ficha del cliente */
+function hist(c){
+  const m = /(\d+)\s*pedidos?\s*·\s*(\d+)\s*prepizzas?\s*·\s*última\s*(\d{4})-(\d{2})/
+    .exec(c.historico||'');
+  return m ? {pedidos:+m[1], prepizzas:+m[2], ultima:m[3]+'-'+m[4]} : null;
+}
+function mesCorto(am){
+  const p = String(am).split('-');
+  return MES3[Number(p[1])-1].toLowerCase()+' '+p[0].slice(2);
+}
+function dormido(am){
+  const d = new Date(); d.setMonth(d.getMonth()-3);
+  return am < d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);
+}
+const iniciales = n => String(n||'?').split(' ').filter(Boolean)
+  .map(w=>w[0]).slice(0,2).join('').toUpperCase();
+
+/* ------------------------------ RECETAS Y REGLAS ------------------------------ */
+function vistaRecetas(){
+  if (!S.listo) return $('#v-recetas').innerHTML = esperando();
+  const pg = precioGr();
+  const nombresInsumo = S.insumos.map(i=>i.nombre).sort();
+  const costoDeReceta = items => {
+    let c = 0; for (const k in items) if (k!=='Agua') c += items[k]*(pg[k]||0); return c; };
+
+  const tabla = (clave, titulo, sub, unidad, divisor) => {
+    const items = receta(clave);
+    const filas = clavesOrdenadas(items).map(k =>
+      '<div class="ed"><span class="n">'+esc(k)+'</span>'
+      + '<span class="campo"><input type="number" data-rec="'+clave+'" data-k="'+esc(k)+'" value="'+items[k]+'" step="1"><span class="un">'+unidad+'</span></span>'
+      + '<button class="x" data-recdel="'+clave+'" data-k="'+esc(k)+'" title="Quitar">×</button></div>').join('');
+    const faltan = nombresInsumo.filter(n => !(n in items) && n !== 'Agua');
+    return '<div class="card"><div class="rot" style="display:flex;justify-content:space-between;align-items:center">'
+      + '<span>'+titulo+'</span><span class="badge-costo">'+pesos(costoDeReceta(items)/(divisor||1))+' por unidad</span></div>'
+      + '<p class="hint" style="margin:0 0 6px">'+sub+'</p>'
+      + filas
+      + '<div class="ed" style="border-top:1px solid var(--line);margin-top:6px;padding-top:11px">'
+      + '<select data-addsel="'+clave+'"><option value="">+ agregar ingrediente…</option>'
+      + faltan.map(n=>'<option>'+esc(n)+'</option>').join('')
+      + (items['Agua']?'':'<option>Agua</option>')+'</select>'
+      + '<span class="campo"><input type="number" data-addval="'+clave+'" placeholder="0"><span class="un">'+unidad+'</span></span>'
+      + '<button class="x" data-addok="'+clave+'" title="Agregar" style="color:var(--marca-ink)">+</button></div></div>';
+  };
+
+  const prodsFoc = S.productos.slice().sort((a,b)=>(a.orden||0)-(b.orden||0));
+  const toppings = prodsFoc.map(p => {
+    const items = topping(p.sku);
+    const filas = clavesOrdenadas(items).map(k =>
+      '<div class="ed"><span class="n">'+esc(k)+'</span>'
+      + '<span class="campo"><input type="number" data-rec="top_'+p.sku+'" data-k="'+esc(k)+'" value="'+items[k]+'" step="1"><span class="un">g</span></span>'
+      + '<button class="x" data-recdel="top_'+p.sku+'" data-k="'+esc(k)+'">×</button></div>').join('');
+    const faltan = nombresInsumo.filter(n => !(n in items));
+    return '<details class="plegable" data-sku="'+p.sku+'"'+(ui.abiertos[p.sku]?' open':'')+'><summary><span>'+esc(p.nombre)+' '+badgeTam(p)+'</span>'
+      + '<span class="badge-costo">'+pesos(costoSku(p.sku,pg))+'</span></summary>'
+      + '<div class="cuerpo">'+(filas||'<p class="hint" style="margin:0 0 8px">Sin ingredientes arriba.</p>')
+      + '<div class="ed" style="border-top:1px solid var(--line);margin-top:6px;padding-top:11px">'
+      + '<select data-addsel="top_'+p.sku+'"><option value="">+ agregar…</option>'
+      + faltan.map(n=>'<option>'+esc(n)+'</option>').join('')+'</select>'
+      + '<span class="campo"><input type="number" data-addval="top_'+p.sku+'" placeholder="0"><span class="un">g</span></span>'
+      + '<button class="x" data-addok="top_'+p.sku+'" style="color:var(--marca-ink)">+</button></div></div></details>';
+  }).join('');
+
+  const R = [
+    ['grPrepizza','Bollo de prepizza','g'],
+    ['grFocMediana','Bollo de focaccia mediana','g'],
+    ['grFocGrande','Bollo de focaccia grande','g'],
+    ['capacidadBollos','Bollos que entran en la cámara','u'],
+    ['lugarPrepizza','Lugares que ocupa una prepizza','u'],
+    ['lugarFocMediana','Lugares que ocupa una mediana','u'],
+    ['lugarFocGrande','Lugares que ocupa una grande','u'],
+    ['maxAmasadora','Máximo de la amasadora','kg'],
+    ['kgTiradaDefault','Kilos por tirada (por defecto)','kg'],
+    ['tdm','Temperatura deseada de la masa','°C'],
+    ['friccion','Fricción de la amasadora','°C'],
+    ['envio','Costo del envío','$'],
+  ];
+  const dec = n => n.toFixed(1).replace('.',',');
+
+  $('#v-recetas').innerHTML =
+    '<div class="aviso">Todo lo que cambies acá recalcula los costos, las recetas de la tanda y el consumo de stock. Los pedidos ya cargados no se tocan: guardan su costo del día que los hiciste.</div>'
+    + tabla('masa_prepizza','Masa de prepizza','Por kilo de harina. Da '+gr(masaTotal('masa_prepizza'))+' de masa = '+rindePre().toFixed(1).replace('.',',')+' bollos de '+nGr(REGLA.grPrepizza)+'.','g',rindePre())
+    + tabla('masa_focaccia','Masa de focaccia','Por kilo de harina. Da '+gr(masaTotal('masa_focaccia'))+' de masa = '+rindeMed().toFixed(1).replace('.',',')+' medianas o '+rindeGra().toFixed(1).replace('.',',')+' grandes.','g',rindeMed())
+    + tabla('por_unidad','Por cada unidad horneada','Gas, bolsa, bandeja y etiqueta. Se suma a todos los productos.','g/u',1)
+    + '<div class="card"><div class="rot">Lo que va arriba de cada producto</div>'
+    + '<p class="hint" style="margin:0 0 4px">Tocá un producto para abrir su receta de topping.</p>'+toppings+'</div>'
+    + '<div class="card"><div class="rot">Reglas del negocio</div>'
+    + R.map(r=>'<div class="ed"><span class="n">'+r[1]+'</span>'
+      + '<span class="campo"><input type="number" data-reg="'+r[0]+'" value="'+REGLA[r[0]]+'" step="'+(r[2]==='g'?'5':'0.5')+'"><span class="un">'+r[2]+'</span></span>'
+      + '<span></span></div>').join('')
+    + '<div class="agua" style="margin-top:12px;display:block">'
+    + '<div class="l" style="margin-bottom:6px">Con estas recetas y estos gramajes, cada kilo de harina da:</div>'
+    + '<div class="rec-row" style="border-color:rgba(0,0,0,.06)"><span>Prepizzas</span><b>'+dec(rindePre())+' · masa de '+gr(masaTotal('masa_prepizza'))+'</b></div>'
+    + '<div class="rec-row" style="border-color:rgba(0,0,0,.06)"><span>Focaccias medianas</span><b>'+dec(rindeMed())+'</b></div>'
+    + '<div class="rec-row"><span>Focaccias grandes</span><b>'+dec(rindeGra())+' · masa de '+gr(masaTotal('masa_focaccia'))+'</b></div>'
+    + '</div>'
+    + '<p class="hint">Se guardan solos al salir del campo. Los rendimientos salen de dividir la masa por el gramaje: no se cargan a mano.</p></div>'
+    + '<div style="height:20px"></div>';
+
+  $('#v-recetas').querySelectorAll('details[data-sku]').forEach(d => d.ontoggle = () => {
+    ui.abiertos[d.dataset.sku] = d.open; });
+  const guardarReceta = async (clave, items) => {
+    await guardar('recetas/'+clave, {items}); };
+  $('#v-recetas').querySelectorAll('[data-rec]').forEach(inp => inp.onchange = async () => {
+    const clave = inp.dataset.rec, items = Object.assign({}, receta(clave));
+    const v = Number(inp.value);
+    if (isNaN(v) || v < 0) return toast('Poné un número válido');
+    items[inp.dataset.k] = v;
+    await guardarReceta(clave, items); toast('Receta actualizada'); });
+  $('#v-recetas').querySelectorAll('[data-recdel]').forEach(b => b.onclick = async () => {
+    const clave = b.dataset.recdel, items = Object.assign({}, receta(clave));
+    delete items[b.dataset.k];
+    await guardarReceta(clave, items); toast('Ingrediente quitado'); });
+  $('#v-recetas').querySelectorAll('[data-addok]').forEach(b => b.onclick = async () => {
+    const clave = b.dataset.addok;
+    const nom = $('[data-addsel="'+clave+'"]').value;
+    const val = Number($('[data-addval="'+clave+'"]').value);
+    if (!nom) return toast('Elegí el ingrediente');
+    if (!(val > 0)) return toast('Poné la cantidad');
+    const items = Object.assign({}, receta(clave)); items[nom] = val;
+    await guardarReceta(clave, items); toast('Ingrediente agregado'); });
+  $('#v-recetas').querySelectorAll('[data-reg]').forEach(inp => inp.onchange = async () => {
+    const v = Number(inp.value);
+    if (isNaN(v) || v <= 0) return toast('Poné un número válido');
+    const valores = Object.assign({}, REGLA); valores[inp.dataset.reg] = v;
+    await guardar('config/reglas', {valores}); toast('Regla actualizada'); });
+}
+
+/* ------------------------------ ESTADÍSTICAS ------------------------------ */
+function vistaStats(){
+  if (!S.listo) return $('#v-stats').innerHTML = esperando();
+  const hoy = semanaHoy();
+  const semanas = [];
+  S.pedidos.forEach(p => { const s = lunesDe(p.tanda); if (semanas.indexOf(s)<0) semanas.push(s); });
+  semanas.sort();
+  const hechas = semanas.filter(s => s <= hoy);
+
+  let venta=0, costo=0, unidades=0, pedidos=0, bollos=0, sinCargo=0, bonif=0, pendiente=0;
+  const porCliente = {}, porSku = {}, porSemana = {}, ultimaDe = {};
+  S.pedidos.forEach(p => {
+    const s = lunesDe(p.tanda);
+    if (s > hoy) return;                         // las futuras no son resultado todavía
+    const t = totalDe(p), br = brutoDe(p), co = costoDe(p);
+    venta += t; costo += co; pedidos++; bonif += br - t;
+    if (p.sinCargo) sinCargo++;
+    if (!p.cobrado) pendiente += t;
+    porSemana[s] = porSemana[s] || {venta:0, costo:0, un:0};
+    porSemana[s].venta += t; porSemana[s].costo += co;
+    porCliente[p.cliente] = (porCliente[p.cliente]||0) + t;
+    if (!ultimaDe[p.cliente] || s > ultimaDe[p.cliente]) ultimaDe[p.cliente] = s;
+    (p.lineas||[]).forEach(l => {
+      unidades += l.cantidad; porSemana[s].un += l.cantidad;
+      porSku[l.sku] = (porSku[l.sku]||0) + l.cantidad;
+      bollos += l.cantidad * lugarDe(productoDe(l.sku));
+    });
+  });
+  const ganancia = venta - costo;
+  const margen = venta ? ganancia/venta : 0;
+  const ticket = pedidos ? venta/pedidos : 0;
+
+  if (!pedidos){
+    $('#v-stats').innerHTML = '<div class="card"><div class="vacio">'
+      + 'Todavía no hay tandas cargadas en el panel.<br>Apenas cargues la primera, acá vas a ver '
+      + 'cuánto vendiste, cuánto ganaste, quiénes son tus mejores clientes y qué producto tira más.'
+      + '</div></div>' + bloquePrevio();
+    conectarTooltips($('#v-stats'));
+    return;
+  }
+
+  /* --- columnas apiladas: últimas 8 semanas --- */
+  const ultimas = hechas.slice(-8);
+  const maxCol = Math.max.apply(null, ultimas.map(s => (porSemana[s]||{venta:0}).venta).concat([1]));
+  const cols = ultimas.map(s => {
+    const d = porSemana[s] || {venta:0, costo:0};
+    const hG = Math.max(0, (d.venta-d.costo))/maxCol*100, hC = d.costo/maxCol*100;
+    return '<div class="col" data-tt="'+esc(rotuloSemana(s))+' · vendiste '+pesos(d.venta)
+      + ', ganaste '+pesos(d.venta-d.costo)+'">'
+      + '<span class="val">'+pesosK(d.venta)+'</span>'
+      + '<div class="pila" style="height:'+(hG+hC)+'%">'
+      + '<div class="seg-g" style="flex:'+Math.max(hG,0.01)+'"></div>'
+      + '<div class="seg-c'+(hG<=0?' solo':'')+'" style="flex:'+Math.max(hC,0.01)+'"></div></div></div>';
+  }).join('');
+  const ejes = ultimas.map(s => '<span class="'+(s===hoy?'hoy':'')+'">'
+    + rotuloSemana(s).split(' ')[0]+'/'+MES3[deIso(s).getMonth()].slice(0,1)+MES3[deIso(s).getMonth()].slice(1,3).toLowerCase()
+    + '</span>').join('');
+
+  /* --- top clientes --- */
+  const top = Object.keys(porCliente).sort((a,b)=>porCliente[b]-porCliente[a]).slice(0,8);
+  const maxCli = porCliente[top[0]] || 1;
+  const barrasCli = top.map(n => '<div class="hb" data-tt="'+esc(n)+' · '+pesos(porCliente[n])
+      + ' ('+Math.round(porCliente[n]/venta*100)+'% del total)">'
+    + '<div class="lin"><span>'+esc(n)+'</span><b>'+pesos(porCliente[n])+'</b></div>'
+    + '<div class="pista"><i style="width:'+(porCliente[n]/maxCli*100)+'%"></i></div></div>').join('');
+  const conc = top.slice(0,3).reduce((a,n)=>a+porCliente[n],0)/venta;
+
+  /* --- mix de productos --- */
+  const skus = Object.keys(porSku).sort((a,b)=>porSku[b]-porSku[a]);
+  const maxSku = porSku[skus[0]] || 1;
+  const barrasSku = skus.map(s => {
+    const p = productoDe(s), esPre = p.tipo==='Prepizza';
+    return '<div class="hb '+(esPre?'pre':'foc')+'" data-tt="'+esc(p.nombre||s)+' · '+porSku[s]+' unidades">'
+      + '<div class="lin"><span>'+esc(p.nombre||s)+' '+(esPre?'':badgeTam(p))+'</span><b>'+porSku[s]+'</b></div>'
+      + '<div class="pista"><i style="width:'+(porSku[s]/maxSku*100)+'%"></i></div></div>';
+  }).join('');
+
+  /* --- dormidos --- */
+  const limite = suma(hoy, -56);
+  const dormidos = Object.keys(ultimaDe).filter(n => ultimaDe[n] < limite)
+    .sort((a,b)=>porCliente[b]-porCliente[a]).slice(0,8);
+
+  /* --- insumos que más pesan --- */
+  const pg = precioGr(), pesoIns = {};
+  S.pedidos.forEach(p => { if (lunesDe(p.tanda) > hoy) return;
+    (p.lineas||[]).forEach(l => {
+      const prod = productoDe(l.sku), esPre = prod.tipo === 'Prepizza';
+      const porKg = esPre ? rindePre() : (prod.tamano==='Grande'?rindeGra():rindeMed());
+      const rec = esPre ? receta('masa_prepizza') : receta('masa_focaccia');
+      for (const k in rec) if (k!=='Agua') pesoIns[k] = (pesoIns[k]||0) + rec[k]/porKg*(pg[k]||0)*l.cantidad;
+      const pu = receta('por_unidad');
+      for (const k in pu) pesoIns[k] = (pesoIns[k]||0) + pu[k]*(pg[k]||0)*l.cantidad;
+      const t = topping(l.sku);
+      for (const k in t) pesoIns[k] = (pesoIns[k]||0) + t[k]*(pg[k]||0)*l.cantidad;
+    }); });
+  const insTop = Object.keys(pesoIns).sort((a,b)=>pesoIns[b]-pesoIns[a]).slice(0,6);
+
+  $('#v-stats').innerHTML =
+    '<div class="hero"><div class="l">Vendido en '+hechas.length+' tanda'+(hechas.length===1?'':'s')+'</div>'
+    + '<div class="v">'+pesos(venta)+'</div>'
+    + '<div class="p">Ganancia '+pesos(ganancia)+' · margen '+Math.round(margen*100)+'%</div></div>'
+
+    + '<div class="tiles">'
+    + '<div class="tile"><div class="l">Unidades hechas</div><div class="v">'+unidades+'</div><div class="p">'+bollos+' bollos</div></div>'
+    + '<div class="tile"><div class="l">Pedidos</div><div class="v">'+pedidos+'</div><div class="p">'+(hechas.length?(pedidos/hechas.length).toFixed(1).replace('.',','):0)+' por tanda</div></div>'
+    + '<div class="tile plata"><div class="l">Ticket promedio</div><div class="v">'+pesos(ticket)+'</div></div>'
+    + '<div class="tile"><div class="l">Capacidad usada</div><div class="v">'
+    + (hechas.length?Math.round(bollos/hechas.length/REGLA.capacidadBollos*100):0)+'%</div>'
+    + '<div class="p">'+(hechas.length?Math.round(bollos/hechas.length):0)+' bollos por tanda</div></div>'
+    + (pendiente?'<div class="tile pend ancho"><div class="l">Falta cobrar (histórico)</div><div class="v">'+pesos(pendiente)+'</div></div>':'')
+    + (bonif?'<div class="tile ancho"><div class="l">Regalado y bonificado</div><div class="v">'+pesos(bonif)+'</div><div class="p">'+sinCargo+' pedido'+(sinCargo===1?'':'s')+' sin cargo</div></div>':'')
+    + '</div>'
+
+    + '<div class="card"><div class="rot">Cada tanda, en plata</div>'
+    + '<div class="leyenda"><span><i style="background:var(--c-gan)"></i>Ganancia</span>'
+    + '<span><i style="background:var(--c-cos)"></i>Costo de insumos</span></div>'
+    + '<div class="chart"><div class="cols">'+cols+'</div><div class="ejes">'+ejes+'</div></div>'
+    + '<p class="hint">La altura es lo que facturaste; el verde es lo que te quedó.</p></div>'
+
+    + '<div class="card"><div class="rot">Quién te compra</div>'+barrasCli
+    + '<p class="hint">Los tres primeros son el '+Math.round(conc*100)+'% de tu facturación. '
+    + (conc>0.5?'Es mucha dependencia de pocos: vale la pena ensanchar la base.':'La base está razonablemente repartida.')+'</p></div>'
+
+    + '<div class="card"><div class="rot">Qué se vende</div>'
+    + '<div class="leyenda"><span><i style="background:var(--c-pre)"></i>Prepizzas</span>'
+    + '<span><i style="background:var(--c-foc)"></i>Focaccias</span></div>'+barrasSku+'</div>'
+
+    + '<div class="card"><div class="rot">A dónde se va la plata</div>'
+    + '<table class="tabla"><thead><tr><th>Insumo</th><th style="text-align:right">Gastado</th><th style="text-align:right">Del costo</th></tr></thead><tbody>'
+    + insTop.map(k=>'<tr><td>'+esc(k)+'</td><td class="num">'+pesos(pesoIns[k])+'</td>'
+      + '<td class="num">'+Math.round(pesoIns[k]/costo*100)+'%</td></tr>').join('')
+    + '</tbody></table></div>'
+
+    + (dormidos.length ? '<div class="card"><div class="rot">Clientes dormidos</div>'
+      + '<p class="hint" style="margin:0 0 10px">Sin pedidos hace más de 8 semanas. Un mensaje suele alcanzar.</p>'
+      + '<table class="tabla"><thead><tr><th>Cliente</th><th style="text-align:right">Último</th><th style="text-align:right">Te dejó</th></tr></thead><tbody>'
+      + dormidos.map(n=>'<tr><td>'+esc(n)+'</td><td class="num">'+rotuloSemana(ultimaDe[n])+'</td>'
+        + '<td class="num">'+pesos(porCliente[n])+'</td></tr>').join('')
+      + '</tbody></table></div>' : '')
+    + bloquePrevio()
+    + '<div style="height:20px"></div>';
+
+  conectarTooltips($('#v-stats'));
+}
+
+/* lo que traen las planillas de enero a septiembre, antes del panel */
+function bloquePrevio(){
+  const con = S.clientes.map(c => ({c, h:hist(c)})).filter(x => x.h && x.h.pedidos);
+  if (!con.length) return '';
+  const totPed = con.reduce((a,x)=>a+x.h.pedidos, 0);
+  const totPre = con.reduce((a,x)=>a+x.h.prepizzas, 0);
+  const top = con.slice().sort((a,b)=>b.h.prepizzas-a.h.prepizzas).slice(0,8);
+  const maxT = top[0].h.prepizzas || 1;
+  const durmiendo = con.filter(x => dormido(x.h.ultima))
+    .sort((a,b)=>b.h.prepizzas-a.h.prepizzas);
+  const fieles = con.filter(x => x.h.pedidos >= 3).length;
+  return '<div class="card"><div class="rot">Antes del panel · enero a septiembre</div>'
+    + '<p class="hint" style="margin:0 0 12px">Viene de las planillas viejas. Son pedidos y unidades '
+    + 'reales; la plata no está porque los precios cambiaron durante el año.</p>'
+    + '<div class="tiles" style="margin-bottom:14px">'
+    + '<div class="tile"><div class="l">Pedidos</div><div class="v">'+totPed+'</div>'
+    + '<div class="p">'+con.length+' clientes</div></div>'
+    + '<div class="tile"><div class="l">Prepizzas</div><div class="v">'+totPre.toLocaleString('es-AR')+'</div>'
+    + '<div class="p">'+fieles+' clientes con 3 o más pedidos</div></div></div>'
+    + '<div class="rot">Los que más te compraron</div>'
+    + top.map(x=>'<div class="hb pre" data-tt="'+esc(x.c.nombre)+' · '+x.h.prepizzas
+        +' prepizzas en '+plu(x.h.pedidos,'pedido','pedidos')+'">'
+      + '<div class="lin"><span>'+esc(x.c.nombre)+'</span><b>'+x.h.prepizzas+'</b></div>'
+      + '<div class="pista"><i style="width:'+(x.h.prepizzas/maxT*100)+'%"></i></div></div>').join('')
+    + (durmiendo.length ? '<div class="rot" style="margin-top:16px">Dormidos hace más de 3 meses</div>'
+      + '<table class="tabla"><thead><tr><th>Cliente</th><th style="text-align:right">Pedidos</th>'
+      + '<th style="text-align:right">Último</th></tr></thead><tbody>'
+      + durmiendo.slice(0,12).map(x=>'<tr><td>'+esc(x.c.nombre)+'</td>'
+        + '<td class="num">'+x.h.pedidos+'</td><td class="num">'+mesCorto(x.h.ultima)+'</td></tr>').join('')
+      + '</tbody></table>'
+      + (durmiendo.length>12?'<p class="hint">Y '+(durmiendo.length-12)+' más.</p>':'') : '')
+    + '</div>';
+}
+
+/* ------------------------------ tooltips ------------------------------ */
+function conectarTooltips(raiz){
+  const tt = $('#tt');
+  raiz.querySelectorAll('[data-tt]').forEach(el => {
+    const mostrar = e => {
+      tt.textContent = el.dataset.tt; tt.classList.add('on');
+      const x = (e.touches ? e.touches[0].clientX : e.clientX);
+      const y = (e.touches ? e.touches[0].clientY : e.clientY);
+      const w = tt.offsetWidth;
+      tt.style.left = Math.max(8, Math.min(window.innerWidth-w-8, x-w/2))+'px';
+      tt.style.top = Math.max(8, y-40)+'px';
+    };
+    el.addEventListener('mouseenter', mostrar);
+    el.addEventListener('mousemove', mostrar);
+    el.addEventListener('touchstart', mostrar, {passive:true});
+    el.addEventListener('mouseleave', ()=>tt.classList.remove('on'));
+    el.addEventListener('touchend', ()=>setTimeout(()=>tt.classList.remove('on'), 1400));
+  });
+}
+
+/* ------------------------------ navegación ------------------------------ */
+const hueso = (an, cl) => '<div class="hueso'+(cl?' '+cl:'')+'" style="width:'+an+'"></div>';
+const esqueleto = () =>
+  '<div class="esq">' + hueso('42%','titulo') + hueso('88%') + hueso('64%') + hueso('74%') + '</div>'
+  + '<div class="esq-tiles"><div class="esq">'+hueso('58%','titulo')+hueso('80%','alto')+'</div>'
+  + '<div class="esq">'+hueso('52%','titulo')+hueso('80%','alto')+'</div></div>'
+  + '<div class="esq">' + hueso('36%','titulo') + hueso('92%') + hueso('70%') + hueso('80%')
+  + hueso('58%') + '</div>';
+const esperando = () => S.error !== 'sin-db'
+  ? esqueleto()
+  : API.activo
+    ? '<div class="card"><div class="vacio">No pude traer los datos.<br>'
+      + 'Fijate que tengas señal y volvé a entrar.'
+      + (API.motivo ? '<div class="motivo">' + esc(API.motivo) + '</div>' : '')
+      + '<button class="mini" id="reintentar" style="margin-top:14px">Reintentar</button>'
+      + '</div></div>'
+    : '<div class="card"><div class="vacio">No puedo conectarme a la base de datos de este panel. Probá recargar; si sigue igual, avisame.</div></div>';
+
+function engancharReintento(){
+  const b = document.getElementById('reintentar');
+  if (b) b.onclick = () => { API.falla = 0; API.motivo = ''; cargarTodo(); };
+}
+
+/* Volver a la app tiene que ser volver a donde estabas, no empezar de nuevo. */
+function recordarPantalla(){
+  const v = leeLocal('vl_vista');
+  if (v && v !== 'nuevo' && document.getElementById('v-'+v)){
+    S.vista = v;
+    document.querySelectorAll('.vista').forEach(x => x.classList.toggle('on', x.id === 'v-'+v));
+    document.querySelectorAll('#nav button').forEach(b =>
+      b.setAttribute('aria-current', String(b.dataset.v === v)));
+  }
+  const sem = leeLocal('vl_semana');
+  if (sem && semanasVisibles().indexOf(sem) >= 0) S.semanaSel = sem;
+}
+
+function irA(v){
+  S.vista = v;
+  guardaLocal('vl_vista', v);
+  document.querySelectorAll('.vista').forEach(s => s.classList.toggle('on', s.id === 'v-'+v));
+  document.querySelectorAll('#nav button').forEach(b =>
+    b.setAttribute('aria-current', String(b.dataset.v === v)));
+  render();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('#nav button').forEach(b => b.onclick = () => irA(b.dataset.v));
+$('#b-masa').onclick = () => irA(S.vista==='amasado' ? 'tanda' : 'amasado');
+$('#b-stats').onclick = () => irA(S.vista==='stats' ? 'tanda' : 'stats');
+$('#b-recetas').onclick = () => irA(S.vista==='recetas' ? 'tanda' : 'recetas');
+
+try { Object.assign(ui.masa, JSON.parse(leeLocal('vl_masa') || '{}') || {}); } catch(e){}
+cargaCrono();
+engancharTiro();
+setInterval(latidoCrono, 250);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && CRONO.corriendo) pantallaDespierta();
+});
+
+render();
+conectar();
+</script>
+
+<div id="nueva" hidden><b>Hay una versión nueva del panel.</b>
+<button id="nueva-ok">Actualizar</button></div>
+<script>
+/* si tarda demasiado, que al menos se vea el esqueleto */
+setTimeout(function(){
+  var a = document.getElementById('arranque');
+  if (a) a.classList.add('se-va');
+}, 9000);
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+  navigator.serviceWorker.addEventListener('message', function (e) {
+    if (!e.data || !e.data.nueva) return;
+    var n = document.getElementById('nueva');
+    if (n) n.hidden = false;
+  });
+  var ok = document.getElementById('nueva-ok');
+  if (ok) ok.onclick = function(){ location.reload(); };
+}
 </script>
 </body>
 </html>

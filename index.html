@@ -149,6 +149,39 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .titulo.ahora .sub{color:rgba(255,255,255,.82)}
 .titulo.ahora .pantalla{color:rgba(255,255,255,.78)}
 .titulo.ahora .pill{background:rgba(255,255,255,.22);color:#fff;font-weight:700}
+.titulo.cerrada{background:var(--ok-soft);border-color:var(--ok)}
+.titulo.cerrada h1,.titulo.cerrada .rango{color:var(--ok)}
+.titulo.cerrada .sub,.titulo.cerrada .pantalla{color:var(--ok);opacity:.85}
+.titulo.cerrada .pill{background:var(--ok);color:var(--surface);font-weight:700}
+.titulo.partida{flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden;
+  background:var(--surface);border-color:var(--line-2)}
+.titulo.partida .arriba{display:flex;align-items:center;gap:9px;padding:9px 14px 8px}
+.titulo.partida .pantalla{font-size:10.5px;margin:0;color:var(--ink-3)}
+.titulo.partida .rango{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+  font-size:15px;flex:1;letter-spacing:-.02em;color:var(--ink)}
+.titulo.partida .trozos{display:flex;border-top:1px solid var(--line-2)}
+.titulo.partida .trozo{flex:1;padding:9px 6px 11px;display:grid;gap:2px;justify-items:center;
+  border-left:1px solid var(--line-2);transition:.15s}
+.titulo.partida .trozo:first-child{border-left:0}
+.titulo.partida .trozo .d{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+  font-size:14.5px;text-transform:capitalize;color:var(--ink-2)}
+.titulo.partida .trozo .q{font-family:"DM Mono",monospace;font-size:10.5px;color:var(--ink-3)}
+.titulo.partida .trozo[aria-pressed="true"]{background:var(--marca)}
+.titulo.partida .trozo[aria-pressed="true"] .d{color:#fff}
+.titulo.partida .trozo[aria-pressed="true"] .q{color:rgba(255,255,255,.82)}
+.titulo.partida.cerrada .trozo[aria-pressed="true"]{background:var(--ok)}
+.titulo.partida.cerrada .trozo[aria-pressed="true"] .d{color:var(--surface)}
+.titulo.partida.cerrada .trozo[aria-pressed="true"] .q{color:var(--surface);opacity:.85}
+.titulo.partida.pasada .trozo[aria-pressed="true"]{background:var(--viejo)}
+.titulo.partida.pasada .trozo[aria-pressed="true"] .d{color:var(--surface)}
+.tchip .e{font-size:10px;color:var(--ink-3);margin-top:2px;font-family:"DM Mono",monospace;
+  white-space:nowrap;text-transform:capitalize}
+.tchip[aria-pressed="true"] .e{color:rgba(255,255,255,.78)}
+.tchip.pasada .e{color:var(--viejo);opacity:.75}
+.tchip.cerrada{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.tchip.cerrada .u,.tchip.cerrada .e{color:var(--ok);opacity:.8}
+.tchip.cerrada[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.tchip.cerrada[aria-pressed="true"] .u,.tchip.cerrada[aria-pressed="true"] .e{color:var(--surface);opacity:.85}
 .titulo.pasada{background:var(--viejo-soft);border-color:var(--viejo-linea)}
 .titulo.pasada h1{color:var(--viejo)}
 .titulo.pasada .sub{color:var(--viejo);opacity:.8}
@@ -198,6 +231,14 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .dias button{flex:1;min-width:38px;padding:8px 2px;border-radius:10px;background:var(--sunken);
   font-size:12px;font-weight:600;color:var(--ink-2);text-transform:capitalize}
 .dias button[aria-pressed="true"]{background:var(--marca);color:#fff}
+.entrega-fila{padding:11px 0;border-bottom:1px solid var(--line-2)}
+.entrega-fila:last-of-type{border-bottom:0}
+.entrega-fila .cab{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:7px}
+.entrega-fila .cab .n{font-size:12px;font-weight:700;color:var(--ink-2)}
+.entrega-fila .cab .x{width:28px;height:28px;border-radius:8px;color:var(--ink-3);
+  font-size:16px;display:grid;place-items:center}
+.entrega-fila .cab .x:hover{background:var(--alerta-soft);color:var(--alerta)}
 
 /* ---------- medidor ---------- */
 .medidor{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
@@ -220,6 +261,11 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .estado.ok{background:var(--ok-soft);color:var(--ok)}
 .estado.alta{background:var(--horno-soft);color:var(--horno)}
 .estado.mal{background:var(--alerta-soft);color:var(--alerta)}
+.salida{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:9px 0;border-bottom:1px solid var(--line-2)}
+.salida:last-of-type{border-bottom:0}
+.salida .n{font-size:14px;font-weight:500}
+.salida .p{font-size:11px;color:var(--ink-3);font-family:"DM Mono",monospace;margin-top:2px}
 
 /* ---------- tiles ---------- */
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
@@ -318,7 +364,10 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .ped.s-entr{background:var(--horno-soft);border-left-color:var(--horno)}
 .ped.s-list{background:var(--ok-soft);border-left-color:var(--ok)}
 .ped .cab{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.ped .nombre{font-weight:700;font-size:15.5px}
+.ped .nombre{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:7px;
+  flex-wrap:wrap}
+.dia-ped{font-family:"DM Mono",monospace;font-size:10px;font-weight:500;padding:2px 7px;
+  border-radius:99px;background:var(--sunken);color:var(--ink-3);text-transform:capitalize}
 .ped .meta{font-size:12px;color:var(--ink-2);margin-top:1px}
 .ped .tot{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:17px;
   font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
@@ -376,6 +425,8 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
   font-size:19px;font-weight:700;color:var(--ink-2);display:grid;place-items:center;line-height:1}
 .mas .n{min-width:22px;text-align:center;font-family:"Bricolage Grotesque",sans-serif;
   font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
+.mas .cant{width:70px;padding:7px 4px;text-align:center;font-size:16px;font-weight:700;
+  font-variant-numeric:tabular-nums;background:var(--surface)}
 .linea{background:var(--sunken);border-radius:var(--r-s);padding:11px;margin-bottom:9px;
   display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center}
 .linea .sel{display:grid;grid-template-columns:1fr 98px;gap:6px}
@@ -538,6 +589,27 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
 .alarma button{background:rgba(0,0,0,.2);padding:11px 17px;border-radius:99px;
   font-weight:700;font-size:14px;color:inherit;flex:0 0 auto}
 
+/* ---------- notas y listas ---------- */
+.nota .cab{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.nota .cab input{font-weight:700;font-size:15px;padding:7px 9px;background:transparent;
+  border-color:transparent}
+.nota .cab input:focus{background:var(--sunken);border-color:var(--line)}
+.nota .cab .x{width:30px;height:30px;border-radius:9px;color:var(--ink-3);font-size:16px;
+  display:grid;place-items:center;flex:0 0 auto}
+.nota .cab .x:hover{background:var(--alerta-soft);color:var(--alerta)}
+.nota textarea{min-height:86px;background:var(--sunken)}
+.item{display:grid;grid-template-columns:26px 1fr 28px;gap:8px;align-items:center;
+  padding:5px 0;border-bottom:1px solid var(--line-2)}
+.item:last-of-type{border-bottom:0}
+.item .tic{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--line);
+  display:grid;place-items:center;font-size:13px;color:transparent}
+.item .tic[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.item input{border-color:transparent;background:transparent;padding:6px 8px;font-size:14px}
+.item input:focus{background:var(--sunken);border-color:var(--line)}
+.item.hecho input{text-decoration:line-through;color:var(--ink-3)}
+.item .x{width:28px;height:28px;border-radius:8px;color:var(--ink-3);font-size:15px;
+  display:grid;place-items:center}
+
 /* ---------- esqueletos mientras llega ---------- */
 .esq{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);
   padding:16px;margin-bottom:12px;box-shadow:var(--sombra)}
@@ -609,6 +681,7 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
       <div class="acc">
         <span class="conex" id="conex" hidden></span>
         <button id="b-masa" title="Amasado" aria-current="false"><svg viewBox="0 0 24 24"><path d="M10 13.5V5a2 2 0 1 1 4 0v8.5a4 4 0 1 1-4 0z"/><path d="M12 9v4.8"/></svg></button>
+        <button id="b-notas" title="Notas" aria-current="false"><svg viewBox="0 0 24 24"><path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5"/><path d="M9 12h6M9 16h4"/></svg></button>
         <button id="b-stats" title="Estadísticas" aria-current="false"><svg viewBox="0 0 24 24"><path d="M4 19V10M10 19V5M16 19v-6M22 19H2"/></svg></button>
         <button id="b-recetas" title="Recetas y reglas" aria-current="false"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
       </div>
@@ -629,6 +702,7 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
     <section class="vista" id="v-stock"></section>
     <section class="vista" id="v-clientes"></section>
     <section class="vista" id="v-amasado"></section>
+    <section class="vista" id="v-notas"></section>
     <section class="vista" id="v-stats"></section>
     <section class="vista" id="v-recetas"></section>
   </div>
@@ -647,9 +721,9 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
 <script>
 /* ============ valores de arranque: solo se usan si la base está vacía ============ */
 const REGLA_BASE = {
-  capacidadBollos:65, maxAmasadora:7, kgTiradaDefault:4,
+  bandejasHeladera:12, maxAmasadora:7, kgTiradaDefault:4,
   grPrepizza:320, grFocMediana:350, grFocGrande:1175,
-  lugarPrepizza:1, lugarFocMediana:1, lugarFocGrande:3,
+  porBandejaPrepizza:6, porBandejaMediana:3, porBandejaGrande:1,
   tdm:24, friccion:9, envio:2000,
 };
 const MASA_BASE = {
@@ -657,8 +731,23 @@ const MASA_BASE = {
                  'Extracto de malta':10,'Aceite de oliva':10,'Levadura':4},
   masa_focaccia:{'Harina 00':500,'Harina 000':500,'Agua':700,'Sal':25,
                  'Aceite de oliva':15,'Levadura':6},
-  por_unidad:{'Gas':80,'Bolsa polipropileno':1,'Bandeja de cartón':1,'Etiqueta impresa':1},
+  por_unidad:{'Gas':80,'Etiqueta impresa':1},
 };
+/* Cada tipo se envasa distinto. Esto va aparte de por_unidad, que es lo que
+   lleva todo por igual. */
+const ENVASE_BASE = {
+  env_prepizza:    {'Bandeja de cartón':1, 'Bolsa polipropileno 35x45':1},
+  env_foc_mediana: {'Bandeja aluminio F-100':1, 'Bolsa polipropileno 25x30':1},
+  env_foc_grande:  {'Bolsa polipropileno 35x45':1},
+};
+const INSUMOS_NUEVOS = [
+  {id:'I26', nombre:'Bolsa polipropileno 25x30', categoria:'Packaging',
+   unidad_compra:'paquete x 100', contenido_gr:100, precio_compra:0,
+   proveedor:'FALTA EL COSTO'},
+  {id:'I27', nombre:'Bandeja aluminio F-100', categoria:'Packaging',
+   unidad_compra:'paquete x 100', contenido_gr:100, precio_compra:0,
+   proveedor:'FALTA EL COSTO'},
+];
 const TOP_BASE = {
   'PRE-TOM':{'Tomate':80,'Albahaca':10},
   'PRE-CEB':{'Cebolla':100},
@@ -685,10 +774,45 @@ const NOM_DIA = ['lun','mar','mié','jue','vie','sáb','dom'];
 let DB = null;
 let REGLA = Object.assign({}, REGLA_BASE);
 const S = {productos:[], insumos:[], clientes:[], tandas:[], pedidos:[], movimientos:[],
-           recetas:[], config:[], semanaSel:null, vista:'tanda', listo:false, error:'',
-           sembrado:{}, deGuardado:false};
+           recetas:[], config:[], notas:[], semanaSel:null, entregaSel:0,
+           vista:'tanda', listo:false, error:'', sembrado:{}, deGuardado:false};
 const nuevo = {cliente:null, items:{}, focaccias:[], conEnvio:true, direccion:'', dirOtra:'',
-               formaPago:'', obs:'', semana:null, sinCargo:false, totalManual:''};
+               formaPago:'', obs:'', semana:null, entrega:0, sinCargo:false, totalManual:'',
+               editando:null, preciosViejos:null};
+function limpiarNuevo(){
+  nuevo.cliente = null; nuevo.items = {}; nuevo.focaccias = []; nuevo.obs = '';
+  nuevo.direccion = ''; nuevo.dirOtra = ''; nuevo.formaPago = '';
+  nuevo.sinCargo = false; nuevo.totalManual = ''; nuevo.entrega = 0;
+  nuevo.editando = null; nuevo.preciosViejos = null;
+  /* al volver a abrirlo arranca en la semana y la entrega que estés mirando */
+  nuevo.semana = null;
+}
+/* Abrir un pedido ya cargado en el mismo formulario: es la misma pantalla, no
+   una copia. Los precios de las líneas que ya estaban se respetan. */
+function abrirEdicion(id){
+  const p = S.pedidos.find(x => x.id === id);
+  if (!p) return;
+  limpiarNuevo();
+  nuevo.editando = id;
+  nuevo.semana = lunesDe(p.tanda);
+  nuevo.entrega = entregaDe(p, entregasDe(nuevo.semana).length);
+  nuevo.cliente = clienteDe(p.clienteId) || {id:p.clienteId, nombre:p.cliente};
+  nuevo.conEnvio = Number(p.envio) > 0;
+  nuevo.direccion = p.direccion || '';
+  nuevo.formaPago = p.formaPago || '';
+  nuevo.obs = p.observaciones || '';
+  nuevo.sinCargo = !!p.sinCargo;
+  nuevo.totalManual = (p.totalManual == null) ? '' : String(p.totalManual);
+  nuevo.preciosViejos = {};
+  (p.lineas||[]).forEach(l => {
+    nuevo.preciosViejos[l.sku] = {precioUnit:l.precioUnit, costoUnit:l.costoUnit};
+    const prod = productoDe(l.sku);
+    if (prod.tipo === 'Prepizza') nuevo.items[l.sku] = l.cantidad;
+    else nuevo.focaccias.push({sabor:(prod.nombre||'').replace('Focaccia ',''),
+                               tam:prod.tamano, cant:l.cantidad});
+  });
+  irA('nuevo');
+}
 const ui = {borrando:null, editaPrecio:null, editaCliente:null, borraCliente:false,
             editaCobro:null, compraSel:0, compraCant:1, compraSigno:1,
             masa:{amb:20, harina:20, pref:20, usaPref:false, canilla:18,
@@ -728,12 +852,15 @@ function rotuloSemana(sem){
     : a.getDate()+' '+MES3[a.getMonth()]+' al '+b.getDate()+' '+MES3[b.getMonth()];
 }
 const tandaDoc = sem => S.tandas.find(t => t.id === sem) || {};
-const diaEntrega = sem => Number(tandaDoc(sem).diaEntrega || 5);   // 1 lun … 7 dom
-const fechaEntrega = sem => suma(sem, diaEntrega(sem)-1);
-function rotuloEntrega(sem){
-  const f = fechaEntrega(sem), d = deIso(f);
-  return NOM_DIA[diaEntrega(sem)-1]+' '+d.getDate()+'/'+(d.getMonth()+1);
+const diaEntrega = (sem, i) => entregasDe(sem)[Math.max(0, Math.min(i||0,
+  entregasDe(sem).length-1))].dia;
+const fechaEntrega = (sem, i) => suma(sem, diaEntrega(sem, i)-1);
+function rotuloEntrega(sem, i){
+  const d = deIso(fechaEntrega(sem, i));
+  return NOM_DIA[diaEntrega(sem, i)-1]+' '+d.getDate()+'/'+(d.getMonth()+1);
 }
+const diaCorto = (sem, i) => { const d = deIso(fechaEntrega(sem, i));
+  return NOM_DIA[diaEntrega(sem, i)-1]+' '+d.getDate(); };
 function semanasVisibles(){
   const base = semanaHoy(), out = [];
   for (let i=-3;i<=4;i++) out.push(suma(base, i*7));
@@ -772,15 +899,15 @@ function masaTotal(clave){
 }
 const nGr = n => Number(n||0).toLocaleString('es-AR')+' g';
 const plu = (n, uno, muchos) => n + ' ' + (n===1 ? uno : muchos);
+/* un número que puede venir partido: 0,5 se escribe con coma */
+const cant = n => (Math.round(Number(n||0)*100)/100).toString().replace('.', ',');
 const gramajeDe = p => p.tipo === 'Prepizza' ? REGLA.grPrepizza
   : (p.tamano === 'Grande' ? REGLA.grFocGrande : REGLA.grFocMediana);
 const rindePre = () => masaTotal('masa_prepizza')/REGLA.grPrepizza;
 const rindeMed = () => masaTotal('masa_focaccia')/REGLA.grFocMediana;
 const rindeGra = () => masaTotal('masa_focaccia')/REGLA.grFocGrande;
-/* cuántos lugares de cámara ocupa cada bollo. Es un dato declarado, no calculado:
-   la grande se compara contra la mediana, que es su misma masa. */
-const lugarDe = p => Number(p.tipo === 'Prepizza' ? REGLA.lugarPrepizza
-  : (p.tamano === 'Grande' ? REGLA.lugarFocGrande : REGLA.lugarFocMediana)) || 1;
+/* en qué bandeja va cada tipo, para contar el lugar de la heladera */
+const claseDe = p => p.tipo === 'Prepizza' ? 'pre' : (p.tamano === 'Grande' ? 'gra' : 'med');
 
 function precioGr(){
   const p = {};
@@ -796,11 +923,29 @@ function costoSku(sku, pg){
   for (const k in rec) if (k !== 'Agua') c += rec[k]/porKg * (pg[k]||0);
   const pu = receta('por_unidad');
   for (const k in pu) c += pu[k] * (pg[k]||0);
+  const env = receta(envaseClave(p));
+  for (const k in env) c += env[k] * (pg[k]||0);
   const t = topping(sku);
   for (const k in t) c += t[k] * (pg[k]||0);
   return Math.round(c);
 }
 const productoDe = sku => S.productos.find(p => p.sku === sku) || {};
+const clienteDe = id => S.clientes.find(c => c.id === id);
+/* El pedido guarda el nombre del día que se cargó, pero si el cliente sigue
+   existiendo manda el nombre de la ficha: lo que corregís se corrige en todos
+   lados. La plata, en cambio, no se toca nunca. */
+function nombreDe(p){
+  const c = clienteDe(p.clienteId);
+  return (c && c.nombre) || p.cliente || 'Sin nombre';
+}
+function direccionDe(p){
+  if (p.direccion) return p.direccion;
+  const c = clienteDe(p.clienteId);
+  return (c && (c.direccion1 || c.direccion2)) || '';
+}
+const envaseClave = p => p.tipo === 'Prepizza' ? 'env_prepizza'
+  : (p.tamano === 'Grande' ? 'env_foc_grande' : 'env_foc_mediana');
+const envaseDe = sku => receta(envaseClave(productoDe(sku)));
 function badgeTam(p){
   if (p.tipo === 'Prepizza') return '<span class="tam u">única</span>';
   return p.tamano === 'Grande' ? '<span class="tam g">G · grande</span>'
@@ -817,15 +962,73 @@ function totalDe(p){
 const costoDe = p => (p.lineas||[]).reduce((a,l)=>a+l.cantidad*l.costoUnit, 0);
 
 /* ---------------------- números de una semana ---------------------- */
-function calcular(sem){
-  const peds = S.pedidos.filter(p => lunesDe(p.tanda) === sem);
+/* ------------------------- entregas de una semana -------------------------
+   Una tanda es una semana. Adentro puede haber una, dos o tres entregas, y cada
+   una es un amasado propio: su día, sus kilos, sus bollos y su heladera. */
+function entregaLimpia(e){
+  e = e || {};
+  const num = v => (v == null || v === '' || isNaN(Number(v))) ? null : Number(v);
+  return {dia: Number(e.dia) || 5,
+          kgTirada: num(e.kgTirada),
+          perdidas: Number(e.perdidas) || 0,
+          kgPreManual: num(e.kgPreManual),
+          kgFocManual: num(e.kgFocManual),
+          bandejasManual: num(e.bandejasManual),
+          salidos: e.salidos || null,
+          minutos: num(e.minutos)};
+}
+function entregasDe(sem){
+  const t = tandaDoc(sem);
+  if (Array.isArray(t.entregas) && t.entregas.length) return t.entregas.map(entregaLimpia);
+  /* las tandas de antes tenían un solo día suelto: esa es su única entrega */
+  return [entregaLimpia({dia: t.diaEntrega, kgTirada: t.kg_tirada, perdidas: t.perdidas,
+    kgPreManual: t.kgPreManual, kgFocManual: t.kgFocManual,
+    bandejasManual: t.bollosManual, minutos: t.minutos})];
+}
+const cuantasEntregas = sem => entregasDe(sem).length;
+function entregaDe(p, tope){
+  const i = Math.floor(Number(p.entrega) || 0);
+  return Math.max(0, Math.min(i, (tope || 1) - 1));
+}
+function escribirEntrega(sem, i, campos){
+  const l = entregasDe(sem);
+  l[i] = entregaLimpia(Object.assign({}, l[i], campos));
+  return escribirEntregas(sem, l);
+}
+/* Se escribe el documento entero: puede que la tanda todavía no exista, y los
+   campos sueltos de antes (diaEntrega, kg_tirada) ya no se usan. */
+function escribirEntregas(sem, lista){
+  const t = tandaDoc(sem);
+  return guardar('tandas/'+sem, {semana:sem, estado:t.estado || 'abierta',
+    entregas:lista.map(entregaLimpia)});
+}
+
+/* ------------------------------- la cuenta ------------------------------- */
+const porBandeja = {
+  pre: () => Number(REGLA.porBandejaPrepizza) || 6,
+  med: () => Number(REGLA.porBandejaMediana)  || 3,
+  gra: () => Number(REGLA.porBandejaGrande)   || 1,
+};
+/* No mezclamos tipos en una misma bandeja: la regla es "hasta tantos de cada". */
+const bandejasDe = (pre, med, gra) =>
+  Math.ceil(Math.max(0, pre)/porBandeja.pre())
+  + Math.ceil(Math.max(0, med)/porBandeja.med())
+  + Math.ceil(Math.max(0, gra)/porBandeja.gra());
+const bandejasHeladera = () => Number(REGLA.bandejasHeladera) || 12;
+
+function calcular(sem, ent){
+  const ents = entregasDe(sem);
+  if (ent == null && ents.length > 1) return juntarSemana(sem, ents);
+  const idx = ent == null ? 0 : Math.max(0, Math.min(Math.floor(ent), ents.length - 1));
+  const E = ents[idx];
+  const peds = S.pedidos.filter(p =>
+    lunesDe(p.tanda) === sem && entregaDe(p, ents.length) === idx);
+
   const unidades = {};
-  let bollos=0, bruto=0, cobrar=0, costo=0, envios=0, cobrado=0;
+  let bruto=0, cobrar=0, costo=0, envios=0, cobrado=0;
   peds.forEach(p => {
     (p.lineas||[]).forEach(l => {
-      const prod = productoDe(l.sku);
       unidades[l.sku] = (unidades[l.sku]||0) + l.cantidad;
-      bollos += l.cantidad * lugarDe(prod);
       costo += l.cantidad * l.costoUnit;
     });
     bruto += brutoDe(p); cobrar += totalDe(p);
@@ -839,29 +1042,32 @@ function calcular(sem){
     else if (p.tamano === 'Grande') gra += unidades[sku];
     else med += unidades[sku];
   });
-  const t = tandaDoc(sem);
+
   /* los pedidos dan un piso de harina; casi siempre amasamos más que eso,
      así que el número final se puede fijar a mano y todo lo demás lo sigue */
-  const puesto = v => (v != null && v !== '' && !isNaN(Number(v))) ? Number(v) : null;
   const kgPreAuto = pre ? Math.ceil(pre/rindePre() - 1e-9) : 0;
   const harinaFoc = med/rindeMed() + gra/rindeGra();
   const kgFocAuto = harinaFoc ? Math.ceil(harinaFoc - 1e-9) : 0;
-  const kgPreManual = puesto(t.kgPreManual), kgFocManual = puesto(t.kgFocManual);
-  const kgPre = kgPreManual != null ? kgPreManual : kgPreAuto;
-  const kgFoc = kgFocManual != null ? kgFocManual : kgFocAuto;
-  const kgTirada = Number(t.kg_tirada) || REGLA.kgTiradaDefault;
-  const perd = Number(t.perdidas||0);
+  const kgPre = E.kgPreManual != null ? E.kgPreManual : kgPreAuto;
+  const kgFoc = E.kgFocManual != null ? E.kgFocManual : kgFocAuto;
+  const kgTirada = E.kgTirada || REGLA.kgTiradaDefault;
+  const perd = E.perdidas;
   const salen = Math.floor(kgPre * masaTotal('masa_prepizza')/REGLA.grPrepizza + 1e-9);
   const focDeMas = Math.max(0, Math.floor((kgFoc - harinaFoc)*rindeMed() + 1e-9));
-  /* lo que va a ocupar la cámara es lo que sale de la masa, no lo que pidieron:
-     los bollos de más también ocupan lugar */
-  const bollosPedidos = bollos;
-  const bollosAuto = salen*Number(REGLA.lugarPrepizza||1)
-    + (med + focDeMas)*Number(REGLA.lugarFocMediana||1)
-    + gra*Number(REGLA.lugarFocGrande||3);
-  bollos = bollosAuto;
-  const manual = puesto(t.bollosManual);
-  if (manual != null) bollos = manual;
+
+  /* Lo que ocupa la heladera es lo que sale de la masa, no lo que pidieron.
+     Y a veces de la masa de prepizza sale alguna focaccia mediana, así que
+     cada número se puede corregir a mano. */
+  const auto = {pre: salen, med: med + focDeMas, gra: gra};
+  const sal = E.salidos || {};
+  const salidos = {};
+  ['pre','med','gra'].forEach(k => {
+    salidos[k] = (sal[k] == null || sal[k] === '' || isNaN(Number(sal[k])))
+      ? auto[k] : Number(sal[k]);
+  });
+  const aMano = ['pre','med','gra'].some(k => salidos[k] !== auto[k]);
+  const bandejasAuto = bandejasDe(salidos.pre, salidos.med, salidos.gra);
+  const bandejas = E.bandejasManual != null ? E.bandejasManual : bandejasAuto;
 
   const consumo = {};
   const sumarC = (k,g) => { if (k !== 'Agua') consumo[k] = (consumo[k]||0)+g; };
@@ -873,17 +1079,56 @@ function calcular(sem){
   Object.keys(unidades).forEach(sku => {
     const t2 = topping(sku);
     for (const k in t2) sumarC(k, t2[k]*unidades[sku]);
+    const e2 = envaseDe(sku);
+    for (const k in e2) sumarC(k, e2[k]*unidades[sku]);
   });
 
-  return {sem, pedidos:peds, unidades, pre, med, gra, kgPre, kgFoc, kgTirada, harinaFoc,
-    kgPreAuto, kgFocAuto, kgPreManual, kgFocManual, bollosPedidos,
-    bollos, bollosAuto, manual,
-    uso:bollos/REGLA.capacidadBollos, totalUn,
+  return {sem, ent:idx, entregas:ents, entrega:E, unaSola:ents.length === 1,
+    pedidos:peds, unidades, pre, med, gra,
+    kgPre, kgFoc, kgTirada, harinaFoc, kgPreAuto, kgFocAuto,
+    kgPreManual:E.kgPreManual, kgFocManual:E.kgFocManual,
+    salidos, salidosAuto:auto, salidosAMano:aMano,
+    bandejas, bandejasAuto, bandejasManual:E.bandejasManual,
+    uso: bandejas/bandejasHeladera(), totalUn, cerrada: estaCerrada(peds),
     plata:{bruto, aCobrar:cobrar, bonificado:bruto-cobrar, envios, costo,
            ganancia:cobrar-costo, cobrado, pendiente:cobrar-cobrado},
     sobrantes:{salen, pedidas:pre, sobran:salen-pre, perdidas:perd,
                libres:Math.max(0, salen-pre-perd), focDeMas},
     consumo};
+}
+
+/* un pedido sin cargo no espera ninguna cobranza */
+const saldado = p => p.entregado && (p.cobrado || p.sinCargo);
+const estaCerrada = peds => peds.length > 0 && peds.every(saldado);
+
+/* La semana entera, para la tira de arriba y para los pedidos: los números de
+   cada entrega sumados. La heladera no se suma, porque cada entrega usa la
+   suya: ahí vale la más cargada. */
+function juntarSemana(sem, ents){
+  const partes = ents.map((e,i) => calcular(sem, i));
+  const j = {sem, ent:null, entregas:ents, partes, unaSola:false, pedidos:[],
+    unidades:{}, consumo:{}, pre:0, med:0, gra:0, kgPre:0, kgFoc:0, totalUn:0,
+    bandejas:0, bandejasAuto:0, bandejasManual:null, kgTirada:REGLA.kgTiradaDefault,
+    salidos:{pre:0,med:0,gra:0}, salidosAuto:{pre:0,med:0,gra:0}, salidosAMano:false,
+    harinaFoc:0, kgPreAuto:0, kgFocAuto:0, kgPreManual:null, kgFocManual:null,
+    plata:{bruto:0, aCobrar:0, bonificado:0, envios:0, costo:0, ganancia:0,
+           cobrado:0, pendiente:0},
+    sobrantes:{salen:0, pedidas:0, sobran:0, perdidas:0, libres:0, focDeMas:0},
+    uso:0};
+  partes.forEach(c => {
+    j.pedidos = j.pedidos.concat(c.pedidos);
+    ['pre','med','gra','kgPre','kgFoc','totalUn','bandejas','bandejasAuto',
+     'harinaFoc','kgPreAuto','kgFocAuto'].forEach(k => j[k] += c[k]);
+    ['pre','med','gra'].forEach(k => { j.salidos[k] += c.salidos[k];
+                                       j.salidosAuto[k] += c.salidosAuto[k]; });
+    Object.keys(j.plata).forEach(k => j.plata[k] += c.plata[k]);
+    Object.keys(j.sobrantes).forEach(k => j.sobrantes[k] += c.sobrantes[k]);
+    Object.keys(c.unidades).forEach(k => j.unidades[k] = (j.unidades[k]||0)+c.unidades[k]);
+    Object.keys(c.consumo).forEach(k => j.consumo[k] = (j.consumo[k]||0)+c.consumo[k]);
+    j.uso = Math.max(j.uso, c.uso);
+  });
+  j.cerrada = estaCerrada(j.pedidos);
+  return j;
 }
 function repartirKg(kg, tope){
   if (!kg) return [];
@@ -904,7 +1149,9 @@ function ordenDeMasa(){
   return Object.keys(peso).sort((a,b) => peso[b]-peso[a]);
 }
 function insumosOrdenados(){
-  const masa = ordenDeMasa(), pu = Object.keys(receta('por_unidad'));
+  const masa = ordenDeMasa();
+  const pu = Object.keys(receta('por_unidad')).concat(
+    Object.keys(ENVASE_BASE).reduce((a,k) => a.concat(Object.keys(receta(k))), []));
   const grupo = n => masa.indexOf(n)>=0 ? 0 : pu.indexOf(n)>=0 ? 1 : 2;
   return S.insumos.slice().sort((a,b) => {
     const ga = grupo(a.nombre), gb = grupo(b.nombre);
@@ -919,7 +1166,7 @@ function insumosOrdenados(){
    El panel corre en dos casas: dentro de Claude (capacidad db) o servido por
    Apps Script desde el Drive de Agus. Todo lo de abajo es lo único que cambia. */
 const COLS = ['productos','insumos','clientes','tandas','pedidos','movimientos',
-              'recetas','config'];
+              'recetas','config','notas'];
 const API = {activo:false, base:'', pin:'', pidePin:false, version:0, cola:[],
              enviando:false, cargando:false, falla:0, motivo:'', via:''};
 const guardaLocal = (k,v) => { try { localStorage.setItem(k,v); } catch(e){} };
@@ -1025,7 +1272,7 @@ async function conectar(){
   col('tandas','tandas');
   col('pedidos','pedidos');
   col('movimientos','movimientos');
-  col('recetas','recetas', sembrarRecetas);
+  col('recetas','recetas', () => { sembrarRecetas(); migrarEnvases(); });
   col('config','config', sembrarConfig);
 }
 
@@ -1085,7 +1332,7 @@ async function cargarTodo(){
        así no parece que se perdió */
     API.cola.forEach(o => aplicarLocal(o.op, o.ruta, o.datos));
     S.listo = true; S.error = ''; API.falla = 0;
-    sembrarRecetas(); sembrarConfig();
+    sembrarRecetas(); sembrarConfig(); migrarEnvases();
     guardarFoto();
     render();
   } catch(e){
@@ -1260,7 +1507,43 @@ function sembrarRecetas(){
   if (S.recetas.length) { S.sembrado.recetas = true; return; }
   S.sembrado.recetas = true;
   Object.keys(MASA_BASE).forEach(k => guardar('recetas/'+k, {items:MASA_BASE[k]}));
+  Object.keys(ENVASE_BASE).forEach(k => guardar('recetas/'+k, {items:ENVASE_BASE[k]}));
   Object.keys(TOP_BASE).forEach(k => guardar('recetas/top_'+k, {items:TOP_BASE[k]}));
+}
+
+/* Antes el envase era uno solo para todo. Ahora cada tipo lleva el suyo, así que
+   hay que separar lo que ya estaba cargado. Se hace una sola vez y queda anotado
+   para no repetirlo. */
+function migrarEnvases(){
+  if (S.sembrado.envases || !S.recetas.length || !S.insumos.length) return;
+  const hecho = S.config.find(c => c.id === 'migraciones');
+  if (hecho && hecho.envases) { S.sembrado.envases = true; return; }
+  S.sembrado.envases = true;
+
+  const VIEJA = 'Bolsa polipropileno', NUEVA = 'Bolsa polipropileno 35x45';
+  /* la bolsa que ya existía es la grande: le ponemos el nombre completo */
+  const bolsa = S.insumos.find(i => i.nombre === VIEJA);
+  if (bolsa) parchar('insumos/'+bolsa.id, {nombre:NUEVA});
+  S.movimientos.forEach(m => {
+    if (m.insumo === VIEJA) parchar('movimientos/'+m.id, {insumo:NUEVA});
+  });
+  INSUMOS_NUEVOS.forEach(i => {
+    if (!S.insumos.some(x => x.nombre === i.nombre)){
+      const datos = Object.assign({}, i); delete datos.id;
+      guardar('insumos/'+i.id, datos);
+    }
+  });
+  Object.keys(ENVASE_BASE).forEach(k => {
+    if (!S.recetas.some(r => r.id === k)) guardar('recetas/'+k, {items:ENVASE_BASE[k]});
+  });
+  /* del "por unidad" salen los envases: ahí queda el gas y la etiqueta */
+  const pu = Object.assign({}, receta('por_unidad'));
+  let toco = false;
+  [VIEJA, NUEVA, 'Bandeja de cartón'].forEach(k => {
+    if (pu[k] !== undefined){ delete pu[k]; toco = true; }
+  });
+  if (toco) guardar('recetas/por_unidad', {items:pu});
+  guardar('config/migraciones', Object.assign({}, hecho || {}, {envases:true}));
 }
 /* Las reglas vuelven a leerse cada vez que cambian, sin esperar a que el
    servidor conteste: si tocás un gramaje, el número de al lado cambia solo. */
@@ -1292,10 +1575,13 @@ function sacarArranque(){
 function render(){
   if (S.listo || S.error) sacarArranque();
   if (!S.semanaSel) S.semanaSel = semanaHoy();
+  /* si se sacó una entrega, la elegida puede quedar fuera de rango */
+  const nEnt = S.listo ? entregasDe(S.semanaSel).length : 1;
+  if (!(S.entregaSel >= 0) || S.entregaSel > nEnt - 1) S.entregaSel = 0;
   pintarCabecera(); pintarStrip();
   ({tanda:vistaTanda, pedidos:vistaPedidos, nuevo:vistaNuevo, stock:vistaStock,
     clientes:vistaClientes, stats:vistaStats, recetas:vistaRecetas,
-    amasado:vistaAmasado})[S.vista]();
+    amasado:vistaAmasado, notas:vistaNotas})[S.vista]();
   engancharReintento();
 }
 
@@ -1303,48 +1589,81 @@ function pintarCabecera(){
   const sem = S.semanaSel, ahora = sem === semanaHoy(), pasada = esPasada(sem);
   const conTira = S.vista==='tanda' || S.vista==='pedidos';
   const T = {
-    tanda:   ['Tanda', 'entrega ' + rotuloEntrega(sem)],
+    tanda:   ['Tanda', ''],
     pedidos: ['Pedidos', 'pedidos de la semana'],
-    nuevo:   ['Nuevo pedido', 'elegí para qué semana es'],
+    nuevo:   [nuevo.editando ? 'Editar pedido' : 'Nuevo pedido',
+              nuevo.editando ? 'lo que cambies se guarda encima' : 'elegí para qué semana es'],
     stock:   ['Stock', 'compras, salidas y precios'],
     clientes:['Clientes', S.clientes.length + ' en la base'],
     amasado: ['Amasado', 'temperatura del agua y tiempos'],
     stats:   ['Estadísticas', 'cómo viene el negocio'],
     recetas: ['Recetas y reglas', 'lo que define los costos'],
+    notas:   ['Notas', 'anotaciones y listas de compras'],
   }[S.vista];
-  $('#pantalla').textContent = T[0];
-  $('#pantalla').className = 'pantalla' + (conTira ? '' : ' solo');
-  $('#titulo').textContent = conTira ? rotuloSemana(sem) : '';
-  $('#titulo').hidden = !conTira;
-  $('#subtitulo').textContent = T[1];
+  const ents = conTira ? entregasDe(sem) : [];
+  const cerrada = conTira && calcular(sem).cerrada;
   const bar = $('#titulo-bar');
-  bar.className = 'titulo' + (conTira && ahora ? ' ahora' : conTira && pasada ? ' pasada' : '');
-  $('#pill').textContent = !conTira ? '' : ahora ? 'esta semana' : pasada ? 'cerrada' : 'próxima';
-  $('#pill').style.display = conTira ? '' : 'none';
+  bar.className = 'titulo' + (!conTira ? '' : cerrada ? ' cerrada'
+    : ahora ? ' ahora' : pasada ? ' pasada' : '');
+
+  if (conTira && ents.length > 1){
+    /* la cabecera se parte: una porción por entrega, y se toca para cambiar */
+    bar.classList.add('partida');
+    bar.innerHTML = '<div class="arriba"><span class="pantalla" id="pantalla">'+T[0]+'</span>'
+      + '<span class="rango" id="titulo">'+rotuloSemana(sem)+'</span>'
+      + '<span class="pill" id="pill">'+(cerrada?'cerrada':ahora?'esta semana':pasada?'pasó':'próxima')+'</span></div>'
+      + '<div class="trozos">' + ents.map((e,i) => {
+          const c = calcular(sem, i);
+          return '<button class="trozo" data-ent="'+i+'" aria-pressed="'+(i===S.entregaSel)+'">'
+            + '<span class="d">'+diaCorto(sem, i)+'</span>'
+            + '<span class="q">'+(c.bandejas? plu(c.bandejas,'bandeja','bandejas')
+                                            : 'sin pedidos')+'</span></button>';
+        }).join('') + '</div>';
+    bar.querySelectorAll('[data-ent]').forEach(b => b.onclick = () => {
+      S.entregaSel = Number(b.dataset.ent);
+      guardaLocal('vl_entrega', String(S.entregaSel));
+      render();
+    });
+  } else {
+    bar.classList.remove('partida');
+    bar.innerHTML = '<div><div class="pantalla'+(conTira?'':' solo')+'" id="pantalla">'+T[0]+'</div>'
+      + '<h1 id="titulo"'+(conTira?'':' hidden')+'>'+(conTira?rotuloSemana(sem):'')+'</h1>'
+      + '<div class="sub" id="subtitulo">'+(conTira && S.vista==='tanda'
+          ? 'entrega '+rotuloEntrega(sem, 0) : esc(T[1]))+'</div></div>'
+      + (conTira ? '<span class="pill" id="pill">'+(cerrada?'cerrada':ahora?'esta semana'
+          :pasada?'pasó':'próxima')+'</span>' : '');
+  }
+
   $('#tandas-nav').style.display = conTira ? '' : 'none';
   $('#b-masa').setAttribute('aria-current', String(S.vista==='amasado'));
   $('#b-stats').setAttribute('aria-current', String(S.vista==='stats'));
   $('#b-recetas').setAttribute('aria-current', String(S.vista==='recetas'));
+  $('#b-notas').setAttribute('aria-current', String(S.vista==='notas'));
 }
 
 function pintarStrip(){
   const hoy = semanaHoy();
   const chips = semanasVisibles().map(sem => {
     const c = calcular(sem);
-    const clase = [sem===hoy?'esta':'', esPasada(sem)?'pasada':''].join(' ');
+    const n = entregasDe(sem).length;
+    const clase = [sem===hoy?'esta':'', c.cerrada?'cerrada':esPasada(sem)?'pasada':''].join(' ');
+    const dias = n > 1 ? Array.from({length:n}, (x,i) => diaCorto(sem, i)).join(' · ') : '';
     return '<button class="tchip '+clase+'" data-s="'+sem+'" aria-pressed="'+(sem===S.semanaSel)+'">'
       + '<div class="f">'+rotuloSemana(sem)+'</div>'
-      + '<div class="u">'+(sem===hoy?'esta semana · ':'')+(c.bollos? c.bollos+' bollos':'sin pedidos')+'</div></button>';
+      + '<div class="u">'+(sem===hoy?'esta semana · ':'')
+      + (c.bandejas? plu(c.bandejas,'bandeja','bandejas') : 'sin pedidos')+'</div>'
+      + (dias ? '<div class="e">'+dias+'</div>' : '')+'</button>';
   }).join('');
   $('#tandas-strip').innerHTML = chips + '<button class="tchip mas" id="mas-tanda" title="Crear otra tanda">+</button>';
   $('#tandas-strip').querySelectorAll('[data-s]').forEach(b => {
     b.onclick = () => {
       if (ui.largo){ ui.largo = false; return; }
-      S.semanaSel = b.dataset.s; ui.nuevaTanda = false;
+      if (b.dataset.s !== S.semanaSel){ S.semanaSel = b.dataset.s; S.entregaSel = 0; }
+      ui.nuevaTanda = false;
       guardaLocal('vl_semana', S.semanaSel); render();
       b.scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'});
     };
-    alMantener(b, () => hojaEntrega(b.dataset.s));
+    alMantener(b, () => hojaEntregas(b.dataset.s));
   });
   $('#mas-tanda').onclick = () => { ui.nuevaTanda = true; irA('tanda'); };
   if (ui.tiraEn !== S.semanaSel){
@@ -1358,7 +1677,8 @@ function pintarStrip(){
 function vistaTanda(){
   if (!S.listo) return $('#v-tanda').innerHTML = esperando();
   if (ui.nuevaTanda) return pantallaNuevaTanda();
-  const c = calcular(S.semanaSel);
+  const sem = S.semanaSel, ent = S.entregaSel;
+  const c = calcular(sem, ent);
   const prods = Object.keys(c.unidades)
     .sort((a,b)=>(productoDe(a).orden||99)-(productoDe(b).orden||99));
 
@@ -1370,7 +1690,7 @@ function vistaTanda(){
       + '<div class="sub">'+c.unidades[sku]+' × '+nGr(gramajeDe(p))+' = '
       + gr(c.unidades[sku]*gramajeDe(p))+' de masa</div></div>'
       + '<div class="q">'+c.unidades[sku]+'</div></div>';
-  }).join('') : '<div class="vacio">Todavía no hay pedidos en esta semana.</div>';
+  }).join('') : '<div class="vacio">Sin pedidos'+(c.unaSola?' en esta semana':' en esta entrega')+'.</div>';
 
   const masas = [];
   if (c.kgPre || c.kgPreManual != null) masas.push(bloqueMasa({
@@ -1384,6 +1704,17 @@ function vistaTanda(){
              c.gra?c.gra+(c.gra===1?' grande':' grandes'):''].filter(Boolean).join(' + ') || 'sin pedidos',
     rec:receta('masa_focaccia'), kg:c.kgFoc, auto:c.kgFocAuto,
     manual:c.kgFocManual, kgTirada:c.kgTirada}));
+
+  const fila = (etiqueta, clave, valor, auto, cuantos) =>
+    '<div class="salida"><div><div class="n">'+etiqueta+'</div>'
+    + '<div class="p">de a '+cuantos+' por bandeja'
+    + (valor !== auto ? ' · la cuenta daba '+auto : '')+'</div></div>'
+    + '<div class="mas"><button data-sal="'+clave+'" data-d="-1">−</button>'
+    + '<span class="n">'+valor+'</span>'
+    + '<button data-sal="'+clave+'" data-d="1">+</button></div></div>';
+
+  const tiradas = repartirKg(c.kgPre,c.kgTirada).length + repartirKg(c.kgFoc,c.kgTirada).length;
+  const mins = c.entrega.minutos;
 
   $('#v-tanda').innerHTML =
     '<div class="card tight"><div class="rot" style="padding:16px 16px 0">Qué hay que hacer</div>'
@@ -1410,8 +1741,7 @@ function vistaTanda(){
         + '<button id="p-mas">+</button></div></div>'
         + '<div class="agua" style="background:var(--ok-soft)">'
         + '<span class="n" style="color:var(--ok)">'+c.sobrantes.libres+'</span>'
-        + '<span class="l">prepizzas libres para ubicar</span></div>'
-        + '<p class="hint">Si ubicás alguna, cargala como pedido y este número baja solo.</p>' : '')
+        + '<span class="l">prepizzas libres para ubicar</span></div>' : '')
       + (c.kgFoc ? (c.kgPre?'<div class="rec-sep"></div>':'')
         + '<div class="rec-cab"><span class="t">Focaccias</span>'
         + '<span class="s">'+c.kgFoc+' kg de masa</span></div>'
@@ -1422,60 +1752,66 @@ function vistaTanda(){
         + (c.sobrantes.focDeMas?' · ~'+c.sobrantes.focDeMas+(c.sobrantes.focDeMas===1?' mediana':' medianas'):'')+'</b></div>' : '')
       + '</div>' : '')
 
-    + '<div class="card"><div class="rot">Producción de la tanda</div>'
-    + '<div class="medidor"><button class="edita-n" id="b-bollos">'+c.bollos+'</button>'
+    + '<div class="card"><div class="rot">Espacio en heladera</div>'
+    + '<div class="medidor"><button class="edita-n" id="b-band">'+c.bandejas+'</button>'
     + '<span class="de">de</span>'
-    + '<button class="edita-cap" id="b-cap">'+REGLA.capacidadBollos+'</button>'
-    + '<span class="de">bollos</span></div>'
+    + '<button class="edita-cap" id="b-cap">'+bandejasHeladera()+'</button>'
+    + '<span class="de">bandejas</span></div>'
     + (ui.editaBollos ? '<div class="edit-precio" style="margin:0 0 11px">'
-        + '<input type="number" id="in-bollos" value="'+c.bollos+'" min="0" aria-label="bollos de esta tanda">'
-        + '<button id="ok-bollos">Fijar</button>'
-        + (c.manual!=null?'<button id="auto-bollos" style="background:var(--sunken);color:var(--ink-2)">Volver a '+c.bollosAuto+'</button>':'')
+        + '<input type="number" id="in-band" value="'+c.bandejas+'" min="0" aria-label="bandejas de esta entrega">'
+        + '<button id="ok-band">Fijar</button>'
+        + (c.bandejasManual!=null?'<button id="auto-band" style="background:var(--sunken);color:var(--ink-2)">Volver a '+c.bandejasAuto+'</button>':'')
         + '</div>' : '')
     + (ui.editaCap ? '<div class="edit-precio" style="margin:0 0 11px">'
-        + '<input type="number" id="in-cap" value="'+REGLA.capacidadBollos+'" min="1" aria-label="capacidad de la cámara">'
-        + '<button id="ok-cap">Guardar capacidad</button></div>' : '')
+        + '<input type="number" id="in-cap" value="'+bandejasHeladera()+'" min="1" aria-label="bandejas de la heladera">'
+        + '<button id="ok-cap">Guardar</button></div>' : '')
     + '<div class="barra '+(c.uso>1?'pasado':c.uso>.85?'alta':'')+'">'
     + '<i style="width:'+Math.min(100,c.uso*100)+'%"></i></div>'
-    + '<div class="pie"><span>'+Math.round(c.uso*100)+'% de la capacidad</span>'
-    + '<span>'+(repartirKg(c.kgPre,c.kgTirada).length + repartirKg(c.kgFoc,c.kgTirada).length)+' tiradas</span></div>'
+    + '<div class="pie"><span>'+Math.round(c.uso*100)+'% de la heladera</span>'
+    + '<span>'+plu(tiradas,'tirada','tiradas')+(mins?' · '+mins+' min de amasado':'')+'</span></div>'
     + '<div class="estado '+(c.uso>1?'mal':c.uso>.85?'alta':'ok')+'">'
-    + (c.bollos===0?'Sin pedidos':c.uso>1?'Te pasaste de la capacidad':c.uso>.85?'Casi llena':'Entra cómodo')+'</div>'
-    + '<p class="hint">'+(c.manual!=null
-        ? 'Número puesto a mano. Por la masa que estás haciendo salen '+c.bollosAuto+'.'
-        : 'Es lo que sale de la masa, no lo que pidieron: los pedidos ocupan '
-          + plu(c.bollosPedidos,'lugar','lugares')+'. '
-          + 'Una focaccia grande ocupa el lugar de '+REGLA.lugarFocGrande
-          + ' bollos de focaccia mediana.')
-    + ' Tocá cualquiera de los dos de arriba para cambiarlos a mano.</p></div>'
-    + '<p class="hint" style="text-align:center;margin-bottom:18px">'
-    + 'Mantené apretada una semana de la tira de arriba para cambiarle el día de entrega.</p>';
+    + (c.bandejas===0?'Sin pedidos':c.uso>1?'No entra':c.uso>.85?'Justo':'Entra cómodo')+'</div>'
+    + '<div class="rec-sep"></div>'
+    + '<div class="rot" style="margin-bottom:6px">Bollos que salieron</div>'
+    + fila('Prepizzas','pre',c.salidos.pre,c.salidosAuto.pre,porBandeja.pre())
+    + fila('Focaccias medianas','med',c.salidos.med,c.salidosAuto.med,porBandeja.med())
+    + fila('Focaccias grandes','gra',c.salidos.gra,c.salidosAuto.gra,porBandeja.gra())
+    + (c.salidosAMano ? '<button class="mini" id="auto-sal" style="width:100%;margin-top:9px">'
+        + 'Volver a la cuenta automática</button>' : '')
+    + '</div>';
 
-  const escribirTanda = campos => escribirSemana(S.semanaSel, campos);
+  const escribir = campos => escribirEntrega(sem, ent, campos);
   if ($('#k-menos')){
-    $('#k-menos').onclick = ()=>escribirTanda({kg_tirada:Math.max(1,c.kgTirada-1)});
-    $('#k-mas').onclick   = ()=>escribirTanda({kg_tirada:Math.min(REGLA.maxAmasadora,c.kgTirada+1)});
+    $('#k-menos').onclick = ()=>escribir({kgTirada:Math.max(1,c.kgTirada-1)});
+    $('#k-mas').onclick   = ()=>escribir({kgTirada:Math.min(REGLA.maxAmasadora,c.kgTirada+1)});
   }
   if ($('#p-menos')){
-    $('#p-menos').onclick = ()=>escribirTanda({perdidas:Math.max(0,c.sobrantes.perdidas-1)});
-    $('#p-mas').onclick   = ()=>escribirTanda({perdidas:c.sobrantes.perdidas+1});
+    $('#p-menos').onclick = ()=>escribir({perdidas:Math.max(0,c.sobrantes.perdidas-1)});
+    $('#p-mas').onclick   = ()=>escribir({perdidas:c.sobrantes.perdidas+1});
   }
-  $('#b-bollos').onclick = () => { ui.editaBollos = !ui.editaBollos; ui.editaCap = false; vistaTanda(); };
+  $('#v-tanda').querySelectorAll('[data-sal]').forEach(b => b.onclick = () => {
+    const k = b.dataset.sal, d = Number(b.dataset.d);
+    const nuevos = Object.assign({}, c.salidos);
+    nuevos[k] = Math.max(0, nuevos[k] + d);
+    escribir({salidos:nuevos});
+  });
+  if ($('#auto-sal')) $('#auto-sal').onclick = () => escribir({salidos:null});
+  $('#b-band').onclick = () => { ui.editaBollos = !ui.editaBollos; ui.editaCap = false; vistaTanda(); };
   $('#b-cap').onclick = () => { ui.editaCap = !ui.editaCap; ui.editaBollos = false; vistaTanda(); };
-  if ($('#ok-bollos')) $('#ok-bollos').onclick = async () => {
-    const v = Number($('#in-bollos').value);
+  if ($('#ok-band')) $('#ok-band').onclick = async () => {
+    const v = Number($('#in-band').value);
     if (isNaN(v) || v < 0) return toast('Poné un número válido');
     ui.editaBollos = false;
-    await escribirTanda({bollosManual:v}); toast('Bollos fijados en '+v); };
-  if ($('#auto-bollos')) $('#auto-bollos').onclick = async () => {
+    await escribir({bandejasManual:v}); toast('Bandejas fijadas en '+v); };
+  if ($('#auto-band')) $('#auto-band').onclick = async () => {
     ui.editaBollos = false;
-    await escribirTanda({bollosManual:null}); toast('Vuelve al cálculo por gramaje'); };
+    await escribir({bandejasManual:null}); };
   if ($('#ok-cap')) $('#ok-cap').onclick = async () => {
     const v = Number($('#in-cap').value);
     if (!(v > 0)) return toast('Poné un número válido');
     ui.editaCap = false;
-    await guardar('config/reglas', {valores:Object.assign({}, REGLA, {capacidadBollos:v})});
-    toast('Capacidad actualizada'); };
+    await guardar('config/reglas', {valores:Object.assign({}, REGLA, {bandejasHeladera:v})});
+    toast('Heladera actualizada'); };
   $('#v-tanda').querySelectorAll('[data-kg]').forEach(b => b.onclick = () => {
     ui.editaKg = ui.editaKg === b.dataset.kg ? null : b.dataset.kg;
     ui.editaBollos = false; ui.editaCap = false; vistaTanda();
@@ -1485,43 +1821,71 @@ function vistaTanda(){
     const v = Number($('#in-kg').value), cual = ui.editaKg;
     if (isNaN(v) || v < 0) return toast('Poné un número válido');
     ui.editaKg = null;
-    await escribirTanda(cual === 'pre' ? {kgPreManual:v} : {kgFocManual:v});
+    await escribir(cual === 'pre' ? {kgPreManual:v} : {kgFocManual:v});
     toast(v + ' kg de masa de ' + (cual === 'pre' ? 'prepizza' : 'focaccia'));
   };
   if ($('#auto-kg')) $('#auto-kg').onclick = async () => {
     const cual = ui.editaKg; ui.editaKg = null;
-    await escribirTanda(cual === 'pre' ? {kgPreManual:null} : {kgFocManual:null});
-    toast('Vuelve a lo que piden los pedidos');
+    await escribir(cual === 'pre' ? {kgPreManual:null} : {kgFocManual:null});
   };
 }
 
-function escribirSemana(sem, campos){
-  const t = tandaDoc(sem);
-  return guardar('tandas/'+sem, Object.assign(
-    {semana:sem, diaEntrega:diaEntrega(sem),
-     kg_tirada:Number(t.kg_tirada)||REGLA.kgTiradaDefault,
-     perdidas:Number(t.perdidas)||0, estado:t.estado||'abierta',
-     bollosManual:(t.bollosManual==null?null:t.bollosManual),
-     kgPreManual:(t.kgPreManual==null?null:t.kgPreManual),
-     kgFocManual:(t.kgFocManual==null?null:t.kgFocManual)}, campos));
-}
-
-function hojaEntrega(sem){
+function hojaEntregas(sem){
   const viejo = document.querySelector('.fondo'); if (viejo) viejo.remove();
   const f = document.createElement('div');
   f.className = 'fondo';
-  f.innerHTML = '<div class="hoja"><div class="tirador"></div>'
-    + '<h2>' + rotuloSemana(sem) + '</h2>'
-    + '<div class="s">¿Qué día entregás esta semana?</div>'
-    + '<div class="dias">' + NOM_DIA.map((d,i) =>
-        '<button data-dia="'+(i+1)+'" aria-pressed="'+(diaEntrega(sem)===i+1)+'">'+d+'</button>').join('')
-    + '</div></div>';
+  /* la lista vive acá adentro mientras la hoja está abierta: así se redibuja al
+     toque, sin esperar a que el servidor conteste */
+  let lista = entregasDe(sem);
+
+  const pintar = () => {
+    f.innerHTML = '<div class="hoja"><div class="tirador"></div>'
+      + '<h2>' + rotuloSemana(sem) + '</h2>'
+      + '<div class="s">Una entrega por amasado. Podés tener hasta tres.</div>'
+      + lista.map((e,i) => '<div class="entrega-fila">'
+          + '<div class="cab"><span class="n">' + (lista.length>1 ? 'Entrega '+(i+1) : 'Entrega')
+          + '</span>' + (lista.length>1
+              ? '<button class="x" data-quitar="'+i+'" title="Quitar">×</button>' : '') + '</div>'
+          + '<div class="dias">' + NOM_DIA.map((d,j) =>
+              '<button data-ent="'+i+'" data-dia="'+(j+1)+'" aria-pressed="'
+              + (e.dia===j+1) + '">'+d+'</button>').join('') + '</div></div>').join('')
+      + (lista.length < 3
+          ? '<button class="agregar" id="mas-entrega" style="margin-top:11px">+ Agregar una entrega</button>'
+          : '')
+      + '</div>';
+
+    f.querySelectorAll('[data-dia]').forEach(b => b.onclick = () => {
+      const i = Number(b.dataset.ent);
+      lista[i] = entregaLimpia(Object.assign({}, lista[i], {dia:Number(b.dataset.dia)}));
+      pintar();
+      escribirEntregas(sem, lista).then(render);
+    });
+    f.querySelectorAll('[data-quitar]').forEach(b => b.onclick = () => {
+      const i = Number(b.dataset.quitar);
+      lista.splice(i, 1);
+      /* los pedidos que colgaban de esa entrega pasan a la anterior */
+      S.pedidos.filter(x => lunesDe(x.tanda) === sem).forEach(x => {
+        const e = Math.floor(Number(x.entrega) || 0);
+        if (e === i) parchar('pedidos/'+x.id, {entrega:Math.max(0, i-1)});
+        else if (e > i) parchar('pedidos/'+x.id, {entrega:e-1});
+      });
+      if (S.entregaSel >= lista.length) S.entregaSel = lista.length - 1;
+      pintar();
+      escribirEntregas(sem, lista).then(render);
+    });
+    const mas = f.querySelector('#mas-entrega');
+    if (mas) mas.onclick = () => {
+      const usados = lista.map(x => x.dia);
+      const libre = [5,3,2,4,6,1,7].filter(d => usados.indexOf(d) < 0)[0] || 5;
+      lista.push(entregaLimpia({dia:libre}));
+      pintar();
+      escribirEntregas(sem, lista).then(render);
+    };
+  };
+
+  pintar();
   document.body.appendChild(f);
-  f.onclick = e => { if (e.target === f) f.remove(); };
-  f.querySelectorAll('[data-dia]').forEach(b => b.onclick = async () => {
-    await escribirSemana(sem, {diaEntrega:Number(b.dataset.dia)});
-    f.remove(); toast('Entrega el '+rotuloEntrega(sem));
-  });
+  f.onclick = e => { if (e.target === f){ f.remove(); render(); } };
 }
 
 function alMantener(el, fn){
@@ -1542,8 +1906,6 @@ function pantallaNuevaTanda(){
   const sug = suma(hoyIso(), 84);
   $('#v-tanda').innerHTML =
     '<div class="card"><div class="rot">Crear una tanda</div>'
-    + '<p class="hint" style="margin:0 0 12px">Elegí cualquier fecha, aunque sea dentro de tres meses. '
-    + 'Se va a guardar la semana que contiene esa fecha.</p>'
     + '<label class="f" for="nt-fecha">Fecha del pedido</label>'
     + '<input type="date" id="nt-fecha" value="'+sug+'">'
     + '<div id="nt-vista" class="agua" style="margin-top:12px"><span class="l">—</span></div>'
@@ -1559,9 +1921,9 @@ function pantallaNuevaTanda(){
   $('#nt-no').onclick = () => { ui.nuevaTanda = false; render(); };
   $('#nt-ok').onclick = async () => {
     const sem = lunesDe($('#nt-fecha').value || sug);
-    await guardar('tandas/'+sem, {semana:sem, diaEntrega:5,
-      kg_tirada:REGLA.kgTiradaDefault, perdidas:0, estado:'abierta'});
-    ui.nuevaTanda = false; S.semanaSel = sem; render(); toast('Tanda creada');
+    await guardar('tandas/'+sem, {semana:sem, estado:'abierta',
+      entregas:[entregaLimpia({dia:5})]});
+    ui.nuevaTanda = false; S.semanaSel = sem; S.entregaSel = 0; render(); toast('Tanda creada');
   };
 }
 
@@ -1583,8 +1945,7 @@ function bloqueMasa(o){
         + (o.manual!=null ? '<button id="auto-kg" style="background:var(--sunken);color:var(--ink-2)">'
             + 'Volver a '+o.auto+'</button>' : '')
         + '</div>'
-        + '<p class="hint" style="margin:-4px 0 10px">Los pedidos piden '+o.auto+' kg. '
-        + 'Lo que pongas acá manda: cambia las tiradas, el stock y los bollos.</p>' : '')
+        : '')
     + '<div class="tiradas">'+cards+'</div>'
     + (t.length>1?'<p class="swipe">← deslizá para ver las '+t.length+' tiradas →</p>':'');
 }
@@ -1626,21 +1987,23 @@ function hielo(objetivo, canilla, gramosAgua){
 const guardaMasa = () => guardaLocal('vl_masa', JSON.stringify(ui.masa));
 
 /* ------------------------------ cronómetro ------------------------------ */
-const CRONO = {corriendo:false, desde:0, acumulado:0, sonados:{}, ctx:null, wake:null};
+const CRONO = {corriendo:false, desde:0, acumulado:0, sonados:{}, marcas:[],
+               ctx:null, wake:null, sonando:null, pendiente:null};
 const cronoMs = () => CRONO.acumulado + (CRONO.corriendo ? Date.now()-CRONO.desde : 0);
 const mmss = ms => { const t = Math.max(0, Math.floor(ms/1000));
   return Math.floor(t/60)+':'+('0'+(t%60)).slice(-2); };
 const claveDe = p => p.min + '\u00b7' + p.que;
 
 function guardaCrono(){ guardaLocal('vl_crono', JSON.stringify({
-  corriendo:CRONO.corriendo, desde:CRONO.desde,
-  acumulado:CRONO.acumulado, sonados:CRONO.sonados})); }
+  corriendo:CRONO.corriendo, desde:CRONO.desde, acumulado:CRONO.acumulado,
+  sonados:CRONO.sonados, marcas:CRONO.marcas})); }
 function cargaCrono(){
   try {
     const c = JSON.parse(leeLocal('vl_crono') || 'null');
     if (!c) return;
     CRONO.corriendo = !!c.corriendo; CRONO.desde = Number(c.desde)||0;
     CRONO.acumulado = Number(c.acumulado)||0; CRONO.sonados = c.sonados || {};
+    CRONO.marcas = Array.isArray(c.marcas) ? c.marcas : [];
   } catch(e){}
 }
 async function pantallaDespierta(){
@@ -1666,30 +2029,61 @@ function pausarCrono(){
   guardaCrono(); soltarPantalla();
 }
 function cerarCrono(){
-  CRONO.corriendo = false; CRONO.acumulado = 0; CRONO.desde = 0; CRONO.sonados = {};
-  guardaCrono(); soltarPantalla();
-  const v = document.getElementById('alarma'); if (v) v.remove();
+  CRONO.corriendo = false; CRONO.acumulado = 0; CRONO.desde = 0;
+  CRONO.sonados = {}; CRONO.marcas = [];
+  guardaCrono(); soltarPantalla(); callar();
 }
+/* El reloj no para hasta que bollás: el descanso de la masa es parte del
+   proceso y el total es lo que queremos saber. */
+function marcar(que){
+  CRONO.marcas.push({ms:cronoMs(), que:que});
+  guardaCrono();
+}
+/* Más fuerte, no más molesto: el mismo tono con sus armónicos y un compresor
+   que aprovecha todo el volumen disponible. El techo es el del teléfono. */
 function pitar(){
   try {
     const ctx = CRONO.ctx || (CRONO.ctx = new (window.AudioContext || window.webkitAudioContext)());
     if (ctx.state === 'suspended') ctx.resume();
-    [0, .38, .76].forEach(d => {
-      const o = ctx.createOscillator(), g = ctx.createGain(), t0 = ctx.currentTime + d;
-      o.type = 'sine'; o.frequency.value = 880;
-      g.gain.setValueAtTime(.0001, t0);
-      g.gain.exponentialRampToValueAtTime(.45, t0 + .02);
-      g.gain.exponentialRampToValueAtTime(.0001, t0 + .3);
-      o.connect(g); g.connect(ctx.destination);
-      o.start(t0); o.stop(t0 + .32);
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -18; comp.knee.value = 6; comp.ratio.value = 12;
+    comp.attack.value = .002; comp.release.value = .12;
+    const salida = ctx.createGain();
+    salida.gain.value = 1;
+    comp.connect(salida); salida.connect(ctx.destination);
+    [0, .4, .8].forEach(d => {
+      const t0 = ctx.currentTime + d;
+      [[880,.5],[1760,.28],[440,.22]].forEach(par => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'triangle'; o.frequency.value = par[0];
+        g.gain.setValueAtTime(.0001, t0);
+        g.gain.exponentialRampToValueAtTime(par[1], t0 + .015);
+        g.gain.setValueAtTime(par[1], t0 + .2);
+        g.gain.exponentialRampToValueAtTime(.0001, t0 + .34);
+        o.connect(g); g.connect(comp);
+        o.start(t0); o.stop(t0 + .36);
+      });
     });
   } catch(e){}
 }
+function callar(){
+  if (CRONO.sonando){ clearInterval(CRONO.sonando); CRONO.sonando = null; }
+  CRONO.pendiente = null;
+  try { if (navigator.vibrate) navigator.vibrate(0); } catch(e){}
+  const x = document.getElementById('alarma'); if (x) x.remove();
+}
+/* Suena hasta que decís que sí. Con las manos en la masa no se puede estar
+   mirando la pantalla. */
 function avisar(paso){
-  pitar();
+  callar();
+  CRONO.pendiente = paso;
   notificar(paso);
-  try { if (navigator.vibrate) navigator.vibrate([300,150,300,150,600]); } catch(e){}
-  const viejo = document.getElementById('alarma'); if (viejo) viejo.remove();
+  const golpe = () => {
+    pitar();
+    try { if (navigator.vibrate) navigator.vibrate([400,180,400,180,700]); } catch(e){}
+  };
+  golpe();
+  CRONO.sonando = setInterval(golpe, 3600);
   const d = document.createElement('div');
   d.className = 'alarma'; d.id = 'alarma';
   d.innerHTML = '<div class="txt"><div class="m">minuto '+esc(paso.min)+'</div>'
@@ -1698,9 +2092,11 @@ function avisar(paso){
   /* justo arriba de la botonera, para no taparte los botones */
   const nav = document.getElementById('nav');
   if (nav) d.style.bottom = nav.offsetHeight + 'px';
-  const cerrar = () => { const x = document.getElementById('alarma'); if (x) x.remove(); };
-  d.querySelector('#alarma-ok').onclick = cerrar;
-  setTimeout(cerrar, 90000);
+  d.querySelector('#alarma-ok').onclick = () => {
+    marcar(paso.que);
+    callar();
+    if (S.vista === 'amasado') vistaAmasado();
+  };
 }
 /* Late siempre, esté la pantalla de amasado a la vista o no: el aviso tiene que
    llegar aunque estés cargando un pedido. */
@@ -1767,7 +2163,7 @@ function vistaAmasado(){
     + '<input type="number" id="g-tdm" value="'+esc(REGLA.tdm)+'"></div>'
     + '<div><label class="f" for="g-fri">Fricción °C</label>'
     + '<input type="number" id="g-fri" value="'+esc(REGLA.friccion)+'"></div></div>'
-    + '<p class="hint">Estos dos son de la casa y quedan guardados para los dos teléfonos.</p></div>'
+    + '</div>'
 
     + '<div class="card"><div class="rot">Cuánta agua y cuánto hielo</div>'
     + '<div class="seg">'
@@ -1781,30 +2177,33 @@ function vistaAmasado(){
     + '<input type="number" id="g-can" value="'+esc(m.canilla)+'"></div></div>'
     + '<div id="agua-linea">'+lineaAgua(aguaTot, obj, hi, m)+'</div></div>'
 
-    + '<div class="card"><div class="rot">Cronómetro</div>'
+    + '<div class="card"><div class="rot">Cronómetro · todo el proceso</div>'
     + '<div class="reloj'+(CRONO.corriendo?' corriendo':'')+'" id="reloj">'+mmss(cronoMs())+'</div>'
     + '<div class="mandos">'
     + '<button class="go'+(CRONO.corriendo?' pausa':'')+'" id="c-go">'
     + (CRONO.corriendo?'Pausar':(cronoMs()?'Seguir':'Arrancar'))+'</button>'
-    + '<button class="cero" id="c-cero">A cero</button></div>'
+    + '<button class="cero" id="c-marca"'+(cronoMs()?'':' disabled')+'>Marcar</button></div>'
+    + (cronoMs() ? '<button class="guardar" id="c-bolle" style="margin-top:9px">'
+        + 'Bollé · cerrar el proceso</button>' : '')
+    + (CRONO.marcas.length ? '<div class="rec-sep"></div>'
+        + CRONO.marcas.map((m,i) => '<div class="rec-row"><span>'+esc(m.que||('Marca '+(i+1)))
+          + '</span><b>'+mmss(m.ms)+'</b></div>').join('') : '')
     + '<p class="hint" style="text-align:center">'
-    + (CRONO.corriendo ? 'Dejá la app abierta y te aviso con sonido en cada paso.'
+    + (CRONO.corriendo ? 'No para hasta que bollás: el descanso también cuenta.'
                        : 'Los avisos suenan aunque estés en otra pantalla de la app.')
     + '</p>'
     + (avisosSistema()
         ? '<p class="hint" style="text-align:center;color:var(--ok)">Avisos del sistema activados.</p>'
         : '<button class="mini" id="c-avisos" style="width:100%;margin-top:4px">'
           + 'Activar avisos del sistema</button>'
-          + '<p class="hint" style="text-align:center">Salen como notificación del teléfono. '
-          + 'Ayudan si te vas a otra app, aunque no te los puedo garantizar.</p>')
+          )
     + '</div>'
 
     + '<div class="card"><div class="rot">Los avisos del amasado</div>'
     + '<div class="paso cab-paso"><span>min</span><span>qué toca</span><span></span></div>'
     + '<div id="lista-pasos">'+filasPasos()+'</div>'
     + '<button class="agregar" id="p-nuevo" style="margin-top:11px">+ Agregar un aviso</button>'
-    + '<p class="hint">El minuto se cuenta desde que arranca el cronómetro. '
-    + 'Lo que pongas acá lo ve tu compañera también.</p></div>';
+    + '</div>';
 
   const refrescar = () => {
     const rr = tempAgua(), oo = Math.round(rr.t);
@@ -1839,7 +2238,14 @@ function vistaAmasado(){
     toast(ok ? 'Listo, te aviso por el teléfono' : 'El teléfono no los dejó activar');
     vistaAmasado(); };
   $('#c-go').onclick = () => { CRONO.corriendo ? pausarCrono() : arrancarCrono(); vistaAmasado(); };
-  $('#c-cero').onclick = () => { cerarCrono(); vistaAmasado(); };
+  $('#c-marca').onclick = () => { marcar('Marca ' + (CRONO.marcas.length + 1)); vistaAmasado(); };
+  if ($('#c-bolle')) $('#c-bolle').onclick = async () => {
+    const min = Math.round(cronoMs()/60000);
+    pausarCrono();
+    await escribirEntrega(S.semanaSel, S.entregaSel, {minutos:min});
+    cerarCrono(); vistaAmasado();
+    toast('Proceso de ' + min + ' min, guardado en la tanda');
+  };
   $('#p-nuevo').onclick = () => {
     const l = pasos();
     const ultimo = l.length ? Number(l[l.length-1].min)||0 : 0;
@@ -1989,14 +2395,91 @@ function notificar(paso){
   } catch(e){}
 }
 
+/* ================================ NOTAS ================================
+   Lo que no entra en ningún número: lo que hay que comprar, lo que probar,
+   lo que hablar con alguien. */
+const notasOrdenadas = () => S.notas.slice()
+  .sort((a,b) => String(b.creado||'').localeCompare(String(a.creado||'')));
+
+function vistaNotas(){
+  if (!S.listo) return $('#v-notas').innerHTML = esperando();
+  const l = notasOrdenadas();
+  const cuerpo = l.map(n => {
+    const items = n.tipo === 'lista' ? (n.items || []) : null;
+    return '<div class="card nota" data-nota="'+n.id+'">'
+      + '<div class="cab"><input type="text" value="'+esc(n.titulo||'')+'" '
+      + 'data-tit="'+n.id+'" placeholder="'+(items?'Lista de compras':'Nota')+'" '
+      + 'aria-label="título"><button class="x" data-delnota="'+n.id+'">×</button></div>'
+      + (items
+          ? items.map((x,i) => '<div class="item'+(x.hecho?' hecho':'')+'">'
+              + '<button class="tic" data-tic="'+n.id+'" data-i="'+i+'" '
+              + 'aria-pressed="'+(x.hecho?'true':'false')+'">✓</button>'
+              + '<input type="text" value="'+esc(x.que||'')+'" data-item="'+n.id+'" data-i="'+i+'">'
+              + '<button class="x" data-delitem="'+n.id+'" data-i="'+i+'">×</button></div>').join('')
+            + '<button class="agregar" data-additem="'+n.id+'" style="margin-top:9px">+ Agregar</button>'
+          : '<textarea data-texto="'+n.id+'" placeholder="Escribí lo que quieras">'
+            + esc(n.texto||'') + '</textarea>')
+      + '</div>';
+  }).join('');
+
+  $('#v-notas').innerHTML =
+    '<div class="tiles"><button class="guardar" id="n-lista">+ Lista de compras</button>'
+    + '<button class="guardar" id="n-nota" style="background:var(--sunken);color:var(--ink)">+ Nota</button></div>'
+    + (l.length ? cuerpo : '<div class="card"><div class="vacio">Todavía no hay nada anotado.</div></div>');
+
+  const nueva = tipo => {
+    const id = 'N' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    guardar('notas/'+id, {titulo:'', tipo:tipo, texto:'',
+      items: tipo === 'lista' ? [{que:'', hecho:false}] : [],
+      creado:new Date().toISOString()});
+    vistaNotas();
+  };
+  $('#n-lista').onclick = () => nueva('lista');
+  $('#n-nota').onclick  = () => nueva('nota');
+
+  const doc = id => S.notas.find(x => x.id === id) || {};
+  const conItems = (id, fn) => {
+    const n = doc(id), items = (n.items || []).slice();
+    fn(items);
+    parchar('notas/'+id, {items});
+  };
+  const v = $('#v-notas');
+  v.querySelectorAll('[data-tit]').forEach(e => e.onchange = () =>
+    parchar('notas/'+e.dataset.tit, {titulo:e.value}));
+  v.querySelectorAll('[data-texto]').forEach(e => e.onchange = () =>
+    parchar('notas/'+e.dataset.texto, {texto:e.value}));
+  v.querySelectorAll('[data-item]').forEach(e => e.onchange = () =>
+    conItems(e.dataset.item, l2 => { l2[Number(e.dataset.i)] =
+      Object.assign({}, l2[Number(e.dataset.i)], {que:e.value}); }));
+  v.querySelectorAll('[data-tic]').forEach(b => b.onclick = () => {
+    conItems(b.dataset.tic, l2 => { const i = Number(b.dataset.i);
+      l2[i] = Object.assign({}, l2[i], {hecho: !l2[i].hecho}); });
+    vistaNotas();
+  });
+  v.querySelectorAll('[data-delitem]').forEach(b => b.onclick = () => {
+    conItems(b.dataset.delitem, l2 => l2.splice(Number(b.dataset.i), 1));
+    vistaNotas();
+  });
+  v.querySelectorAll('[data-additem]').forEach(b => b.onclick = () => {
+    conItems(b.dataset.additem, l2 => l2.push({que:'', hecho:false}));
+    vistaNotas();
+    const campos = v.querySelectorAll('[data-item="'+b.dataset.additem+'"]');
+    if (campos.length) campos[campos.length-1].focus();
+  });
+  v.querySelectorAll('[data-delnota]').forEach(b => b.onclick = () => {
+    borrar('notas/'+b.dataset.delnota); vistaNotas();
+  });
+}
+
 /* ------------------------------ PEDIDOS ------------------------------ */
 function vistaPedidos(){
   if (!S.listo) return $('#v-pedidos').innerHTML = esperando();
-  const c = calcular(S.semanaSel);
+  const nEnt = entregasDe(S.semanaSel).length;
+  const c = calcular(S.semanaSel, nEnt > 1 ? S.entregaSel : null);
   const cards = c.pedidos.length ? c.pedidos.map(p => {
-    const estado = p.cobrado && p.entregado ? 's-list' : p.entregado ? 's-entr'
+    const estado = saldado(p) ? 's-list' : p.entregado ? 's-entr'
                  : p.preparado ? 's-prep' : '';
-    const sello = p.cobrado && p.entregado ? 'Listo' : p.entregado ? 'Entregado · falta cobrar'
+    const sello = saldado(p) ? 'Listo' : p.entregado ? 'Entregado · falta cobrar'
                 : p.preparado ? 'Preparado' : 'Pendiente';
     const chips = (p.lineas||[]).slice()
       .sort((a,b)=>(productoDe(a.sku).orden||99)-(productoDe(b.sku).orden||99)).map(l => {
@@ -2006,7 +2489,7 @@ function vistaPedidos(){
     }).join('');
     const bruto = brutoDe(p), tot = totalDe(p), ajustado = tot !== bruto;
     const conf = ui.borrando === p.id ? '<div class="confirm">'
-        + '<b>¿Borrar el pedido de '+esc(p.cliente)+'?</b>'
+        + '<b>¿Borrar el pedido de '+esc(nombreDe(p))+'?</b>'
         + '<button class="si" data-si="'+p.id+'">Sí, borrar</button>'
         + '<button class="no" data-no="1">Cancelar</button></div>' : '';
     const cobro = ui.editaCobro === p.id ? '<div class="panelito">'
@@ -2015,11 +2498,12 @@ function vistaPedidos(){
         + '<button data-cm="manual" aria-pressed="'+(!p.sinCargo && p.totalManual!=null && p.totalManual!=='')+'">Otro monto</button>'
         + '<button data-cm="sin" aria-pressed="'+(!!p.sinCargo)+'">Sin cargo</button></div>'
         + '<div class="edit-precio"><input type="number" id="cm-'+p.id+'" placeholder="'+bruto+'" value="'+(p.totalManual!=null?p.totalManual:'')+'" step="100">'
-        + '<button data-cmok="'+p.id+'">Guardar monto</button></div>'
-        + '<p class="hint">La producción, el stock y el costo no cambian: solo cambia lo que entra.</p></div>' : '';
-    return '<div class="ped '+estado+'">'
-      + '<div class="cab"><div><div class="nombre">'+esc(p.cliente)+'</div>'
-      + '<div class="meta">'+(p.envio? esc(p.direccion||'con envío') : 'Retira')+' · '+esc(p.formaPago||'sin forma de pago')+'</div>'
+        + '<button data-cmok="'+p.id+'">Guardar monto</button></div></div>' : '';
+    return '<div class="ped '+estado+'" data-ped="'+p.id+'">'
+      + '<div class="cab"><div><div class="nombre">'+esc(nombreDe(p))
+      + (nEnt > 1 ? '<span class="dia-ped">'+diaCorto(S.semanaSel, entregaDe(p, nEnt))+'</span>' : '')
+      + '</div>'
+      + '<div class="meta">'+(p.envio? esc(direccionDe(p)||'con envío') : 'Retira')+' · '+esc(p.formaPago||'sin forma de pago')+'</div>'
       + '<div class="sello">'+sello+'</div></div>'
       + '<div class="tot">'+(ajustado?'<span class="tachado">'+pesos(bruto)+'</span>':'')+pesos(tot)+'</div></div>'
       + '<div class="items">'+chips
@@ -2029,11 +2513,13 @@ function vistaPedidos(){
       + '<div class="acciones">'
       + '<button class="tog" data-id="'+p.id+'" data-k="preparado" aria-pressed="'+(!!p.preparado)+'">Preparado</button>'
       + '<button class="tog" data-id="'+p.id+'" data-k="entregado" aria-pressed="'+(!!p.entregado)+'">Entregado</button>'
-      + '<button class="tog" data-id="'+p.id+'" data-k="cobrado" aria-pressed="'+(!!p.cobrado)+'">Cobrado</button>'
+      + (p.sinCargo ? ''
+         : '<button class="tog" data-id="'+p.id+'" data-k="cobrado" aria-pressed="'+(!!p.cobrado)+'">Cobrado</button>')
       + '<button class="mini" data-cobro="'+p.id+'">$</button>'
       + '<button class="del" data-del="'+p.id+'">Borrar</button></div>'
       + cobro + conf + '</div>';
-  }).join('') : '<div class="card"><div class="vacio">No hay pedidos para esta semana.</div></div>';
+  }).join('') : '<div class="card"><div class="vacio">No hay pedidos para esta '
+      + (nEnt>1?'entrega':'semana')+'.</div></div>';
 
   $('#v-pedidos').innerHTML =
     '<div class="tiles">'
@@ -2048,9 +2534,12 @@ function vistaPedidos(){
     + '</div>'+cards;
 
   $('#v-pedidos').querySelectorAll('.tog').forEach(b => b.onclick = () => {
+    if (ui.largo){ ui.largo = false; return; }
     const p = S.pedidos.find(x=>x.id===b.dataset.id);
     parchar('pedidos/'+p.id, {[b.dataset.k]: !p[b.dataset.k]});
   });
+  $('#v-pedidos').querySelectorAll('[data-ped]').forEach(t =>
+    alMantener(t, () => abrirEdicion(t.dataset.ped)));
   $('#v-pedidos').querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
     ui.borrando = b.dataset.del; ui.editaCobro = null; vistaPedidos(); });
   $('#v-pedidos').querySelectorAll('[data-no]').forEach(b => b.onclick = () => {
@@ -2076,7 +2565,7 @@ function vistaPedidos(){
 /* ------------------------------ NUEVO ------------------------------ */
 function vistaNuevo(){
   if (!S.listo) return $('#v-nuevo').innerHTML = esperando();
-  if (!nuevo.semana) nuevo.semana = S.semanaSel;
+  if (!nuevo.semana){ nuevo.semana = S.semanaSel; nuevo.entrega = S.entregaSel || 0; }
   const pre = S.productos.filter(p=>p.tipo==='Prepizza')
     .sort((a,b)=>(a.orden||99)-(b.orden||99));
   const sabores = [];
@@ -2093,7 +2582,12 @@ function vistaNuevo(){
         '<option value="'+s+'"'+(s===nuevo.semana?' selected':'')+'>'+rotuloSemana(s)
         + (s===semanaHoy()?' (esta semana)':'')+' · entrega '+rotuloEntrega(s)+'</option>').join('')
     + '</select>'
-    + '<p class="hint">¿Es para más adelante? Creá la tanda con el <b>+</b> del final de la tira de arriba.</p></div>'
+    + (entregasDe(nuevo.semana).length > 1
+        ? '<div class="dias" style="margin-top:10px">'
+          + entregasDe(nuevo.semana).map((e,i) => '<button data-nent="'+i+'" aria-pressed="'
+            + (nuevo.entrega===i)+'">'+diaCorto(nuevo.semana, i)+'</button>').join('')
+          + '</div>' : '')
+    + '</div>'
 
     + '<div class="card"><label class="f" for="cli">Cliente</label>'
     + '<input type="search" id="cli" placeholder="Escribí el nombre…" autocomplete="off" value="'+esc(cli?cli.nombre:'')+'">'
@@ -2130,7 +2624,7 @@ function vistaNuevo(){
       : '<div style="margin-top:11px"><label class="f">Dirección</label>'
         + '<input id="n-dir-libre" placeholder="Dirección de entrega" value="'+esc(nuevo.direccion)+'">'
         + (cli?'<p class="hint">Este cliente no tiene direcciones cargadas. Podés agregárselas en Clientes.</p>':'')+'</div>')
-      : '<p class="hint">Retira por casa. Sin cargo de envío.</p>')
+      : '')
     + '<div style="margin-top:12px"><label class="f">Forma de pago</label>'
     + '<select id="n-pago"><option value="">—</option>'
     + PAGOS.map(p=>'<option'+(nuevo.formaPago===p?' selected':'')+'>'+p+'</option>').join('')+'</select></div></div>'
@@ -2139,20 +2633,24 @@ function vistaNuevo(){
     + '<div class="seg"><button data-nm="normal" aria-pressed="'+(!nuevo.sinCargo && !nuevo.totalManual)+'">Precio normal</button>'
     + '<button data-nm="manual" aria-pressed="'+(!nuevo.sinCargo && !!nuevo.totalManual)+'">Otro monto</button>'
     + '<button data-nm="sin" aria-pressed="'+nuevo.sinCargo+'">Sin cargo</button></div>'
-    + (nuevo.sinCargo ? '<p class="hint" style="margin:0">Va de regalo. Se produce igual y descuenta stock igual; no entra plata.</p>'
+    + (nuevo.sinCargo ? ''
        : '<div><label class="f" for="n-monto">Total a cobrar</label>'
-         + '<input type="number" id="n-monto" placeholder="'+Math.round(brutoNuevo())+'" value="'+esc(nuevo.totalManual)+'" step="100">'
-         + '<p class="hint">Dejalo vacío para cobrar el precio de lista.</p></div>')+'</div>'
+         + '<input type="number" id="n-monto" placeholder="'+Math.round(brutoNuevo())+'" value="'+esc(nuevo.totalManual)+'" step="100"></div>')+'</div>'
 
     + '<div class="card"><label class="f" for="n-obs">Observaciones</label>'
     + '<textarea id="n-obs" placeholder="Por ejemplo: la de cebolla sin chimi">'+esc(nuevo.obs)+'</textarea></div>'
 
     + '<div class="total'+(nuevo.sinCargo?' regalo':'')+'"><span class="l">'
     + (nuevo.sinCargo?'Va sin cargo':'Total del pedido')+'</span><span class="v">'+pesos(totalNuevo())+'</span></div>'
-    + '<button class="guardar" id="guardar"'+(puedeGuardar()?'':' disabled')+'>Guardar pedido</button>'
-    + '<p class="hint" style="text-align:center;margin-bottom:18px">Se suma a la semana del '+rotuloSemana(nuevo.semana)+'</p>';
+    + '<button class="guardar" id="guardar"'+(puedeGuardar()?'':' disabled')+'>'
+    + (nuevo.editando ? 'Guardar los cambios' : 'Guardar pedido')+'</button>'
+    + (nuevo.editando ? '<button class="guardar" id="cancelar" style="margin-top:8px;'
+        + 'background:var(--sunken);color:var(--ink-2)">Cancelar</button>' : '')
+    + '<div style="height:18px"></div>';
 
-  $('#n-semana').onchange = e => { nuevo.semana = e.target.value; vistaNuevo(); };
+  $('#n-semana').onchange = e => { nuevo.semana = e.target.value; nuevo.entrega = 0; vistaNuevo(); };
+  $('#v-nuevo').querySelectorAll('[data-nent]').forEach(b => b.onclick = () => {
+    nuevo.entrega = Number(b.dataset.nent); vistaNuevo(); });
   $('#cli').oninput = e => { nuevo.cliente = null; sugerir(e.target.value); };
   $('#v-nuevo').querySelectorAll('[data-sku]').forEach(b => b.onclick = () => {
     const k = b.dataset.sku;
@@ -2185,6 +2683,7 @@ function vistaNuevo(){
     $('.total .v').textContent = pesos(totalNuevo()); };
   $('#n-obs').oninput = e => { nuevo.obs = e.target.value; };
   $('#guardar').onclick = guardarPedido;
+  if ($('#cancelar')) $('#cancelar').onclick = () => { limpiarNuevo(); irA('pedidos'); };
   if (document.activeElement === document.body && $('#cli').value) sugerir($('#cli').value);
 }
 function sugerir(q){
@@ -2229,24 +2728,31 @@ const puedeGuardar = () => !!nuevo.cliente && lineasNuevo().length > 0;
 
 async function guardarPedido(){
   const dir = nuevo.direccion === '__otra__' ? nuevo.dirOtra : nuevo.direccion;
-  const id = nuevoId('P');
-  const lineas = lineasNuevo();
-  await guardar('pedidos/'+id, {
-    tanda:nuevo.semana, clienteId:nuevo.cliente.id, cliente:nuevo.cliente.nombre,
+  const editando = nuevo.editando;
+  const id = editando || nuevoId('P');
+  /* una línea que ya estaba conserva su precio y su costo: si no, un pedido de
+     hace tres semanas se recalcularía con los precios de hoy */
+  const viejos = nuevo.preciosViejos || {};
+  const lineas = lineasNuevo().map(l => viejos[l.sku]
+    ? Object.assign({}, l, viejos[l.sku]) : l);
+  const campos = {
+    tanda:nuevo.semana, entrega:Number(nuevo.entrega)||0,
+    clienteId:nuevo.cliente.id, cliente:nuevo.cliente.nombre,
     envio: nuevo.conEnvio ? REGLA.envio : 0, direccion: nuevo.conEnvio ? dir : '',
     formaPago:nuevo.formaPago, observaciones:nuevo.obs, lineas,
     sinCargo: !!nuevo.sinCargo,
     totalManual: (!nuevo.sinCargo && nuevo.totalManual !== '' && nuevo.totalManual != null)
-                 ? Number(nuevo.totalManual) : null,
-    preparado:false, entregado:false, cobrado:false, creado:new Date().toISOString()});
+                 ? Number(nuevo.totalManual) : null};
+  if (editando) await parchar('pedidos/'+id, campos);
+  else await guardar('pedidos/'+id, Object.assign({}, campos,
+    {preparado:false, entregado:false, cobrado:false, creado:new Date().toISOString()}));
   const impares = lineas.filter(l=>productoDe(l.sku).tipo==='Prepizza')
                     .reduce((a,l)=>a+l.cantidad,0) % 2;
-  S.semanaSel = nuevo.semana;
-  nuevo.cliente = null; nuevo.items = {}; nuevo.focaccias = []; nuevo.obs = '';
-  nuevo.direccion = ''; nuevo.dirOtra = ''; nuevo.formaPago = '';
-  nuevo.sinCargo = false; nuevo.totalManual = '';
+  S.semanaSel = nuevo.semana; S.entregaSel = Number(nuevo.entrega)||0;
+  limpiarNuevo();
   irA('pedidos');
-  toast(impares ? 'Guardado · prepizzas impares' : 'Pedido guardado');
+  toast(editando ? 'Pedido actualizado'
+                 : impares ? 'Guardado · prepizzas impares' : 'Pedido guardado');
 }
 
 /* ------------------------------ STOCK ------------------------------ */
@@ -2269,9 +2775,12 @@ function vistaStock(){
           '<option value="'+x.n+'"'+(x.n===ui.compraSel?' selected':'')+'>'+esc(x.i.nombre)+'</option>').join('')+'</optgroup>' : '';
       }).join('')+'</select>'
     + '<div class="mas" style="justify-content:flex-end"><button id="s-menos">−</button>'
-    + '<span class="n">'+ui.compraCant+'</span><button id="s-mas">+</button></div></div>'
+    + '<input class="cant" id="s-cant" type="number" inputmode="decimal" step="0.25" min="0" '
+    + 'value="'+ui.compraCant+'" aria-label="cuánto">'
+    + '<button id="s-mas">+</button></div></div>'
     + '<p class="hint" style="margin:0 0 12px">'+(ui.compraSigno>0?'Suma':'Descuenta')+' '
-    + ui.compraCant+' × '+esc(sel.unidad_compra||'')+' = '+gr((sel.contenido_gr||0)*ui.compraCant)+'</p>'
+    + cant(ui.compraCant)+' × '+esc(sel.unidad_compra||'')+' = '
+    + gr((sel.contenido_gr||0)*ui.compraCant)+'</p>'
     + '<button class="guardar" id="s-cargar">'+(ui.compraSigno>0?'Sumar al stock':'Descontar del stock')+'</button></div>'
 
     + '<div class="card tight"><div class="rot" style="padding:16px 16px 0">Stock actual</div>'
@@ -2295,8 +2804,7 @@ function vistaStock(){
             + '<div class="edit-precio">'
             + '<input type="number" id="ns-'+i.id+'" value="'+Math.round(tiene)+'" step="10" aria-label="stock en gramos">'
             + '<button data-fix="'+i.id+'">Corregir stock (g)</button></div>'
-            + '<p class="hint">Cambiar el precio recalcula los costos de todos los productos. '
-            + 'Corregir el stock anota la diferencia como ajuste.</p>':'')
+            :'')
           + '</div>';}).join('')+'</div>'
 
     + '<div class="card tight"><div class="rot" style="padding:16px 16px 0">Últimos movimientos</div>'
@@ -2312,12 +2820,25 @@ function vistaStock(){
   $('#v-stock').querySelectorAll('[data-sg]').forEach(b => b.onclick = () => {
     ui.compraSigno = Number(b.dataset.sg); vistaStock(); });
   $('#s-insumo').onchange = e => { ui.compraSel = +e.target.value; vistaStock(); };
-  $('#s-menos').onclick = () => { ui.compraCant = Math.max(1, ui.compraCant-1); vistaStock(); };
-  $('#s-mas').onclick = () => { ui.compraCant++; vistaStock(); };
+  const paso = 0.25;
+  $('#s-menos').onclick = () => {
+    ui.compraCant = Math.max(paso, Math.round((ui.compraCant - (ui.compraCant > 1 ? 1 : paso))*100)/100);
+    vistaStock(); };
+  $('#s-mas').onclick = () => {
+    ui.compraCant = Math.round((ui.compraCant + (ui.compraCant >= 1 ? 1 : paso))*100)/100;
+    vistaStock(); };
+  $('#s-cant').oninput = e => {
+    const v = Number(String(e.target.value).replace(',', '.'));
+    ui.compraCant = (isNaN(v) || v < 0) ? 0 : v;
+    const t = $('#v-stock .hint');
+    if (t) t.textContent = (ui.compraSigno>0?'Suma ':'Descuenta ') + cant(ui.compraCant)
+      + ' × ' + (sel.unidad_compra||'') + ' = ' + gr((sel.contenido_gr||0)*ui.compraCant);
+  };
   $('#s-cargar').onclick = async () => {
     const i = ins[ui.compraSel];
+    if (!(ui.compraCant > 0)) return toast('Poné cuánto');
     await guardar('movimientos/'+nuevoId('M'), {insumo:i.nombre,
-      gramos:(i.contenido_gr||0)*ui.compraCant*ui.compraSigno,
+      gramos:Math.round((i.contenido_gr||0)*ui.compraCant*ui.compraSigno),
       origen: ui.compraSigno>0 ? 'compra' : 'salida manual', fecha:new Date().toISOString()});
     ui.compraCant = 1; toast(ui.compraSigno>0?'Compra cargada':'Stock descontado'); };
   $('#v-stock').querySelectorAll('[data-precio]').forEach(b => b.onclick = () => {
@@ -2392,16 +2913,15 @@ function vistaClientes(){
   }
   const lista = S.clientes.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre));
   $('#v-clientes').innerHTML =
-    '<div class="aviso">Tocá un cliente para editarlo o eliminarlo. Las direcciones que cargues acá aparecen como opción al hacer un pedido.</div>'
-    + '<div class="card tight">'+(lista.map(c=>{
+    '<div class="card tight">'+(lista.map(c=>{
       const dirs = [c.direccion1, c.direccion2].filter(Boolean);
       const h = hist(c);
       return '<button class="cli" data-id="'+c.id+'">'
         + '<span class="ini">'+esc(iniciales(c.nombre))+'</span>'
         + '<span><span class="n" style="display:block">'+esc(c.nombre)+'</span>'
         + '<span class="d">'+esc(c.zona||'sin zona')+(dirs.length?' · '+dirs.length+(dirs.length===1?' dirección':' direcciones'):' · sin dirección')+'</span>'
-        + (h?'<span class="d hx">'+plu(h.pedidos,'pedido','pedidos')+' · '+h.prepizzas+' prepizzas · '
-           + (dormido(h.ultima)?'<em>dormido desde '+mesCorto(h.ultima)+'</em>':'última '+mesCorto(h.ultima))+'</span>':'')
+        + (h?'<span class="d hx">'+plu(h.pedidos,'pedido','pedidos')+' · '+h.prepizzas
+           + ' prepizzas · última '+mesCorto(h.ultima)+'</span>':'')
         + '</span><span class="r">›</span></button>';}).join('')
       || '<div class="vacio">Todavía no hay clientes.</div>')+'</div>';
   $('#v-clientes').querySelectorAll('.cli').forEach(b => b.onclick = () => {
@@ -2416,10 +2936,6 @@ function hist(c){
 function mesCorto(am){
   const p = String(am).split('-');
   return MES3[Number(p[1])-1].toLowerCase()+' '+p[0].slice(2);
-}
-function dormido(am){
-  const d = new Date(); d.setMonth(d.getMonth()-3);
-  return am < d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);
 }
 const iniciales = n => String(n||'?').split(' ').filter(Boolean)
   .map(w=>w[0]).slice(0,2).join('').toUpperCase();
@@ -2473,10 +2989,10 @@ function vistaRecetas(){
     ['grPrepizza','Bollo de prepizza','g'],
     ['grFocMediana','Bollo de focaccia mediana','g'],
     ['grFocGrande','Bollo de focaccia grande','g'],
-    ['capacidadBollos','Bollos que entran en la cámara','u'],
-    ['lugarPrepizza','Lugares que ocupa una prepizza','u'],
-    ['lugarFocMediana','Lugares que ocupa una mediana','u'],
-    ['lugarFocGrande','Lugares que ocupa una grande','u'],
+    ['bandejasHeladera','Bandejas que entran en la heladera','u'],
+    ['porBandejaPrepizza','Prepizzas por bandeja','u'],
+    ['porBandejaMediana','Focaccias medianas por bandeja','u'],
+    ['porBandejaGrande','Focaccias grandes por bandeja','u'],
     ['maxAmasadora','Máximo de la amasadora','kg'],
     ['kgTiradaDefault','Kilos por tirada (por defecto)','kg'],
     ['tdm','Temperatura deseada de la masa','°C'],
@@ -2486,12 +3002,13 @@ function vistaRecetas(){
   const dec = n => n.toFixed(1).replace('.',',');
 
   $('#v-recetas').innerHTML =
-    '<div class="aviso">Todo lo que cambies acá recalcula los costos, las recetas de la tanda y el consumo de stock. Los pedidos ya cargados no se tocan: guardan su costo del día que los hiciste.</div>'
-    + tabla('masa_prepizza','Masa de prepizza','Por kilo de harina. Da '+gr(masaTotal('masa_prepizza'))+' de masa = '+rindePre().toFixed(1).replace('.',',')+' bollos de '+nGr(REGLA.grPrepizza)+'.','g',rindePre())
+    tabla('masa_prepizza','Masa de prepizza','Por kilo de harina. Da '+gr(masaTotal('masa_prepizza'))+' de masa = '+rindePre().toFixed(1).replace('.',',')+' bollos de '+nGr(REGLA.grPrepizza)+'.','g',rindePre())
     + tabla('masa_focaccia','Masa de focaccia','Por kilo de harina. Da '+gr(masaTotal('masa_focaccia'))+' de masa = '+rindeMed().toFixed(1).replace('.',',')+' medianas o '+rindeGra().toFixed(1).replace('.',',')+' grandes.','g',rindeMed())
-    + tabla('por_unidad','Por cada unidad horneada','Gas, bolsa, bandeja y etiqueta. Se suma a todos los productos.','g/u',1)
-    + '<div class="card"><div class="rot">Lo que va arriba de cada producto</div>'
-    + '<p class="hint" style="margin:0 0 4px">Tocá un producto para abrir su receta de topping.</p>'+toppings+'</div>'
+    + tabla('por_unidad','Por cada unidad horneada','Lo que lleva todo por igual.','g/u',1)
+    + tabla('env_prepizza','Envase de la prepizza','','u',1)
+    + tabla('env_foc_mediana','Envase de la focaccia mediana','','u',1)
+    + tabla('env_foc_grande','Envase de la focaccia grande','','u',1)
+    + '<div class="card"><div class="rot">Lo que va arriba de cada producto</div>'+toppings+'</div>'
     + '<div class="card"><div class="rot">Reglas del negocio</div>'
     + R.map(r=>'<div class="ed"><span class="n">'+r[1]+'</span>'
       + '<span class="campo"><input type="number" data-reg="'+r[0]+'" value="'+REGLA[r[0]]+'" step="'+(r[2]==='g'?'5':'0.5')+'"><span class="un">'+r[2]+'</span></span>'
@@ -2502,7 +3019,7 @@ function vistaRecetas(){
     + '<div class="rec-row" style="border-color:rgba(0,0,0,.06)"><span>Focaccias medianas</span><b>'+dec(rindeMed())+'</b></div>'
     + '<div class="rec-row"><span>Focaccias grandes</span><b>'+dec(rindeGra())+' · masa de '+gr(masaTotal('masa_focaccia'))+'</b></div>'
     + '</div>'
-    + '<p class="hint">Se guardan solos al salir del campo. Los rendimientos salen de dividir la masa por el gramaje: no se cargan a mano.</p></div>'
+    + '</div>'
     + '<div style="height:20px"></div>';
 
   $('#v-recetas').querySelectorAll('details[data-sku]').forEach(d => d.ontoggle = () => {
@@ -2543,8 +3060,9 @@ function vistaStats(){
   semanas.sort();
   const hechas = semanas.filter(s => s <= hoy);
 
-  let venta=0, costo=0, unidades=0, pedidos=0, bollos=0, sinCargo=0, bonif=0, pendiente=0;
+  let venta=0, costo=0, unidades=0, pedidos=0, sinCargo=0, bonif=0, pendiente=0;
   const porCliente = {}, porSku = {}, porSemana = {}, ultimaDe = {};
+  const porClase = {pre:0,med:0,gra:0}, porClaseSem = {};
   S.pedidos.forEach(p => {
     const s = lunesDe(p.tanda);
     if (s > hoy) return;                         // las futuras no son resultado todavía
@@ -2559,12 +3077,19 @@ function vistaStats(){
     (p.lineas||[]).forEach(l => {
       unidades += l.cantidad; porSemana[s].un += l.cantidad;
       porSku[l.sku] = (porSku[l.sku]||0) + l.cantidad;
-      bollos += l.cantidad * lugarDe(productoDe(l.sku));
+      const cl = claseDe(productoDe(l.sku));
+      porClase[cl] = (porClase[cl]||0) + l.cantidad;
+      porClaseSem[s] = porClaseSem[s] || {pre:0,med:0,gra:0};
+      porClaseSem[s][cl] += l.cantidad;
     });
   });
   const ganancia = venta - costo;
   const margen = venta ? ganancia/venta : 0;
   const ticket = pedidos ? venta/pedidos : 0;
+  const bandejasTot = bandejasDe(porClase.pre, porClase.med, porClase.gra);
+  const usoMedio = hechas.length ? hechas.reduce((a,x) => {
+    const q = porClaseSem[x] || {pre:0,med:0,gra:0};
+    return a + bandejasDe(q.pre,q.med,q.gra)/bandejasHeladera(); }, 0) / hechas.length : 0;
 
   if (!pedidos){
     $('#v-stats').innerHTML = '<div class="card"><div class="vacio">'
@@ -2611,11 +3136,6 @@ function vistaStats(){
       + '<div class="pista"><i style="width:'+(porSku[s]/maxSku*100)+'%"></i></div></div>';
   }).join('');
 
-  /* --- dormidos --- */
-  const limite = suma(hoy, -56);
-  const dormidos = Object.keys(ultimaDe).filter(n => ultimaDe[n] < limite)
-    .sort((a,b)=>porCliente[b]-porCliente[a]).slice(0,8);
-
   /* --- insumos que más pesan --- */
   const pg = precioGr(), pesoIns = {};
   S.pedidos.forEach(p => { if (lunesDe(p.tanda) > hoy) return;
@@ -2626,6 +3146,8 @@ function vistaStats(){
       for (const k in rec) if (k!=='Agua') pesoIns[k] = (pesoIns[k]||0) + rec[k]/porKg*(pg[k]||0)*l.cantidad;
       const pu = receta('por_unidad');
       for (const k in pu) pesoIns[k] = (pesoIns[k]||0) + pu[k]*(pg[k]||0)*l.cantidad;
+      const env = envaseDe(l.sku);
+      for (const k in env) pesoIns[k] = (pesoIns[k]||0) + env[k]*(pg[k]||0)*l.cantidad;
       const t = topping(l.sku);
       for (const k in t) pesoIns[k] = (pesoIns[k]||0) + t[k]*(pg[k]||0)*l.cantidad;
     }); });
@@ -2637,12 +3159,14 @@ function vistaStats(){
     + '<div class="p">Ganancia '+pesos(ganancia)+' · margen '+Math.round(margen*100)+'%</div></div>'
 
     + '<div class="tiles">'
-    + '<div class="tile"><div class="l">Unidades hechas</div><div class="v">'+unidades+'</div><div class="p">'+bollos+' bollos</div></div>'
+    + '<div class="tile"><div class="l">Unidades hechas</div><div class="v">'+unidades+'</div>'
+    + '<div class="p">'+plu(bandejasTot,'bandeja','bandejas')+'</div></div>'
     + '<div class="tile"><div class="l">Pedidos</div><div class="v">'+pedidos+'</div><div class="p">'+(hechas.length?(pedidos/hechas.length).toFixed(1).replace('.',','):0)+' por tanda</div></div>'
     + '<div class="tile plata"><div class="l">Ticket promedio</div><div class="v">'+pesos(ticket)+'</div></div>'
-    + '<div class="tile"><div class="l">Capacidad usada</div><div class="v">'
-    + (hechas.length?Math.round(bollos/hechas.length/REGLA.capacidadBollos*100):0)+'%</div>'
-    + '<div class="p">'+(hechas.length?Math.round(bollos/hechas.length):0)+' bollos por tanda</div></div>'
+    + '<div class="tile"><div class="l">Heladera usada</div><div class="v">'
+    + (hechas.length?Math.round(usoMedio*100):0)+'%</div>'
+    + '<div class="p">'+(hechas.length?(bandejasTot/hechas.length).toFixed(1).replace('.',',')
+        :0)+' bandejas por tanda</div></div>'
     + (pendiente?'<div class="tile pend ancho"><div class="l">Falta cobrar (histórico)</div><div class="v">'+pesos(pendiente)+'</div></div>':'')
     + (bonif?'<div class="tile ancho"><div class="l">Regalado y bonificado</div><div class="v">'+pesos(bonif)+'</div><div class="p">'+sinCargo+' pedido'+(sinCargo===1?'':'s')+' sin cargo</div></div>':'')
     + '</div>'
@@ -2651,11 +3175,10 @@ function vistaStats(){
     + '<div class="leyenda"><span><i style="background:var(--c-gan)"></i>Ganancia</span>'
     + '<span><i style="background:var(--c-cos)"></i>Costo de insumos</span></div>'
     + '<div class="chart"><div class="cols">'+cols+'</div><div class="ejes">'+ejes+'</div></div>'
-    + '<p class="hint">La altura es lo que facturaste; el verde es lo que te quedó.</p></div>'
+    + '</div>'
 
     + '<div class="card"><div class="rot">Quién te compra</div>'+barrasCli
-    + '<p class="hint">Los tres primeros son el '+Math.round(conc*100)+'% de tu facturación. '
-    + (conc>0.5?'Es mucha dependencia de pocos: vale la pena ensanchar la base.':'La base está razonablemente repartida.')+'</p></div>'
+    + '</div>'
 
     + '<div class="card"><div class="rot">Qué se vende</div>'
     + '<div class="leyenda"><span><i style="background:var(--c-pre)"></i>Prepizzas</span>'
@@ -2667,12 +3190,6 @@ function vistaStats(){
       + '<td class="num">'+Math.round(pesoIns[k]/costo*100)+'%</td></tr>').join('')
     + '</tbody></table></div>'
 
-    + (dormidos.length ? '<div class="card"><div class="rot">Clientes dormidos</div>'
-      + '<p class="hint" style="margin:0 0 10px">Sin pedidos hace más de 8 semanas. Un mensaje suele alcanzar.</p>'
-      + '<table class="tabla"><thead><tr><th>Cliente</th><th style="text-align:right">Último</th><th style="text-align:right">Te dejó</th></tr></thead><tbody>'
-      + dormidos.map(n=>'<tr><td>'+esc(n)+'</td><td class="num">'+rotuloSemana(ultimaDe[n])+'</td>'
-        + '<td class="num">'+pesos(porCliente[n])+'</td></tr>').join('')
-      + '</tbody></table></div>' : '')
     + bloquePrevio()
     + '<div style="height:20px"></div>';
 
@@ -2687,8 +3204,6 @@ function bloquePrevio(){
   const totPre = con.reduce((a,x)=>a+x.h.prepizzas, 0);
   const top = con.slice().sort((a,b)=>b.h.prepizzas-a.h.prepizzas).slice(0,8);
   const maxT = top[0].h.prepizzas || 1;
-  const durmiendo = con.filter(x => dormido(x.h.ultima))
-    .sort((a,b)=>b.h.prepizzas-a.h.prepizzas);
   const fieles = con.filter(x => x.h.pedidos >= 3).length;
   return '<div class="card"><div class="rot">Antes del panel · enero a septiembre</div>'
     + '<p class="hint" style="margin:0 0 12px">Viene de las planillas viejas. Son pedidos y unidades '
@@ -2703,13 +3218,6 @@ function bloquePrevio(){
         +' prepizzas en '+plu(x.h.pedidos,'pedido','pedidos')+'">'
       + '<div class="lin"><span>'+esc(x.c.nombre)+'</span><b>'+x.h.prepizzas+'</b></div>'
       + '<div class="pista"><i style="width:'+(x.h.prepizzas/maxT*100)+'%"></i></div></div>').join('')
-    + (durmiendo.length ? '<div class="rot" style="margin-top:16px">Dormidos hace más de 3 meses</div>'
-      + '<table class="tabla"><thead><tr><th>Cliente</th><th style="text-align:right">Pedidos</th>'
-      + '<th style="text-align:right">Último</th></tr></thead><tbody>'
-      + durmiendo.slice(0,12).map(x=>'<tr><td>'+esc(x.c.nombre)+'</td>'
-        + '<td class="num">'+x.h.pedidos+'</td><td class="num">'+mesCorto(x.h.ultima)+'</td></tr>').join('')
-      + '</tbody></table>'
-      + (durmiendo.length>12?'<p class="hint">Y '+(durmiendo.length-12)+' más.</p>':'') : '')
     + '</div>';
 }
 
@@ -2767,6 +3275,8 @@ function recordarPantalla(){
   }
   const sem = leeLocal('vl_semana');
   if (sem && semanasVisibles().indexOf(sem) >= 0) S.semanaSel = sem;
+  const e = Number(leeLocal('vl_entrega'));
+  if (e > 0 && e < entregasDe(S.semanaSel || semanaHoy()).length) S.entregaSel = e;
 }
 
 function irA(v){
@@ -2780,6 +3290,7 @@ function irA(v){
 }
 document.querySelectorAll('#nav button').forEach(b => b.onclick = () => irA(b.dataset.v));
 $('#b-masa').onclick = () => irA(S.vista==='amasado' ? 'tanda' : 'amasado');
+$('#b-notas').onclick = () => irA(S.vista==='notas' ? 'tanda' : 'notas');
 $('#b-stats').onclick = () => irA(S.vista==='stats' ? 'tanda' : 'stats');
 $('#b-recetas').onclick = () => irA(S.vista==='recetas' ? 'tanda' : 'recetas');
 

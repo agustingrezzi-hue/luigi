@@ -1,12 +1,18 @@
 /* El teléfono se guarda la app. Abrir deja de depender de la red: se muestra
-   lo que ya tiene y, por detrás, mira si hay una versión nueva.
+   lo que ya tiene y, por detrás, se baja la versión nueva.
    Los datos NO pasan por acá: van siempre y directo a la planilla. */
-const CACHE = 'luigi-3';
+const CACHE = 'luigi-4';
 const BASICOS = ['./', './index.html', './manifest.webmanifest',
                  './icono-192.png', './icono-512.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASICOS)).then(() => self.skipWaiting()));
+  /* de a uno: si un archivo falla, el resto se guarda igual. Con addAll, uno
+     solo que falle tira abajo la instalación entera y la app queda sin worker. */
+  e.waitUntil((async () => {
+    const c = await caches.open(CACHE);
+    await Promise.all(BASICOS.map(u => c.add(u).catch(() => {})));
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', e => {
@@ -21,26 +27,42 @@ self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   /* todo lo que no sea nuestro (la planilla, las tipografías) va derecho a la red */
   if (e.request.method !== 'GET' || u.origin !== location.origin) return;
-  e.respondWith(servir(e.request));
+
+  const bajada = revalidar(e.request);
+  /* Esto es lo que faltaba. Sin waitUntil, apenas contestamos con la copia
+     guardada el navegador puede apagar el worker, y la bajada de la versión
+     nueva queda a mitad de camino: la app se queda pegada a la copia vieja
+     para siempre. Pasó el 21/9 y no se arreglaba ni reinstalando. */
+  e.waitUntil(bajada);
+  e.respondWith(responder(e.request, bajada));
 });
 
-async function servir(req){
+/* baja la versión de la red, la guarda y avisa si cambió */
+async function revalidar(req){
+  try {
+    const res = await fetch(req);
+    if (!res || !res.ok) return res || null;
+    const cache = await caches.open(CACHE);
+    const copia = res.clone();
+    if (esLaApp(req)){
+      const guardado = await cache.match(req, {ignoreSearch: true});
+      if (guardado){
+        const nuevo = await copia.clone().text();
+        const viejo = await guardado.clone().text();
+        if (nuevo !== viejo) avisarNueva();
+      }
+    }
+    await cache.put(req, copia);
+    return res;
+  } catch (e){ return null; }
+}
+
+/* primero lo que ya tenemos: la app abre al toque aunque no haya señal */
+async function responder(req, bajada){
   const cache = await caches.open(CACHE);
   const guardado = await cache.match(req, {ignoreSearch: true});
-
-  const red = fetch(req).then(async res => {
-    if (!res || !res.ok) return res;
-    if (esLaApp(req) && guardado){
-      const nuevo = await res.clone().text();
-      const viejo = await guardado.clone().text();
-      if (nuevo !== viejo) avisarNueva();
-    }
-    await cache.put(req, res.clone());
-    return res;
-  }).catch(() => null);
-
-  /* primero lo que ya tenemos: la app abre al toque aunque no haya señal */
-  return guardado || (await red) || new Response('Sin conexión', {status: 503});
+  if (guardado) return guardado;
+  return (await bajada) || new Response('Sin conexión', {status: 503});
 }
 
 function esLaApp(req){

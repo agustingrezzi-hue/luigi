@@ -188,6 +188,64 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .titulo.pasada .pantalla{color:var(--viejo);opacity:.85}
 .titulo.pasada .pill{background:var(--viejo);color:var(--surface);font-weight:700;opacity:.9}
 
+.cal{background:var(--surface);border-bottom:1px solid var(--line-2)}
+.cal[hidden]{display:none}
+.cal-tira{display:flex;overflow-x:auto;padding:4px 8px 5px;gap:1px;cursor:pointer;
+  scrollbar-width:none;-webkit-tap-highlight-color:transparent}
+.cal-tira::-webkit-scrollbar{height:0}
+.cal-tira .dia{flex:0 0 29px;display:grid;justify-items:center;gap:0;padding:2px 0 3px;
+  border-radius:8px;position:relative;line-height:1.05}
+.cal-tira .dia i{font-style:normal;font-family:"DM Mono",monospace;font-size:8.5px;
+  color:var(--ink-3);letter-spacing:.02em}
+.cal-tira .dia b{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:12.5px;
+  color:var(--ink-2);font-variant-numeric:tabular-nums}
+.cal-tira .dia.dom b{color:var(--ink-3);font-weight:500}
+.cal-tira .dia.lun{margin-left:5px}
+.cal-tira .dia.sel{background:var(--marca-soft)}
+.cal-tira .dia.hoy b{color:var(--marca-ink);text-decoration:underline;text-underline-offset:2px;
+  text-decoration-thickness:2px}
+.cal-tira .dia.rep b{color:#fff;background:var(--marca);border-radius:99px;width:21px;height:17px;
+  display:grid;place-items:center;font-size:11.5px}
+.cal-tira .dia.rep.ok b{background:var(--ok)}
+.cal-tira .dia.rep.debe b{background:var(--alerta)}
+.cal-tira .dia.rep.vacia b{background:transparent;color:var(--marca-ink);box-shadow:inset 0 0 0 1.5px var(--marca-2)}
+.cal-tira .mes{flex:0 0 auto;writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:"DM Mono",monospace;font-size:8.5px;letter-spacing:.12em;color:var(--marca-ink);
+  padding:0 2px;margin-left:4px;align-self:center}
+.cal-mes{padding:4px 14px 12px}
+.cal-mes .cab{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.cal-mes .cab span{flex:1;text-align:center;font-family:"Bricolage Grotesque",sans-serif;
+  font-weight:800;font-size:15px;text-transform:capitalize}
+.cal-mes .cab button{width:34px;height:32px;border-radius:10px;background:var(--sunken);
+  font-size:19px;color:var(--ink-2)}
+.cal-mes .cab .hoyb{width:auto;padding:0 12px;font-size:12.5px;font-weight:700;color:var(--marca-ink)}
+.cal-mes .sem,.cal-mes .grilla{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-mes .sem span{text-align:center;font-family:"DM Mono",monospace;font-size:10px;color:var(--ink-3);
+  padding:2px 0}
+.cal-mes .c{height:40px;border-radius:10px;display:grid;justify-items:center;align-content:center;
+  gap:1px;position:relative}
+.cal-mes .c b{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:14px;
+  width:28px;height:24px;display:grid;place-items:center;border-radius:99px;color:var(--ink-2)}
+.cal-mes .c i{font-style:normal;font-family:"DM Mono",monospace;font-size:8.5px;color:var(--ink-3);
+  line-height:1}
+.cal-mes .c.fuera b{color:var(--ink-3);opacity:.5}
+.cal-mes .c.sel{background:var(--marca-soft)}
+.cal-mes .c.hoy b{box-shadow:inset 0 0 0 1.5px var(--marca-2)}
+.cal-mes .c.rep b{background:var(--marca);color:#fff}
+.cal-mes .c.rep.ok b{background:var(--ok)}
+.cal-mes .c.rep.debe b{background:var(--alerta)}
+.cal-mes .c.rep.vacia b{background:transparent;color:var(--marca-ink);box-shadow:inset 0 0 0 1.5px var(--marca-2)}
+.cal-mes .ref{display:flex;gap:12px;justify-content:center;margin-top:8px;flex-wrap:wrap;
+  font-size:11px;color:var(--ink-3)}
+.cal-mes .ref .rep::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+  background:var(--marca);margin-right:5px;vertical-align:-1px}
+.cal-mes .ref .rep.ok::before{background:var(--ok)}
+.cal-mes .ref .rep.debe::before{background:var(--alerta)}
+.tchip .u{text-transform:none}
+.tchip.debe:not([aria-pressed="true"]) .u{color:var(--alerta);opacity:1;font-weight:600}
+.tchip.falta:not([aria-pressed="true"]) .u{color:var(--horno-2);opacity:1;font-weight:600}
+.titulo.partida .trozo.debe:not([aria-pressed="true"]) .q{color:var(--alerta);font-weight:600}
+.titulo.partida .trozo.falta:not([aria-pressed="true"]) .q{color:var(--horno-2);font-weight:600}
 /* ---------- tira de tandas ---------- */
 .tandas-nav{position:sticky;top:0;z-index:30;background:var(--ground);flex:0 0 auto;
   padding:10px 0 9px;border-bottom:1px solid var(--line-2)}
@@ -321,6 +379,15 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .rec-row:last-child{border-bottom:0}
 .rec-row b{font-family:"DM Mono",monospace;font-weight:500;font-variant-numeric:tabular-nums}
 .rec-row.agua-l,.rec-row.agua-l b{color:var(--marca-ink)}
+.tirada .fase{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);padding:10px 0 3px}
+.tirada .fase.biga{color:var(--horno-2);padding-top:4px}
+.tirada .fase b{font-weight:500;letter-spacing:0;text-transform:none}
+.rec-row.biga-l,.rec-row.biga-l b{color:var(--horno-2);font-weight:700}
+.switch.biga-sw{border-bottom:0;padding:4px 0 12px}
+.switch .t{font-weight:700;font-size:14px}
+.switch .p{font-size:12px;color:var(--ink-3);margin-top:1px}
 .rec-sep{height:1px;background:var(--line);margin:16px 0 4px}
 .swipe{font-size:11.5px;color:var(--ink-3);text-align:center;margin:2px 0 0;
   font-family:"DM Mono",monospace}
@@ -340,6 +407,7 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .ed .campo{position:relative}
 .ed input{padding:8px 40px 8px 9px;font-size:14px;text-align:right;
   font-family:"DM Mono",monospace}
+.ed input[data-addsel]{padding:8px 9px;text-align:left;font-family:inherit}
 .ed .un{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;
   color:var(--ink-3);pointer-events:none;font-family:"DM Mono",monospace}
 .ed .x{width:30px;height:30px;border-radius:9px;color:var(--ink-3);font-size:16px;
@@ -477,7 +545,22 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
 .edit-precio input{padding:8px 11px;font-size:14px;flex:1;min-width:96px}
 .edit-precio button{padding:8px 14px;border-radius:var(--r-s);background:var(--marca);
   color:#fff;font-weight:700;font-size:13px;white-space:nowrap}
-.compra{display:grid;grid-template-columns:1fr 118px;gap:9px;margin-bottom:11px}
+.busca{position:relative;margin-bottom:10px}
+.busca svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;
+  stroke:var(--ink-3);fill:none;stroke-width:2;stroke-linecap:round;pointer-events:none}
+.busca input{padding:12px 40px 12px 40px;border-radius:14px;font-size:15px;background:var(--surface);
+  box-shadow:var(--sombra)}
+.busca input::-webkit-search-cancel-button{display:none}
+.busca button{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;
+  border-radius:10px;color:var(--ink-3);font-size:18px}
+.compra{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;margin-bottom:11px;
+  align-items:center}
+.compra select{min-width:0}
+.compra .mas{gap:6px}
+.compra .mas .cant{width:62px;min-width:0}
+.ins-nuevo{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ins-nuevo .todo{grid-column:1/-1}
+.mov.grupo .s{text-transform:none}
 .mov{display:grid;grid-template-columns:1fr auto 30px;gap:9px;align-items:center;
   padding:9px 16px;border-bottom:1px solid var(--line-2);font-size:13px}
 .mov:last-child{border-bottom:0}
@@ -561,6 +644,20 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
   text-align:center;font-variant-numeric:tabular-nums;letter-spacing:-.04em;
   line-height:1.05;margin:2px 0 0}
 .reloj.corriendo{color:var(--marca-ink)}
+.temp-b{width:100%;margin-top:9px;display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:12px;font-size:14px;font-weight:700;border-radius:var(--r-s);background:var(--horno-soft);color:var(--horno-2)}
+.temp-b:disabled{opacity:.45}
+.temp-b svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.rec-row.temp-l,.rec-row.temp-l b{color:var(--horno-2)}
+details.lab{border-top:1px solid var(--line-2)}
+details.lab summary{display:grid;grid-template-columns:44px 1fr auto;gap:2px 8px;padding:9px 0;
+  cursor:pointer;list-style:none;align-items:baseline}
+details.lab summary::-webkit-details-marker{display:none}
+details.lab .f{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:14px;grid-row:span 2}
+details.lab .m{font-size:13.5px;font-weight:600}
+details.lab .t{font-family:"DM Mono",monospace;font-size:11.5px;color:var(--ink-3);grid-column:2}
+details.lab .min{font-family:"DM Mono",monospace;font-size:12px;color:var(--ink-2);grid-row:1;grid-column:3}
+details.lab .cuerpo{padding:0 0 10px 52px}
 .mandos{display:grid;grid-template-columns:2fr 1fr;gap:9px;margin-top:12px}
 .mandos button{padding:14px 8px;border-radius:var(--r-s);font-weight:700;font-size:15px}
 .mandos .go{background:var(--marca);color:#fff}
@@ -686,6 +783,7 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
         <button id="b-recetas" title="Recetas y reglas" aria-current="false"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
       </div>
     </div>
+    <div class="cal" id="cal" hidden></div>
     <div class="titulo" id="titulo-bar">
       <div><div class="pantalla" id="pantalla">TANDA</div>
         <h1 id="titulo">La tanda</h1><div class="sub" id="subtitulo">—</div></div>
@@ -876,7 +974,7 @@ function toast(t){ const e = $('#toast'); e.textContent = t; e.classList.add('on
 /* --- recetas vivas (de la base, con los valores de arranque como respaldo) --- */
 function receta(clave){
   const d = S.recetas.find(r => r.id === clave);
-  return d && d.items ? d.items : (MASA_BASE[clave] || {});
+  return d && d.items ? d.items : (clave === 'biga' ? BIGA_BASE.items : (MASA_BASE[clave] || {}));
 }
 function topping(sku){
   const d = S.recetas.find(r => r.id === 'top_'+sku);
@@ -896,6 +994,42 @@ function masaTotal(clave){
   const r = receta(clave); let t = 0;
   for (const k in r) t += Number(r[k])||0;
   return t;
+}
+/* Toda el agua es agua, se llame como se llame: la de ingreso y la del final
+   (el bassinage) pesan en la masa pero no cuestan ni salen del stock. */
+const esAgua = k => /^agua/i.test(String(k||'').trim());
+
+/* ------------------------------- la biga -------------------------------
+   Es parte de la receta, no una masa aparte: un porcentaje de la harina total
+   se adelanta el día antes con su propia agua y su levadura, y el amasado del
+   día sale de restar eso a la receta completa. Los totales no cambian, así que
+   el costo y el stock tampoco. */
+const BIGA_BASE = {pct:50, items:{'Harina 00':1000, 'Agua':500, 'Levadura':1}};
+function bigaDoc(){ return S.recetas.find(r => r.id === 'biga') || {}; }
+function bigaPct(){
+  const v = Number(bigaDoc().pct);
+  return isNaN(v) || bigaDoc().pct == null || bigaDoc().pct === '' ? BIGA_BASE.pct : v;
+}
+const bigaItems = () => bigaDoc().items || BIGA_BASE.items;
+/* rec va por kilo de harina; kg son los kilos de harina de la tirada */
+function desdoblar(rec, kg){
+  const B = bigaItems(), kgB = kg * bigaPct()/100;
+  const biga = {}, fin = {}, falta = [];
+  Object.keys(rec).forEach(k => { fin[k] = (Number(rec[k])||0) * kg; });
+  let pesoBiga = 0;
+  Object.keys(B).forEach(k => {
+    const g = (Number(B[k])||0) * kgB;
+    biga[k] = g; pesoBiga += g;
+    /* el agua de la biga sale del agua de ingreso: la que se llama Agua a secas,
+       o si no existe, la primera agua de la receta */
+    let dest = k in fin ? k : null;
+    if (!dest && esAgua(k)) dest = Object.keys(fin).filter(esAgua)[0] || null;
+    if (!dest){ falta.push(k); return; }
+    fin[dest] -= g;
+    if (fin[dest] < -0.5) falta.push(dest);
+    if (fin[dest] < 0) fin[dest] = 0;
+  });
+  return {biga, fin, pesoBiga, kgBiga:kgB, falta};
 }
 const nGr = n => Number(n||0).toLocaleString('es-AR')+' g';
 const plu = (n, uno, muchos) => n + ' ' + (n===1 ? uno : muchos);
@@ -920,7 +1054,7 @@ function costoSku(sku, pg){
   const porKg = esPre ? rindePre() : (p.tamano === 'Grande' ? rindeGra() : rindeMed());
   let c = 0;
   const rec = esPre ? receta('masa_prepizza') : receta('masa_focaccia');
-  for (const k in rec) if (k !== 'Agua') c += rec[k]/porKg * (pg[k]||0);
+  for (const k in rec) if (!esAgua(k)) c += rec[k]/porKg * (pg[k]||0);
   const pu = receta('por_unidad');
   for (const k in pu) c += pu[k] * (pg[k]||0);
   const env = receta(envaseClave(p));
@@ -975,7 +1109,9 @@ function entregaLimpia(e){
           kgFocManual: num(e.kgFocManual),
           bandejasManual: num(e.bandejasManual),
           salidos: e.salidos || null,
-          minutos: num(e.minutos)};
+          minutos: num(e.minutos),
+          biga: {pre: siNo((e.biga||{}).pre), foc: siNo((e.biga||{}).foc)},
+          procesos: Array.isArray(e.procesos) ? e.procesos : []};
 }
 function entregasDe(sem){
   const t = tandaDoc(sem);
@@ -1070,7 +1206,7 @@ function calcular(sem, ent){
   const bandejas = E.bandejasManual != null ? E.bandejasManual : bandejasAuto;
 
   const consumo = {};
-  const sumarC = (k,g) => { if (k !== 'Agua') consumo[k] = (consumo[k]||0)+g; };
+  const sumarC = (k,g) => { if (!esAgua(k)) consumo[k] = (consumo[k]||0)+g; };
   const rp = receta('masa_prepizza'), rf = receta('masa_focaccia'), pu = receta('por_unidad');
   for (const k in rp) sumarC(k, rp[k]*kgPre);
   for (const k in rf) sumarC(k, rf[k]*kgFoc);
@@ -1137,6 +1273,68 @@ function repartirKg(kg, tope){
   for (let i=0;i<n;i++) out.push(i<resto ? base+1 : base);
   return out;
 }
+/* ------------------- el stock se descuenta solo -------------------
+   Cuando llega el día de una entrega, lo que se usó para ella sale del stock.
+   Cada entrega deja un movimiento por insumo con un nombre fijo: T, la semana,
+   la entrega y el insumo. Si después corregís la tanda, se reescribe el mismo
+   movimiento en vez de sumar otro; y si los dos teléfonos lo hacen a la vez,
+   escriben lo mismo. Solo cuentan las entregas posteriores a la primera carga
+   de stock: lo de antes ya había salido cuando se contó lo que había. */
+const esAuto = m => /^T\d{8}-\d-/.test(String(m.id||''));
+function stockDesde(){
+  const d = S.config.find(c => c.id === 'stock');
+  if (d && d.desde) return soloFecha(d.desde);
+  const f = S.movimientos.filter(m => m.fecha && !esAuto(m)).map(m => soloFecha(m.fecha)).sort();
+  return f[0] || null;
+}
+function descuentosDebidos(){
+  const desde = stockDesde(), hoy = hoyIso(), out = {};
+  if (!desde) return out;
+  const porNombre = {};
+  S.insumos.forEach(i => { porNombre[i.nombre] = i; });
+  const sems = {};
+  S.tandas.forEach(t => { sems[lunesDe(t.id)] = 1; });
+  S.pedidos.forEach(p => { if (p.tanda) sems[lunesDe(p.tanda)] = 1; });
+  Object.keys(sems).filter(sem => suma(sem, 7) > desde).forEach(sem => {
+    entregasDe(sem).forEach((e, i) => {
+      const f = fechaEntrega(sem, i);
+      if (!(f > desde) || f > hoy) return;
+      const c = calcular(sem, i);
+      Object.keys(c.consumo).forEach(k => {
+        const ins = porNombre[k], g = Math.round(c.consumo[k]);
+        if (!ins || !g) return;
+        out['T'+sem.replace(/-/g,'')+'-'+i+'-'+ins.id] =
+          {insumo:k, gramos:-g, origen:'tanda '+rotuloEntrega(sem, i), fecha:f};
+      });
+    });
+  });
+  return out;
+}
+function descontarSolo(){
+  if (!S.listo || !S.insumos.length || (!API.activo && !DB)) return;
+  const desde = stockDesde();
+  if (!desde) return;
+  const ops = [];
+  /* la fecha de arranque se anota una vez, para que no se corra si algún día
+     se borra la primera compra */
+  if (!S.config.find(c => c.id === 'stock')) ops.push({op:'set', ruta:'config/stock', datos:{desde}});
+  const deb = descuentosDebidos();
+  Object.keys(deb).forEach(id => {
+    const m = S.movimientos.find(x => x.id === id), d = deb[id];
+    if (!m || Math.round(Number(m.gramos)) !== d.gramos || m.insumo !== d.insumo
+        || m.origen !== d.origen || soloFecha(m.fecha) !== d.fecha)
+      ops.push({op:'set', ruta:'movimientos/'+id, datos:d});
+  });
+  S.movimientos.filter(esAuto).forEach(m => {
+    if (!deb[m.id]) ops.push({op:'delete', ruta:'movimientos/'+m.id});
+  });
+  if (ops.length) escribirVarias(ops);
+}
+let _descuento = null;
+function programarDescuento(){
+  clearTimeout(_descuento);
+  _descuento = setTimeout(descontarSolo, 700);
+}
 const stockDe = nombre =>
   S.movimientos.reduce((a,m)=> a + (m.insumo===nombre ? Number(m.gramos)||0 : 0), 0);
 
@@ -1145,7 +1343,7 @@ const GRUPOS = ['De las masas','Por unidad horneada','Toppings y otros'];
 function ordenDeMasa(){
   const peso = {};
   [receta('masa_prepizza'), receta('masa_focaccia')].forEach(r =>
-    Object.keys(r).forEach(k => { if (k!=='Agua') peso[k] = (peso[k]||0) + r[k]; }));
+    Object.keys(r).forEach(k => { if (!esAgua(k)) peso[k] = (peso[k]||0) + r[k]; }));
   return Object.keys(peso).sort((a,b) => peso[b]-peso[a]);
 }
 function insumosOrdenados(){
@@ -1423,8 +1621,27 @@ async function deAUna(lote){
   }
 }
 
+/* Si tocaste lo mismo varias veces antes de que se guarde (una lista que vas
+   escribiendo, un pedido que corregís), viaja una sola vez con lo último. */
+function compactarCola(){
+  const out = [];
+  API.cola.forEach(o => {
+    let j = -1;
+    for (let k = out.length - 1; k >= 0; k--) if (out[k].ruta === o.ruta){ j = k; break; }
+    if (j < 0) return out.push(o);
+    const a = out[j];
+    let m;
+    if (o.op === 'set' || o.op === 'delete') m = o;
+    else if (a.op === 'set') m = {op:'set', ruta:o.ruta, datos:Object.assign({}, a.datos, o.datos)};
+    else if (a.op === 'update') m = {op:'update', ruta:o.ruta, datos:Object.assign({}, a.datos, o.datos)};
+    else return out.push(o);
+    out.splice(j, 1); out.push(m);
+  });
+  if (out.length !== API.cola.length){ API.cola = out; guardaCola(); }
+}
 async function vaciarCola(){
   if (!API.activo || API.enviando || !API.cola.length) return;
+  compactarCola();
   API.enviando = true; pintarConex();
   const lote = API.cola.slice(0, 40);
   try {
@@ -1562,6 +1779,20 @@ function escribir(op, ruta, datos){
   render(); vaciarCola();
   return Promise.resolve();
 }
+/* Varios cambios de una: se dibuja una sola vez y viajan en el mismo envío. */
+async function escribirVarias(ops){
+  if (!ops.length) return;
+  if (!API.activo){
+    if (!DB) return;
+    for (const o of ops){
+      const d = DB.doc(o.ruta);
+      await (o.op === 'set' ? d.set(o.datos) : o.op === 'update' ? d.update(o.datos) : d.delete());
+    }
+    return;
+  }
+  ops.forEach(o => { aplicarLocal(o.op, o.ruta, o.datos); API.cola.push({op:o.op, ruta:o.ruta, datos:o.datos}); });
+  guardaCola(); render(); vaciarCola();
+}
 const guardar = (ruta, datos) => escribir('set', ruta, datos);
 const parchar = (ruta, datos) => escribir('update', ruta, datos);
 const borrar  = ruta => escribir('delete', ruta);
@@ -1643,11 +1874,12 @@ function render(){
   /* si se sacó una entrega, la elegida puede quedar fuera de rango */
   const nEnt = S.listo ? entregasDe(S.semanaSel).length : 1;
   if (!(S.entregaSel >= 0) || S.entregaSel > nEnt - 1) S.entregaSel = 0;
-  pintarCabecera(); pintarStrip();
+  pintarCal(); pintarCabecera(); pintarStrip();
   ({tanda:vistaTanda, pedidos:vistaPedidos, nuevo:vistaNuevo, stock:vistaStock,
     clientes:vistaClientes, stats:vistaStats, recetas:vistaRecetas,
     amasado:vistaAmasado, notas:vistaNotas})[S.vista]();
   engancharReintento();
+  programarDescuento();
 }
 
 function pintarCabecera(){
@@ -1678,11 +1910,10 @@ function pintarCabecera(){
       + '<span class="rango" id="titulo">'+rotuloSemana(sem)+'</span>'
       + '<span class="pill" id="pill">'+(cerrada?'cerrada':ahora?'esta semana':pasada?'pasó':'próxima')+'</span></div>'
       + '<div class="trozos">' + ents.map((e,i) => {
-          const c = calcular(sem, i);
-          return '<button class="trozo" data-ent="'+i+'" aria-pressed="'+(i===S.entregaSel)+'">'
+          const c = calcular(sem, i), est = estadoDe(c.pedidos, sem);
+          return '<button class="trozo '+est.cls+'" data-ent="'+i+'" aria-pressed="'+(i===S.entregaSel)+'">'
             + '<span class="d">'+diaCorto(sem, i)+'</span>'
-            + '<span class="q">'+(c.bandejas? plu(c.bandejas,'bandeja','bandejas')
-                                            : 'sin pedidos')+'</span></button>';
+            + '<span class="q">'+esc(est.txt)+'</span></button>';
         }).join('') + '</div>';
     bar.querySelectorAll('[data-ent]').forEach(b => b.onclick = () => {
       S.entregaSel = Number(b.dataset.ent);
@@ -1706,17 +1937,129 @@ function pintarCabecera(){
   $('#b-notas').setAttribute('aria-current', String(S.vista==='notas'));
 }
 
+/* Lo que dice la tarjeta de una tanda o de una entrega: si quedó algo por
+   entregar o por cobrar, o si ya está todo. Las semanas que vienen muestran
+   cuántos pedidos hay. */
+function estadoDe(peds, sem){
+  if (!peds.length) return {txt:'sin pedidos', cls:''};
+  if (peds.every(saldado)) return {txt:'Finalizado', cls:'fin'};
+  if (sem > semanaHoy()) return {txt:plu(peds.length,'pedido','pedidos'), cls:''};
+  const fe = peds.some(p => !p.entregado), fc = peds.some(p => !(p.cobrado || p.sinCargo));
+  return {txt: fe && fc ? 'Falta entregar/cobrar' : fe ? 'Falta entregar' : 'Falta cobrar',
+          cls: esPasada(sem) ? 'debe' : 'falta'};
+}
+
+/* ------------------------- el calendario de arriba -------------------------
+   Una fila finita de días con los repartos marcados. Tocándola se abre el mes
+   entero, que se navega, y tocando un día vas a esa semana. */
+const DIA2 = ['Lu','Ma','Mi','Ju','Vi','Sá','Do'];
+function repartos(desde, hasta){
+  const out = {}, hoy = hoyIso(), sems = {};
+  S.tandas.forEach(t => { sems[lunesDe(t.id)] = 1; });
+  S.pedidos.forEach(p => { if (p.tanda) sems[lunesDe(p.tanda)] = 1; });
+  Object.keys(sems).filter(x => x >= suma(desde, -7) && x <= hasta).forEach(sem => {
+    const ents = entregasDe(sem);
+    ents.forEach((e, i) => {
+      const f = fechaEntrega(sem, i);
+      const peds = S.pedidos.filter(p => lunesDe(p.tanda) === sem && entregaDe(p, ents.length) === i);
+      let est = 'prox';
+      if (!peds.length) est = 'vacia';
+      else if (peds.every(saldado)) est = 'ok';
+      else if (f < hoy) est = 'debe';
+      out[f] = {sem, i, est, n:peds.length};
+    });
+  });
+  return out;
+}
+function irAFecha(f){
+  const sem = lunesDe(f);
+  const r = repartos(sem, sem)[f];
+  S.semanaSel = sem; S.entregaSel = r ? r.i : 0;
+  ui.nuevaTanda = false; ui.calAbierto = false;
+  guardaLocal('vl_semana', S.semanaSel); guardaLocal('vl_entrega', String(S.entregaSel));
+  render();
+}
+function pintarCal(){
+  const el = $('#cal');
+  const conTira = S.listo && (S.vista==='tanda' || S.vista==='pedidos');
+  el.hidden = !conTira;
+  if (!conTira) return;
+  const hoy = hoyIso(), sel = S.semanaSel, lunHoy = semanaHoy();
+  const desde = [suma(lunHoy, -56), suma(sel, -14)].sort()[0];
+  const hasta = [suma(lunHoy, 90), suma(sel, 27)].sort()[1];
+  const rep = repartos(desde, suma(hasta, 7));
+  const viejaTira = el.querySelector('.cal-tira');
+  const scroll = viejaTira ? viejaTira.scrollLeft : null;
+
+  let dias = '';
+  for (let f = desde; f <= hasta; f = suma(f, 1)){
+    const d = deIso(f), dow = (d.getDay()+6)%7, r = rep[f];
+    const cls = ['dia', f===hoy?'hoy':'', lunesDe(f)===sel?'sel':'', dow===0?'lun':'',
+                 dow===6?'dom':'', r?'rep '+r.est:''].join(' ');
+    if (d.getDate() === 1 || f === desde)
+      dias += '<span class="mes">'+MES3[d.getMonth()]+'</span>';
+    dias += '<span class="'+cls+'"><i>'+DIA2[dow]+'</i><b>'+d.getDate()+'</b></span>';
+  }
+  let mes = '';
+  if (ui.calAbierto){
+    const m = ui.calMes || sel.slice(0,7);
+    const [y, mo] = m.split('-').map(Number);
+    const primero = y+'-'+('0'+mo).slice(-2)+'-01';
+    const ini = lunesDe(primero);
+    const repM = repartos(ini, suma(ini, 42));
+    let celdas = '';
+    for (let k = 0; k < 42; k++){
+      const f = suma(ini, k), d = deIso(f), r = repM[f];
+      if (k === 35 && d.getMonth()+1 !== mo) break;
+      celdas += '<button class="'+['c', d.getMonth()+1!==mo?'fuera':'', f===hoy?'hoy':'',
+          lunesDe(f)===sel?'sel':'', r?'rep '+r.est:''].join(' ')+'" data-f="'+f+'">'
+        + '<b>'+d.getDate()+'</b>'+(r?'<i>'+(r.n?r.n:'')+'</i>':'')+'</button>';
+    }
+    mes = '<div class="cal-mes"><div class="cab">'
+      + '<button data-mm="-1" aria-label="mes anterior">‹</button>'
+      + '<span>'+MESES[mo-1]+' '+y+'</span>'
+      + '<button data-mm="1" aria-label="mes siguiente">›</button>'
+      + '<button class="hoyb" data-hoy="1">Hoy</button></div>'
+      + '<div class="sem">'+DIA2.map(x=>'<span>'+x+'</span>').join('')+'</div>'
+      + '<div class="grilla">'+celdas+'</div>'
+      + '<div class="ref"><span class="rep prox">reparto</span><span class="rep ok">terminado</span>'
+      + '<span class="rep debe">falta entregar o cobrar</span></div></div>';
+  }
+  el.className = 'cal' + (ui.calAbierto ? ' abierto' : '');
+  el.innerHTML = '<div class="cal-tira" role="button" aria-label="abrir el calendario">'+dias+'</div>' + mes;
+
+  const tira = el.querySelector('.cal-tira');
+  if (ui.calEn !== sel || scroll == null){
+    ui.calEn = sel;
+    const lun = tira.querySelector('.dia.sel');
+    if (lun) tira.scrollLeft = Math.max(0, lun.offsetLeft - 64);
+  } else tira.scrollLeft = scroll;
+  tira.onclick = () => {
+    ui.calAbierto = !ui.calAbierto;
+    ui.calMes = S.semanaSel.slice(0,7);
+    pintarCal();
+  };
+  el.querySelectorAll('[data-mm]').forEach(b => b.onclick = () => {
+    const [y, mo] = (ui.calMes || sel.slice(0,7)).split('-').map(Number);
+    const d = new Date(y, mo-1+Number(b.dataset.mm), 1);
+    ui.calMes = d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);
+    pintarCal();
+  });
+  el.querySelectorAll('[data-hoy]').forEach(b => b.onclick = () => irAFecha(hoyIso()));
+  el.querySelectorAll('[data-f]').forEach(b => b.onclick = () => irAFecha(b.dataset.f));
+}
+
 function pintarStrip(){
   const hoy = semanaHoy();
   const chips = semanasVisibles().map(sem => {
     const c = calcular(sem);
     const n = entregasDe(sem).length;
-    const clase = [sem===hoy?'esta':'', c.cerrada?'cerrada':esPasada(sem)?'pasada':''].join(' ');
+    const est = estadoDe(c.pedidos, sem);
+    const clase = [sem===hoy?'esta':'', c.cerrada?'cerrada':esPasada(sem)?'pasada':'', est.cls].join(' ');
     const dias = n > 1 ? Array.from({length:n}, (x,i) => diaCorto(sem, i)).join(' · ') : '';
     return '<button class="tchip '+clase+'" data-s="'+sem+'" aria-pressed="'+(sem===S.semanaSel)+'">'
       + '<div class="f">'+rotuloSemana(sem)+'</div>'
-      + '<div class="u">'+(sem===hoy?'esta semana · ':'')
-      + (c.bandejas? plu(c.bandejas,'bandeja','bandejas') : 'sin pedidos')+'</div>'
+      + '<div class="u">'+esc(est.txt)+'</div>'
       + (dias ? '<div class="e">'+dias+'</div>' : '')+'</button>';
   }).join('');
   $('#tandas-strip').innerHTML = chips + '<button class="tchip mas" id="mas-tanda" title="Crear otra tanda">+</button>';
@@ -1762,13 +2105,13 @@ function vistaTanda(){
     clave:'pre', titulo:'Masa de prepizzas',
     detalle:c.pre+' pedidas · salen '+c.sobrantes.salen,
     rec:receta('masa_prepizza'), kg:c.kgPre, auto:c.kgPreAuto,
-    manual:c.kgPreManual, kgTirada:c.kgTirada}));
+    manual:c.kgPreManual, kgTirada:c.kgTirada, biga:c.entrega.biga.pre}));
   if (c.kgFoc || c.kgFocManual != null) masas.push(bloqueMasa({
     clave:'foc', titulo:'Masa de focaccias',
     detalle:[c.med?c.med+(c.med===1?' mediana':' medianas'):'',
              c.gra?c.gra+(c.gra===1?' grande':' grandes'):''].filter(Boolean).join(' + ') || 'sin pedidos',
     rec:receta('masa_focaccia'), kg:c.kgFoc, auto:c.kgFocAuto,
-    manual:c.kgFocManual, kgTirada:c.kgTirada}));
+    manual:c.kgFocManual, kgTirada:c.kgTirada, biga:c.entrega.biga.foc}));
 
   const fila = (etiqueta, clave, valor, auto, cuantos) =>
     '<div class="salida"><div><div class="n">'+etiqueta+'</div>'
@@ -1861,6 +2204,11 @@ function vistaTanda(){
     escribir({salidos:nuevos});
   });
   if ($('#auto-sal')) $('#auto-sal').onclick = () => escribir({salidos:null});
+  $('#v-tanda').querySelectorAll('[data-biga]').forEach(b => b.onclick = () => {
+    const k = b.dataset.biga;
+    const nueva = Object.assign({}, c.entrega.biga, {[k]: !c.entrega.biga[k]});
+    escribir({biga:nueva});
+  });
   $('#b-band').onclick = () => { ui.editaBollos = !ui.editaBollos; ui.editaCap = false; vistaTanda(); };
   $('#b-cap').onclick = () => { ui.editaCap = !ui.editaCap; ui.editaBollos = false; vistaTanda(); };
   if ($('#ok-band')) $('#ok-band').onclick = async () => {
@@ -1994,10 +2342,27 @@ function pantallaNuevaTanda(){
 
 function bloqueMasa(o){
   const t = repartirKg(o.kg, o.kgTirada);
-  const cards = t.map((k,i) => '<div class="tirada">'
-      + '<div class="cab"><span class="t">Tirada '+(i+1)+'</span><span class="s">'+k+' kg de harina</span></div>'
-      + clavesOrdenadas(o.rec).map(x=>'<div class="rec-row '+(x==='Agua'?'agua-l':'')+'">'
-        + '<span>'+esc(x)+'</span><b>'+gr(o.rec[x]*k)+'</b></div>').join('')+'</div>').join('');
+  const filas = (items, orden) => clavesOrdenadas(items).map(x =>
+      '<div class="rec-row '+(esAgua(x)?'agua-l':'')+'"><span>'+esc(x)+'</span><b>'
+      + gr(items[x])+'</b></div>').join('');
+  const cards = t.map((k,i) => {
+    const cab = '<div class="cab"><span class="t">Tirada '+(i+1)+'</span><span class="s">'+k+' kg de harina</span></div>';
+    if (!o.biga){
+      const items = {}; Object.keys(o.rec).forEach(x => items[x] = o.rec[x]*k);
+      return '<div class="tirada">'+cab+filas(items)+'</div>';
+    }
+    const d = desdoblar(o.rec, k);
+    const fin = Object.assign({}, d.fin);
+    return '<div class="tirada">'+cab
+      + '<div class="fase biga"><span>Biga · el día antes</span><b>'+gr(d.pesoBiga)+'</b></div>'
+      + filas(d.biga)
+      + '<div class="fase"><span>Amasado final</span></div>'
+      + '<div class="rec-row biga-l"><span>Biga</span><b>'+gr(d.pesoBiga)+'</b></div>'
+      + filas(fin)
+      + (d.falta.length ? '<p class="hint" style="margin:6px 0 0;color:var(--alerta)">A la receta no le alcanza '
+          + esc(d.falta.join(', '))+' para la biga. Revisá la biga en Recetas.</p>' : '')
+      + '</div>';
+  }).join('');
   const abierto = ui.editaKg === o.clave;
   return '<div class="rec-cab con-kg"><div><span class="t">'+o.titulo+'</span>'
       + '<span class="s">'+o.detalle+' en '+t.length+' tirada'+(t.length>1?'s':'')+'</span></div>'
@@ -2011,6 +2376,11 @@ function bloqueMasa(o){
             + 'Volver a '+o.auto+'</button>' : '')
         + '</div>'
         : '')
+    + '<div class="switch biga-sw"><div><div class="t">Activar biga</div>'
+    + '<div class="p">'+(o.biga ? cant(bigaPct())+'% de la harina va a la biga, el día antes'
+        : 'desdobla el amasado en biga y masa final')+'</div></div>'
+    + '<button class="sw" data-biga="'+o.clave+'" aria-pressed="'+(o.biga?'true':'false')+'" '
+    + 'aria-label="activar biga"></button></div>'
     + '<div class="tiradas">'+cards+'</div>'
     + (t.length>1?'<p class="swipe">← deslizá para ver las '+t.length+' tiradas →</p>':'');
 }
@@ -2201,7 +2571,7 @@ function vistaAmasado(){
   if (!S.listo) return $('#v-amasado').innerHTML = esperando();
   const m = ui.masa, r = tempAgua(), obj = Math.round(r.t);
   const rec = receta(m.cual);
-  const aguaTot = (Number(rec['Agua'])||0) * (Number(m.kg)||0);
+  const A = aguasDe(m.cual, Number(m.kg)||0), aguaTot = A.ingreso;
   const hi = obj > 0 ? hielo(obj, Number(m.canilla)||0, aguaTot) : 0;
   const clase = obj < 5 ? ' frio' : obj > 45 ? ' caliente' : '';
   const cuenta = r.n + ' × ' + (REGLA.tdm||24) + ' − (' + r.partes.join(' + ') + ') = ' + obj;
@@ -2248,10 +2618,18 @@ function vistaAmasado(){
     + '<button class="go'+(CRONO.corriendo?' pausa':'')+'" id="c-go">'
     + (CRONO.corriendo?'Pausar':(cronoMs()?'Seguir':'Arrancar'))+'</button>'
     + '<button class="cero" id="c-marca"'+(cronoMs()?'':' disabled')+'>Marcar</button></div>'
+    + '<button class="mini temp-b" id="c-temp"'+(cronoMs()?'':' disabled')+'>'
+    + '<svg viewBox="0 0 24 24"><path d="M10 13.5V5a2 2 0 1 1 4 0v8.5a4 4 0 1 1-4 0z"/></svg>'
+    + 'Anotar temperatura de la masa</button>'
+    + (ui.tempAbierta ? '<div class="edit-precio">'
+        + '<input type="text" id="c-grados" inputmode="decimal" placeholder="°C de la masa" '
+        + 'aria-label="temperatura de la masa">'
+        + '<button id="c-grados-ok">Anotar</button></div>' : '')
     + (cronoMs() ? '<button class="guardar" id="c-bolle" style="margin-top:9px">'
         + 'Bollé · cerrar el proceso</button>' : '')
     + (CRONO.marcas.length ? '<div class="rec-sep"></div>'
-        + CRONO.marcas.map((m,i) => '<div class="rec-row"><span>'+esc(m.que||('Marca '+(i+1)))
+        + CRONO.marcas.map((m,i) => '<div class="rec-row'+(m.temp!=null?' temp-l':'')+'"><span>'
+          + esc(m.temp!=null ? 'Masa a '+cant(m.temp)+' °C' : (m.que||('Marca '+(i+1))))
           + '</span><b>'+mmss(m.ms)+'</b></div>').join('') : '')
     + '<p class="hint" style="text-align:center">'
     + (CRONO.corriendo ? 'No para hasta que bollás: el descanso también cuenta.'
@@ -2272,7 +2650,7 @@ function vistaAmasado(){
 
   const refrescar = () => {
     const rr = tempAgua(), oo = Math.round(rr.t);
-    const ag = (Number(receta(ui.masa.cual)['Agua'])||0) * (Number(ui.masa.kg)||0);
+    const ag = aguasDe(ui.masa.cual, Number(ui.masa.kg)||0).ingreso;
     const hh = oo > 0 ? hielo(oo, Number(ui.masa.canilla)||0, ag) : 0;
     const n = $('#termo-n'); if (n) n.textContent = oo;
     const cu = $('#termo-cuenta');
@@ -2304,11 +2682,40 @@ function vistaAmasado(){
     vistaAmasado(); };
   $('#c-go').onclick = () => { CRONO.corriendo ? pausarCrono() : arrancarCrono(); vistaAmasado(); };
   $('#c-marca').onclick = () => { marcar('Marca ' + (CRONO.marcas.length + 1)); vistaAmasado(); };
+  $('#c-temp').onclick = () => { ui.tempAbierta = !ui.tempAbierta; vistaAmasado();
+    const i = $('#c-grados'); if (i) i.focus(); };
+  if ($('#c-grados-ok')){
+    const anotar = () => {
+      const v = Number(String($('#c-grados').value).replace(',', '.'));
+      if (!$('#c-grados').value || isNaN(v)) return toast('Poné los grados');
+      CRONO.marcas.push({ms:cronoMs(), que:'Temperatura de la masa', temp:v});
+      guardaCrono(); ui.tempAbierta = false; vistaAmasado();
+      toast('Masa a ' + cant(v) + ' °C, anotado');
+    };
+    $('#c-grados-ok').onclick = anotar;
+    $('#c-grados').onkeydown = e => { if (e.key === 'Enter') anotar(); };
+  }
   if ($('#c-bolle')) $('#c-bolle').onclick = async () => {
     const min = Math.round(cronoMs()/60000);
     pausarCrono();
-    await escribirEntrega(S.semanaSel, S.entregaSel, {minutos:min});
-    cerarCrono(); vistaAmasado();
+    /* todo lo del proceso queda guardado en la tanda: sirve para ir
+       cruzando temperaturas y tiempos más adelante */
+    const tt = tempAgua(), A = aguasDe(ui.masa.cual, Number(ui.masa.kg)||0);
+    const obj = Math.round(tt.t);
+    const proceso = {fecha: hoyIso(), hora: new Date().toTimeString().slice(0,5),
+      masa: ui.masa.cual === 'masa_prepizza' ? 'prepizza' : 'focaccia',
+      kg: Number(ui.masa.kg)||0, minutos: min, biga: A.conBiga,
+      ambiente: numONada(ui.masa.amb), harina: numONada(ui.masa.harina),
+      prefermento: ui.masa.usaPref ? numONada(ui.masa.pref) : null,
+      canilla: numONada(ui.masa.canilla), aguaObjetivo: obj,
+      hielo: obj > 0 ? hielo(obj, Number(ui.masa.canilla)||0, A.ingreso) : 0,
+      tdm: Number(REGLA.tdm)||null, friccion: Number(REGLA.friccion)||null,
+      marcas: CRONO.marcas.map(m => Object.assign({min: Math.round(m.ms/6000)/10, que: m.que},
+                                                  m.temp != null ? {temp: m.temp} : {}))};
+    const E = entregasDe(S.semanaSel)[S.entregaSel] || {};
+    await escribirEntrega(S.semanaSel, S.entregaSel,
+      {minutos:min, procesos:(E.procesos || []).concat([proceso])});
+    cerarCrono(); ui.tempAbierta = false; vistaAmasado();
     toast('Proceso de ' + min + ' min, guardado en la tanda');
   };
   $('#p-nuevo').onclick = () => {
@@ -2320,6 +2727,21 @@ function vistaAmasado(){
   engancharPasos();
 }
 
+/* El agua que se templa es la de ingreso. Si la tanda elegida lleva biga en esta
+   masa, una parte del agua ya se fue en la biga el día antes. La del final se
+   pone aparte y no entra en la cuenta. */
+function aguasDe(cual, kg){
+  const rec = receta(cual);
+  const E = S.listo ? entregasDe(S.semanaSel)[S.entregaSel] || entregasDe(S.semanaSel)[0] : null;
+  const conBiga = !!(E && E.biga && E.biga[cual === 'masa_prepizza' ? 'pre' : 'foc']);
+  const items = conBiga ? desdoblar(rec, kg).fin : Object.keys(rec).reduce((o,k) =>
+    (o[k] = (Number(rec[k])||0)*kg, o), {});
+  const aguas = Object.keys(items).filter(esAgua);
+  const principal = 'Agua' in items ? 'Agua' : aguas[0];
+  const final = aguas.filter(k => k !== principal).reduce((a,k) => a + items[k], 0);
+  return {ingreso: principal ? items[principal] : 0, final, conBiga};
+}
+const numONada = v => (v === '' || v == null || isNaN(Number(v))) ? null : Number(v);
 function lineaAgua(aguaTot, obj, hi, m){
   if (!aguaTot) return '<p class="hint" style="margin:0">Poné los kilos de harina de la tirada.</p>';
   const nombre = m.cual === 'masa_prepizza' ? 'prepizza' : 'focaccia';
@@ -2340,9 +2762,12 @@ function lineaAgua(aguaTot, obj, hi, m){
     nota = '<div class="l" style="margin-top:7px">La canilla a '+can
       + ' °C ya está por debajo de '+obj+' °C: templala hasta ahí y listo, sin hielo.</div>';
   }
+  const A = aguasDe(m.cual, Number(m.kg)||0);
   return '<div class="agua" style="display:block">'
-    + '<div><span class="n">'+gr(aguaTot)+'</span> <span class="l">de agua para '
-    + (Number(m.kg)||0)+' kg de harina · masa de '+nombre+'</span></div>' + nota + '</div>';
+    + '<div><span class="n">'+gr(aguaTot)+'</span> <span class="l">de agua de ingreso para '
+    + (Number(m.kg)||0)+' kg de harina · masa de '+nombre+(A.conBiga?' con biga':'')+'</span></div>' + nota
+    + (A.final ? '<div class="l" style="margin-top:7px">Y '+gr(A.final)+' de agua al final, aparte.</div>' : '')
+    + '</div>';
 }
 
 function engancharPasos(){
@@ -2826,8 +3251,17 @@ function vistaStock(){
   const c = calcular(S.semanaSel);
   const ins = insumosOrdenados();
   const sel = ins[ui.compraSel] || {};
-  const movs = S.movimientos.slice()
-    .sort((a,b)=>String(b.fecha||'').localeCompare(String(a.fecha||''))).slice(0,10);
+  /* los descuentos automáticos de una entrega se muestran como una sola línea */
+  const grupos = {}, sueltos = [];
+  S.movimientos.forEach(m => {
+    if (!esAuto(m)) return sueltos.push(m);
+    const k = m.origen || m.id.split('-').slice(0,2).join('-');
+    const g = grupos[k] || (grupos[k] = {grupo:true, origen:k, fecha:m.fecha, n:0});
+    g.n++;
+  });
+  const movs = sueltos.concat(Object.keys(grupos).map(k => grupos[k]))
+    .sort((a,b)=>String(b.fecha||'').localeCompare(String(a.fecha||''))).slice(0,12);
+  const cats = Array.from(new Set(S.insumos.map(i => i.categoria).filter(Boolean))).sort();
 
   $('#v-stock').innerHTML =
     '<div class="card"><div class="rot">Mover stock</div>'
@@ -2848,6 +3282,17 @@ function vistaStock(){
     + gr((sel.contenido_gr||0)*ui.compraCant)+'</p>'
     + '<button class="guardar" id="s-cargar">'+(ui.compraSigno>0?'Sumar al stock':'Descontar del stock')+'</button></div>'
 
+    + (ui.insNuevo ? '<div class="card"><div class="rot">Insumo nuevo</div><div class="ins-nuevo">'
+        + '<div class="todo"><label class="f" for="in-nom">Nombre</label><input id="in-nom" placeholder="Por ejemplo: Harina integral"></div>'
+        + '<div><label class="f" for="in-cat">Categoría</label><input id="in-cat" list="dl-cats" placeholder="Harinas, Packaging…">'
+        + '<datalist id="dl-cats">'+cats.map(c=>'<option value="'+esc(c)+'">').join('')+'</datalist></div>'
+        + '<div><label class="f" for="in-uni">Se compra como</label><input id="in-uni" placeholder="bolsa 25 kg"></div>'
+        + '<div><label class="f" for="in-cont">Trae (g o unidades)</label><input id="in-cont" type="number" inputmode="decimal" min="0" placeholder="25000"></div>'
+        + '<div><label class="f" for="in-pre">Precio $</label><input id="in-pre" type="number" inputmode="decimal" min="0" placeholder="0"></div>'
+        + '<div class="todo"><label class="f" for="in-prov">Proveedor (opcional)</label><input id="in-prov"></div>'
+        + '</div><button class="guardar" id="in-ok" style="margin-top:12px">Agregar insumo</button>'
+        + '<button class="guardar" id="in-no" style="margin-top:8px;background:var(--sunken);color:var(--ink-2)">Cancelar</button></div>'
+      : '<button class="agregar" id="in-abrir" style="margin-bottom:12px">+ Insumo nuevo</button>')
     + '<div class="card tight"><div class="rot" style="padding:16px 16px 0">Stock actual</div>'
     + ins.map((i,n) => {
         const cab = (n===0 || ins[n-1].__g !== i.__g)
@@ -2861,7 +3306,7 @@ function vistaStock(){
           + '<div class="bar"><i style="width:'+Math.max(0,Math.min(100, tiene/((i.contenido_gr||1)*1.2)*100))+'%"></i></div>'
           + '<div class="d"><span>'+(!tiene ? 'stock sin cargar'
               : usa ? 'esta tanda usa '+gr(usa)+' · '+(tandas<1?'NO ALCANZA':'te quedan '+Math.floor(tandas)+(Math.floor(tandas)===1?' tanda':' tandas'))
-              : 'no entra en las masas')+'</span>'
+              : 'la tanda elegida no lo usa')+'</span>'
           + '<button class="precio" data-precio="'+i.id+'">'+pesos(i.precio_compra)+' / '+esc(i.unidad_compra)+'</button></div>'
           + (editando?'<div class="edit-precio">'
             + '<input type="number" id="np-'+i.id+'" value="'+i.precio_compra+'" step="10" aria-label="precio">'
@@ -2874,6 +3319,10 @@ function vistaStock(){
 
     + '<div class="card tight"><div class="rot" style="padding:16px 16px 0">Últimos movimientos</div>'
     + (movs.length ? movs.map(m => {
+        if (m.grupo) return '<div class="mov grupo"><div>Se usó en la '+esc(m.origen)
+          + '<div class="s">descuento automático · '+plu(m.n,'insumo','insumos')
+          + (m.fecha?' · '+String(m.fecha).slice(8,10)+'/'+String(m.fecha).slice(5,7):'')+'</div></div>'
+          + '<div class="q neg">auto</div><span></span></div>';
         const g = Number(m.gramos)||0;
         return '<div class="mov"><div>'+esc(m.insumo)+'<div class="s">'+esc(m.origen||'')
           + (m.fecha?' · '+String(m.fecha).slice(8,10)+'/'+String(m.fecha).slice(5,7):'')+'</div></div>'
@@ -2882,6 +3331,22 @@ function vistaStock(){
       }).join('') : '<div class="vacio">Todavía no cargaste ningún movimiento.</div>')
     + '</div>';
 
+  if ($('#in-abrir')) $('#in-abrir').onclick = () => { ui.insNuevo = true; vistaStock();
+    const n = $('#in-nom'); if (n) n.focus(); };
+  if ($('#in-no')) $('#in-no').onclick = () => { ui.insNuevo = false; vistaStock(); };
+  if ($('#in-ok')) $('#in-ok').onclick = async () => {
+    const num = id => Number(String($(id).value).replace(',', '.'));
+    const nombre = $('#in-nom').value.trim();
+    if (!nombre) return toast('Poné el nombre');
+    if (S.insumos.some(i => i.nombre.toLowerCase() === nombre.toLowerCase())) return toast('Ya existe');
+    const cont = num('#in-cont');
+    if (!(cont > 0)) return toast('Poné cuánto trae');
+    const precio = num('#in-pre');
+    ui.insNuevo = false;
+    await guardar('insumos/'+nuevoId('I'), {nombre, categoria:$('#in-cat').value.trim() || 'Otros',
+      unidad_compra:$('#in-uni').value.trim() || 'unidad', contenido_gr:cont,
+      precio_compra: isNaN(precio) ? 0 : precio, proveedor:$('#in-prov').value.trim()});
+    toast(nombre + ' agregado'); };
   $('#v-stock').querySelectorAll('[data-sg]').forEach(b => b.onclick = () => {
     ui.compraSigno = Number(b.dataset.sg); vistaStock(); });
   $('#s-insumo').onchange = e => { ui.compraSel = +e.target.value; vistaStock(); };
@@ -2976,9 +3441,14 @@ function vistaClientes(){
       ui.editaCliente = null; ui.borraCliente = false; vistaClientes(); toast('Cliente eliminado'); };
     return;
   }
-  const lista = S.clientes.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre));
-  $('#v-clientes').innerHTML =
-    '<div class="card tight">'+(lista.map(c=>{
+  const buscando = document.activeElement && document.activeElement.id === 'cli-busca';
+  const sinTilde = t => String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const filas = () => {
+    const q = sinTilde(ui.buscaCli).trim();
+    const lista = S.clientes.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre))
+      .filter(c => !q || q.split(/\s+/).every(w => sinTilde([c.nombre, c.zona, c.direccion1,
+        c.direccion2, c.telefono, c.tipo].join(' ')).indexOf(w) >= 0));
+    return lista.map(c=>{
       const dirs = [c.direccion1, c.direccion2].filter(Boolean);
       const h = hist(c);
       return '<button class="cli" data-id="'+c.id+'">'
@@ -2988,9 +3458,31 @@ function vistaClientes(){
         + (h?'<span class="d hx">'+plu(h.pedidos,'pedido','pedidos')+' · '+h.prepizzas
            + ' prepizzas · última '+mesCorto(h.ultima)+'</span>':'')
         + '</span><span class="r">›</span></button>';}).join('')
-      || '<div class="vacio">Todavía no hay clientes.</div>')+'</div>';
-  $('#v-clientes').querySelectorAll('.cli').forEach(b => b.onclick = () => {
+      || '<div class="vacio">'+(q ? 'Nadie con “'+esc(ui.buscaCli.trim())+'”.' : 'Todavía no hay clientes.')+'</div>';
+  };
+  const enganchar = () => $('#cli-lista').querySelectorAll('.cli').forEach(b => b.onclick = () => {
     ui.editaCliente = b.dataset.id; ui.borraCliente = false; vistaClientes(); });
+  $('#v-clientes').innerHTML =
+    '<div class="busca"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>'
+    + '<input type="search" id="cli-busca" placeholder="Buscar por nombre, zona, dirección…" '
+    + 'value="'+esc(ui.buscaCli||'')+'" autocomplete="off" aria-label="buscar cliente">'
+    + (ui.buscaCli ? '<button id="cli-limpia" aria-label="borrar búsqueda">×</button>' : '') + '</div>'
+    + '<div class="card tight" id="cli-lista">'+filas()+'</div>';
+  enganchar();
+  const inp = $('#cli-busca');
+  /* si llegan datos nuevos mientras escribís, no perdés el cursor */
+  if (buscando){ inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+  inp.oninput = () => {
+    const tenia = !!ui.buscaCli;
+    ui.buscaCli = inp.value;
+    if (tenia !== !!ui.buscaCli){
+      /* aparece o se va la cruz: se redibuja y se devuelve el foco */
+      vistaClientes(); const i = $('#cli-busca'); i.focus();
+      i.setSelectionRange(i.value.length, i.value.length); return;
+    }
+    $('#cli-lista').innerHTML = filas(); enganchar();
+  };
+  if ($('#cli-limpia')) $('#cli-limpia').onclick = () => { ui.buscaCli = ''; vistaClientes(); $('#cli-busca').focus(); };
 }
 /* lo que quedó de las planillas viejas, guardado en la ficha del cliente */
 function hist(c){
@@ -3011,7 +3503,7 @@ function vistaRecetas(){
   const pg = precioGr();
   const nombresInsumo = S.insumos.map(i=>i.nombre).sort();
   const costoDeReceta = items => {
-    let c = 0; for (const k in items) if (k!=='Agua') c += items[k]*(pg[k]||0); return c; };
+    let c = 0; for (const k in items) if (!esAgua(k)) c += items[k]*(pg[k]||0); return c; };
 
   const tabla = (clave, titulo, sub, unidad, divisor) => {
     const items = receta(clave);
@@ -3019,19 +3511,37 @@ function vistaRecetas(){
       '<div class="ed"><span class="n">'+esc(k)+'</span>'
       + '<span class="campo"><input type="number" data-rec="'+clave+'" data-k="'+esc(k)+'" value="'+items[k]+'" step="1"><span class="un">'+unidad+'</span></span>'
       + '<button class="x" data-recdel="'+clave+'" data-k="'+esc(k)+'" title="Quitar">×</button></div>').join('');
-    const faltan = nombresInsumo.filter(n => !(n in items) && n !== 'Agua');
+    const faltan = nombresInsumo.filter(n => !(n in items));
+    if (!items['Agua']) faltan.unshift('Agua');
+    if (!('Agua final' in items)) faltan.push('Agua final');
     return '<div class="card"><div class="rot" style="display:flex;justify-content:space-between;align-items:center">'
-      + '<span>'+titulo+'</span><span class="badge-costo">'+pesos(costoDeReceta(items)/(divisor||1))+' por unidad</span></div>'
+      + '<span>'+titulo+'</span>'+(divisor===0 ? '' : '<span class="badge-costo">'+pesos(costoDeReceta(items)/(divisor||1))+' por unidad</span>')+'</div>'
       + '<p class="hint" style="margin:0 0 6px">'+sub+'</p>'
       + filas
       + '<div class="ed" style="border-top:1px solid var(--line);margin-top:6px;padding-top:11px">'
-      + '<select data-addsel="'+clave+'"><option value="">+ agregar ingrediente…</option>'
-      + faltan.map(n=>'<option>'+esc(n)+'</option>').join('')
-      + (items['Agua']?'':'<option>Agua</option>')+'</select>'
+      + '<input type="text" data-addsel="'+clave+'" list="dl-'+clave+'" '
+      + 'placeholder="+ ingrediente" aria-label="ingrediente nuevo">'
+      + '<datalist id="dl-'+clave+'">'+faltan.map(n=>'<option value="'+esc(n)+'">').join('')+'</datalist>'
       + '<span class="campo"><input type="number" data-addval="'+clave+'" placeholder="0"><span class="un">'+unidad+'</span></span>'
       + '<button class="x" data-addok="'+clave+'" title="Agregar" style="color:var(--marca-ink)">+</button></div></div>';
   };
 
+  /* la biga va por kilo de SU harina; el porcentaje dice cuánto de la harina
+     total de la masa se va para ella */
+  const tarjetaBiga = () => {
+    const t = tabla('biga','Biga','Por kilo de harina de la biga. Se activa en cada tanda, masa por masa.','g',0);
+    const pct = '<div class="ed" style="margin-bottom:4px"><span class="n">De la harina total va a la biga</span>'
+      + '<span class="campo"><input type="number" id="biga-pct" value="'+bigaPct()+'" step="5" min="0" max="100">'
+      + '<span class="un">%</span></span><span></span></div>';
+    const d = desdoblar(receta('masa_prepizza'), 1);
+    const ej = '<div class="agua" style="margin-top:10px;display:block"><div class="l" style="margin-bottom:5px">'
+      + 'Ejemplo: 1 kg de harina de prepizza</div>'
+      + '<div class="rec-row"><span>Biga</span><b>'+Object.keys(d.biga).map(k=>esc(k)+' '+gr(d.biga[k])).join(' · ')+'</b></div>'
+      + '<div class="rec-row"><span>Final</span><b>'+clavesOrdenadas(d.fin).filter(k=>d.fin[k]>0)
+        .map(k=>esc(k)+' '+gr(d.fin[k])).join(' · ')+'</b></div></div>';
+    /* el porcentaje va arriba de los ingredientes */
+    return t.replace('<p class="hint"', pct + '<p class="hint"').replace(/<\/div>$/, ej + '</div>');
+  };
   const prodsFoc = S.productos.slice().sort((a,b)=>(a.orden||0)-(b.orden||0));
   const toppings = prodsFoc.map(p => {
     const items = topping(p.sku);
@@ -3044,8 +3554,9 @@ function vistaRecetas(){
       + '<span class="badge-costo">'+pesos(costoSku(p.sku,pg))+'</span></summary>'
       + '<div class="cuerpo">'+(filas||'<p class="hint" style="margin:0 0 8px">Sin ingredientes arriba.</p>')
       + '<div class="ed" style="border-top:1px solid var(--line);margin-top:6px;padding-top:11px">'
-      + '<select data-addsel="top_'+p.sku+'"><option value="">+ agregar…</option>'
-      + faltan.map(n=>'<option>'+esc(n)+'</option>').join('')+'</select>'
+      + '<input type="text" data-addsel="top_'+p.sku+'" list="dl-top_'+p.sku+'" '
+      + 'placeholder="+ ingrediente" aria-label="ingrediente nuevo">'
+      + '<datalist id="dl-top_'+p.sku+'">'+faltan.map(n=>'<option value="'+esc(n)+'">').join('')+'</datalist>'
       + '<span class="campo"><input type="number" data-addval="top_'+p.sku+'" placeholder="0"><span class="un">g</span></span>'
       + '<button class="x" data-addok="top_'+p.sku+'" style="color:var(--marca-ink)">+</button></div></div></details>';
   }).join('');
@@ -3069,6 +3580,7 @@ function vistaRecetas(){
   $('#v-recetas').innerHTML =
     tabla('masa_prepizza','Masa de prepizza','Por kilo de harina. Da '+gr(masaTotal('masa_prepizza'))+' de masa = '+rindePre().toFixed(1).replace('.',',')+' bollos de '+nGr(REGLA.grPrepizza)+'.','g',rindePre())
     + tabla('masa_focaccia','Masa de focaccia','Por kilo de harina. Da '+gr(masaTotal('masa_focaccia'))+' de masa = '+rindeMed().toFixed(1).replace('.',',')+' medianas o '+rindeGra().toFixed(1).replace('.',',')+' grandes.','g',rindeMed())
+    + tarjetaBiga()
     + tabla('por_unidad','Por cada unidad horneada','Lo que lleva todo por igual.','g/u',1)
     + tabla('env_prepizza','Envase de la prepizza','','u',1)
     + tabla('env_foc_mediana','Envase de la focaccia mediana','','u',1)
@@ -3090,7 +3602,11 @@ function vistaRecetas(){
   $('#v-recetas').querySelectorAll('details[data-sku]').forEach(d => d.ontoggle = () => {
     ui.abiertos[d.dataset.sku] = d.open; });
   const guardarReceta = async (clave, items) => {
-    await guardar('recetas/'+clave, {items}); };
+    await guardar('recetas/'+clave, clave === 'biga' ? {items, pct:bigaPct()} : {items}); };
+  $('#biga-pct').onchange = async e => {
+    const v = Number(String(e.target.value).replace(',', '.'));
+    if (isNaN(v) || v < 0 || v > 100) return toast('Entre 0 y 100');
+    await guardar('recetas/biga', {items:bigaItems(), pct:v}); toast('Biga actualizada'); };
   $('#v-recetas').querySelectorAll('[data-rec]').forEach(inp => inp.onchange = async () => {
     const clave = inp.dataset.rec, items = Object.assign({}, receta(clave));
     const v = Number(inp.value);
@@ -3103,9 +3619,10 @@ function vistaRecetas(){
     await guardarReceta(clave, items); toast('Ingrediente quitado'); });
   $('#v-recetas').querySelectorAll('[data-addok]').forEach(b => b.onclick = async () => {
     const clave = b.dataset.addok;
-    const nom = $('[data-addsel="'+clave+'"]').value;
+    const nom = $('[data-addsel="'+clave+'"]').value.trim();
     const val = Number($('[data-addval="'+clave+'"]').value);
-    if (!nom) return toast('Elegí el ingrediente');
+    if (!nom) return toast('Elegí o escribí el ingrediente');
+    if (nom in receta(clave)) return toast('Ya está en la receta');
     if (!(val > 0)) return toast('Poné la cantidad');
     const items = Object.assign({}, receta(clave)); items[nom] = val;
     await guardarReceta(clave, items); toast('Ingrediente agregado'); });
@@ -3208,7 +3725,7 @@ function vistaStats(){
       const prod = productoDe(l.sku), esPre = prod.tipo === 'Prepizza';
       const porKg = esPre ? rindePre() : (prod.tamano==='Grande'?rindeGra():rindeMed());
       const rec = esPre ? receta('masa_prepizza') : receta('masa_focaccia');
-      for (const k in rec) if (k!=='Agua') pesoIns[k] = (pesoIns[k]||0) + rec[k]/porKg*(pg[k]||0)*l.cantidad;
+      for (const k in rec) if (!esAgua(k)) pesoIns[k] = (pesoIns[k]||0) + rec[k]/porKg*(pg[k]||0)*l.cantidad;
       const pu = receta('por_unidad');
       for (const k in pu) pesoIns[k] = (pesoIns[k]||0) + pu[k]*(pg[k]||0)*l.cantidad;
       const env = envaseDe(l.sku);
@@ -3255,10 +3772,75 @@ function vistaStats(){
       + '<td class="num">'+Math.round(pesoIns[k]/costo*100)+'%</td></tr>').join('')
     + '</tbody></table></div>'
 
+    + bloqueLaboratorio()
     + bloquePrevio()
     + '<div style="height:20px"></div>';
 
   conectarTooltips($('#v-stats'));
+  engancharLaboratorio();
+}
+
+/* --------------------------- laboratorio ---------------------------
+   Cada vez que bollás, el proceso queda guardado en su tanda con las
+   temperaturas que cargaste y el tiempo. Acá se juntan todos. */
+function procesosTodos(){
+  const out = [];
+  S.tandas.forEach(t => entregasDe(t.id).forEach((e, i) =>
+    (e.procesos || []).forEach((p, k) => out.push(Object.assign({sem:t.id, ent:i, k}, p)))));
+  return out.sort((a,b) => String(b.fecha+(b.hora||'')).localeCompare(String(a.fecha+(a.hora||''))));
+}
+const tempsMasa = p => (p.marcas || []).filter(m => m.temp != null);
+function bloqueLaboratorio(){
+  const l = procesosTodos();
+  const grados = v => v == null ? '—' : cant(v)+'°';
+  return '<div class="card"><div class="rot" style="display:flex;justify-content:space-between;align-items:center">'
+    + '<span>Laboratorio</span>'+(l.length?'<button class="mini" id="lab-csv">Bajar planilla</button>':'')+'</div>'
+    + (l.length ? '<p class="hint" style="margin:0 0 8px">Cada amasado cerrado con “Bollé”. Tocá uno para ver el detalle.</p>'
+      + l.map((p, n) => {
+          const tm = tempsMasa(p), ult = tm.length ? tm[tm.length-1].temp : null;
+          const d = deIso(p.fecha);
+          return '<details class="lab"><summary>'
+            + '<span class="f">'+d.getDate()+'/'+(d.getMonth()+1)+'</span>'
+            + '<span class="m">'+esc(String(p.masa||'').replace(/^./, x => x.toUpperCase()))+(p.biga?' · biga':'')+' · '+cant(p.kg||0)+' kg</span>'
+            + '<span class="t">agua '+grados(p.aguaObjetivo)+' → masa '+grados(ult)+'</span>'
+            + '<span class="min">'+(p.minutos||0)+' min</span></summary>'
+            + '<div class="cuerpo">'
+            + '<div class="rec-row"><span>Ambiente · harina'+(p.prefermento!=null?' · prefermento':'')+'</span><b>'
+            + grados(p.ambiente)+' · '+grados(p.harina)+(p.prefermento!=null?' · '+grados(p.prefermento):'')+'</b></div>'
+            + '<div class="rec-row"><span>Canilla · agua buscada</span><b>'+grados(p.canilla)+' · '+grados(p.aguaObjetivo)
+            + (p.hielo?' · '+gr(p.hielo)+' de hielo':'')+'</b></div>'
+            + '<div class="rec-row"><span>Masa deseada · fricción</span><b>'+grados(p.tdm)+' · '+grados(p.friccion)+'</b></div>'
+            + (p.marcas||[]).map(m => '<div class="rec-row'+(m.temp!=null?' temp-l':'')+'"><span>'
+                + esc(m.temp!=null ? 'Masa a '+cant(m.temp)+' °C' : m.que)+'</span><b>min '+cant(m.min)+'</b></div>').join('')
+            + '</div></details>';
+        }).join('')
+      : '<div class="vacio">Todavía no cerraste ningún amasado. En Amasado, cuando termines, tocá “Bollé”.</div>')
+    + '</div>';
+}
+function engancharLaboratorio(){
+  const b = document.getElementById('lab-csv');
+  if (!b) return;
+  b.onclick = () => {
+    const l = procesosTodos();
+    const cols = ['fecha','hora','masa','biga','kg','minutos','ambiente','harina','prefermento',
+                  'canilla','aguaObjetivo','hielo','tdm','friccion'];
+    const maxT = Math.max(0, ...l.map(p => tempsMasa(p).length));
+    const cab = cols.concat(Array.from({length:maxT}, (x,i) => ['min_temp'+(i+1),'temp_masa'+(i+1)])
+      .reduce((a,x)=>a.concat(x), []));
+    const celda = v => v == null ? '' : (typeof v === 'boolean' ? (v?'si':'no')
+      : typeof v === 'number' ? String(v).replace('.', ',') : '"'+String(v).replace(/"/g,'""')+'"');
+    const filas = l.slice().reverse().map(p => {
+      const tm = tempsMasa(p);
+      return cols.map(k => celda(p[k])).concat(Array.from({length:maxT}, (x,i) =>
+        tm[i] ? [celda(tm[i].min), celda(tm[i].temp)] : ['','']).reduce((a,x)=>a.concat(x), [])).join(';');
+    });
+    const texto = '\ufeff' + cab.join(';') + '\n' + filas.join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([texto], {type:'text/csv;charset=utf-8'}));
+    a.download = 'laboratorio-vamos-luigi-' + hoyIso() + '.csv';
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  };
 }
 
 /* lo que traen las planillas de enero a septiembre, antes del panel */

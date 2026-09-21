@@ -66,6 +66,7 @@ html,body{overscroll-behavior-y:contain}
   --alerta:#A81F16; --alerta-soft:#FBE5E2;
   --c-pre:#2589C8; --c-foc:#B96A15; --c-gan:#0F6E4A; --c-cos:#B7C3D1;
   --viejo:#8E4640; --viejo-soft:#F0E0DE; --viejo-linea:#D9BDB9;
+  --sig:#6D4BC2;
   --sombra:0 1px 2px rgba(19,26,38,.05), 0 6px 20px -12px rgba(19,26,38,.25);
   --sombra-alta:0 2px 4px rgba(19,26,38,.06), 0 18px 40px -22px rgba(19,26,38,.45);
   --r:18px; --r-s:12px;
@@ -81,6 +82,7 @@ html,body{overscroll-behavior-y:contain}
   --alerta:#F08A80; --alerta-soft:#33170F;
   --c-pre:#3E9BD8; --c-foc:#BA7F39; --c-gan:#35A073; --c-cos:#3B4657;
   --viejo:#C08A84; --viejo-soft:#2A1917; --viejo-linea:#4A2E2B;
+  --sig:#A68AF0;
   --sombra:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.9);
   --sombra-alta:0 2px 6px rgba(0,0,0,.55), 0 22px 48px -24px rgba(0,0,0,1);
 }}
@@ -95,6 +97,7 @@ html,body{overscroll-behavior-y:contain}
   --alerta:#F08A80; --alerta-soft:#33170F;
   --c-pre:#3E9BD8; --c-foc:#BA7F39; --c-gan:#35A073; --c-cos:#3B4657;
   --viejo:#C08A84; --viejo-soft:#2A1917; --viejo-linea:#4A2E2B;
+  --sig:#A68AF0;
   --sombra:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.9);
   --sombra-alta:0 2px 6px rgba(0,0,0,.55), 0 22px 48px -24px rgba(0,0,0,1);
 }
@@ -165,6 +168,8 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .titulo.partida .trozo:first-child{border-left:0}
 .titulo.partida .trozo .d{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
   font-size:14.5px;text-transform:capitalize;color:var(--ink-2)}
+.titulo.partida .trozo .d em{font-style:normal;font-family:"DM Mono",monospace;font-size:10.5px;
+  font-weight:500;opacity:.65;margin-right:6px;letter-spacing:.04em}
 .titulo.partida .trozo .q{font-family:"DM Mono",monospace;font-size:10.5px;color:var(--ink-3)}
 .titulo.partida .trozo[aria-pressed="true"]{background:var(--marca)}
 .titulo.partida .trozo[aria-pressed="true"] .d{color:#fff}
@@ -204,11 +209,8 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .cal-tira .dia.sel{background:var(--marca-soft)}
 .cal-tira .dia.hoy b{color:var(--marca-ink);text-decoration:underline;text-underline-offset:2px;
   text-decoration-thickness:2px}
-.cal-tira .dia.rep b{color:#fff;background:var(--marca);border-radius:99px;width:21px;height:17px;
+.cal-tira .dia.rep b{color:#fff;background:var(--rep);border-radius:99px;width:21px;height:17px;
   display:grid;place-items:center;font-size:11.5px}
-.cal-tira .dia.rep.ok b{background:var(--ok)}
-.cal-tira .dia.rep.debe b{background:var(--alerta)}
-.cal-tira .dia.rep.vacia b{background:transparent;color:var(--marca-ink);box-shadow:inset 0 0 0 1.5px var(--marca-2)}
 .cal-tira .mes{flex:0 0 auto;writing-mode:vertical-rl;transform:rotate(180deg);
   font-family:"DM Mono",monospace;font-size:8.5px;letter-spacing:.12em;color:var(--marca-ink);
   padding:0 2px;margin-left:4px;align-self:center}
@@ -231,24 +233,23 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .cal-mes .c.fuera b{color:var(--ink-3);opacity:.5}
 .cal-mes .c.sel{background:var(--marca-soft)}
 .cal-mes .c.hoy b{box-shadow:inset 0 0 0 1.5px var(--marca-2)}
-.cal-mes .c.rep b{background:var(--marca);color:#fff}
-.cal-mes .c.rep.ok b{background:var(--ok)}
-.cal-mes .c.rep.debe b{background:var(--alerta)}
-.cal-mes .c.rep.vacia b{background:transparent;color:var(--marca-ink);box-shadow:inset 0 0 0 1.5px var(--marca-2)}
+.cal-mes .c.rep b{background:var(--rep);color:#fff}
+.rep.esta{--rep:var(--marca)} .rep.sig{--rep:var(--sig)} .rep.fut{--rep:var(--marca-2)}
+.rep.pasada{--rep:var(--viejo)} .rep.debe{--rep:var(--alerta)}
+.cal-tira .dia.rep.fut b,.cal-mes .c.rep.fut b,.cal-tira .dia.rep.vacia b,.cal-mes .c.rep.vacia b{
+  background:transparent;color:var(--rep);box-shadow:inset 0 0 0 1.5px var(--rep)}
 .cal-mes .ref{display:flex;gap:12px;justify-content:center;margin-top:8px;flex-wrap:wrap;
   font-size:11px;color:var(--ink-3)}
 .cal-mes .ref .rep::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
-  background:var(--marca);margin-right:5px;vertical-align:-1px}
-.cal-mes .ref .rep.ok::before{background:var(--ok)}
-.cal-mes .ref .rep.debe::before{background:var(--alerta)}
+  background:var(--rep);margin-right:5px;vertical-align:-1px}
+.cal-mes .ref .rep.fut::before{background:transparent;box-shadow:inset 0 0 0 1.5px var(--rep)}
 .tchip .u{text-transform:none}
 .tchip.debe:not([aria-pressed="true"]) .u{color:var(--alerta);opacity:1;font-weight:600}
 .tchip.falta:not([aria-pressed="true"]) .u{color:var(--horno-2);opacity:1;font-weight:600}
 .titulo.partida .trozo.debe:not([aria-pressed="true"]) .q{color:var(--alerta);font-weight:600}
 .titulo.partida .trozo.falta:not([aria-pressed="true"]) .q{color:var(--horno-2);font-weight:600}
 /* ---------- tira de tandas ---------- */
-.tandas-nav{position:sticky;top:0;z-index:30;background:var(--ground);flex:0 0 auto;
-  padding:10px 0 9px;border-bottom:1px solid var(--line-2)}
+.tandas-nav{flex:0 0 auto;padding:10px 0 0}
 .tandas-strip{display:flex;gap:8px;overflow-x:auto;padding:0 12px;scroll-snap-type:x proximity}
 .tandas-strip::-webkit-scrollbar{height:0}
 .tchip{flex:0 0 auto;scroll-snap-align:center;background:var(--surface);
@@ -553,6 +554,14 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
 .busca input::-webkit-search-cancel-button{display:none}
 .busca button{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;
   border-radius:10px;color:var(--ink-3);font-size:18px}
+.tanda-sel{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:22px;
+  letter-spacing:-.01em;margin:2px 0 11px;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 7px}
+.tanda-sel b{color:var(--marca-ink)}
+.tanda-sel i{font-style:normal;color:var(--ink-3);font-weight:500}
+.tanda-sel span{flex-basis:100%;font-family:"DM Mono",monospace;font-size:11.5px;font-weight:500;
+  color:var(--ink-3);letter-spacing:0;margin-top:2px}
+.dias.tandas-n button{display:grid;gap:1px;padding:8px 6px;text-transform:none}
+.dias.tandas-n button b{font-family:"DM Mono",monospace;font-size:10.5px;font-weight:500;opacity:.75}
 .compra{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;margin-bottom:11px;
   align-items:center}
 .compra select{min-width:0}
@@ -784,6 +793,7 @@ details.lab .cuerpo{padding:0 0 10px 52px}
       </div>
     </div>
     <div class="cal" id="cal" hidden></div>
+    <div class="tandas-nav" id="tandas-nav"><div class="tandas-strip" id="tandas-strip"></div></div>
     <div class="titulo" id="titulo-bar">
       <div><div class="pantalla" id="pantalla">TANDA</div>
         <h1 id="titulo">La tanda</h1><div class="sub" id="subtitulo">—</div></div>
@@ -791,7 +801,6 @@ details.lab .cuerpo{padding:0 0 10px 52px}
     </div>
   </header>
 
-  <div class="tandas-nav" id="tandas-nav"><div class="tandas-strip" id="tandas-strip"></div></div>
 
   <div class="cuerpo">
     <section class="vista on" id="v-tanda"></section>
@@ -967,6 +976,17 @@ function semanasVisibles(){
   return out.sort();
 }
 const esPasada = sem => sem < semanaHoy();
+const dos = n => ('0' + n).slice(-2);
+/* "SEP 03": la semana se cuenta por los lunes del mes, así la del 21 de
+   septiembre es la tercera */
+function numeroSemana(sem){
+  const d = deIso(sem);
+  return MES3[d.getMonth()] + ' ' + dos(Math.ceil(d.getDate()/7));
+}
+function diasSemana(sem){
+  const a = deIso(sem), b = deIso(suma(sem, 5));
+  return a.getDate() + ' a ' + b.getDate();
+}
 
 function toast(t){ const e = $('#toast'); e.textContent = t; e.classList.add('on');
   setTimeout(()=>e.classList.remove('on'), 1900); }
@@ -1910,9 +1930,9 @@ function pintarCabecera(){
       + '<span class="rango" id="titulo">'+rotuloSemana(sem)+'</span>'
       + '<span class="pill" id="pill">'+(cerrada?'cerrada':ahora?'esta semana':pasada?'pasó':'próxima')+'</span></div>'
       + '<div class="trozos">' + ents.map((e,i) => {
-          const c = calcular(sem, i), est = estadoDe(c.pedidos, sem);
+          const c = calcular(sem, i), est = estadoDe(c.pedidos, sem, c.bandejas);
           return '<button class="trozo '+est.cls+'" data-ent="'+i+'" aria-pressed="'+(i===S.entregaSel)+'">'
-            + '<span class="d">'+diaCorto(sem, i)+'</span>'
+            + '<span class="d"><em>'+dos(i+1)+'</em>'+diaCorto(sem, i)+'</span>'
             + '<span class="q">'+esc(est.txt)+'</span></button>';
         }).join('') + '</div>';
     bar.querySelectorAll('[data-ent]').forEach(b => b.onclick = () => {
@@ -1940,13 +1960,14 @@ function pintarCabecera(){
 /* Lo que dice la tarjeta de una tanda o de una entrega: si quedó algo por
    entregar o por cobrar, o si ya está todo. Las semanas que vienen muestran
    cuántos pedidos hay. */
-function estadoDe(peds, sem){
+function estadoDe(peds, sem, bandejas){
   if (!peds.length) return {txt:'sin pedidos', cls:''};
+  /* la semana actual y las que vienen: lo que importa es cuánto ocupa */
+  if (!esPasada(sem)) return {txt:plu(bandejas||0,'bandeja','bandejas'), cls:''};
   if (peds.every(saldado)) return {txt:'Finalizado', cls:'fin'};
-  if (sem > semanaHoy()) return {txt:plu(peds.length,'pedido','pedidos'), cls:''};
   const fe = peds.some(p => !p.entregado), fc = peds.some(p => !(p.cobrado || p.sinCargo));
   return {txt: fe && fc ? 'Falta entregar/cobrar' : fe ? 'Falta entregar' : 'Falta cobrar',
-          cls: esPasada(sem) ? 'debe' : 'falta'};
+          cls: 'debe'};
 }
 
 /* ------------------------- el calendario de arriba -------------------------
@@ -1962,10 +1983,12 @@ function repartos(desde, hasta){
     ents.forEach((e, i) => {
       const f = fechaEntrega(sem, i);
       const peds = S.pedidos.filter(p => lunesDe(p.tanda) === sem && entregaDe(p, ents.length) === i);
-      let est = 'prox';
-      if (!peds.length) est = 'vacia';
-      else if (peds.every(saldado)) est = 'ok';
-      else if (f < hoy) est = 'debe';
+      /* el color es el de la semana: azul la actual, violeta la que sigue,
+         rojo apagado las pasadas y rojo fuerte si quedó algo sin entregar o cobrar */
+      const lh = semanaHoy();
+      let est = sem === lh ? 'esta' : sem === suma(lh, 7) ? 'sig' : sem > lh ? 'fut' : 'pasada';
+      if (est === 'pasada' && peds.length && !peds.every(saldado)) est = 'debe';
+      if (!peds.length) est += ' vacia';
       out[f] = {sem, i, est, n:peds.length};
     });
   });
@@ -2022,7 +2045,8 @@ function pintarCal(){
       + '<button class="hoyb" data-hoy="1">Hoy</button></div>'
       + '<div class="sem">'+DIA2.map(x=>'<span>'+x+'</span>').join('')+'</div>'
       + '<div class="grilla">'+celdas+'</div>'
-      + '<div class="ref"><span class="rep prox">reparto</span><span class="rep ok">terminado</span>'
+      + '<div class="ref"><span class="rep esta">esta semana</span><span class="rep sig">la que sigue</span>'
+      + '<span class="rep fut">más adelante</span><span class="rep pasada">pasadas</span>'
       + '<span class="rep debe">falta entregar o cobrar</span></div></div>';
   }
   el.className = 'cal' + (ui.calAbierto ? ' abierto' : '');
@@ -2054,7 +2078,7 @@ function pintarStrip(){
   const chips = semanasVisibles().map(sem => {
     const c = calcular(sem);
     const n = entregasDe(sem).length;
-    const est = estadoDe(c.pedidos, sem);
+    const est = estadoDe(c.pedidos, sem, c.bandejas);
     const clase = [sem===hoy?'esta':'', c.cerrada?'cerrada':esPasada(sem)?'pasada':'', est.cls].join(' ');
     const dias = n > 1 ? Array.from({length:n}, (x,i) => diaCorto(sem, i)).join(' · ') : '';
     return '<button class="tchip '+clase+'" data-s="'+sem+'" aria-pressed="'+(sem===S.semanaSel)+'">'
@@ -3067,16 +3091,18 @@ function vistaNuevo(){
   if (semanas.indexOf(nuevo.semana) < 0) semanas.push(nuevo.semana), semanas.sort();
 
   $('#v-nuevo').innerHTML =
-    '<div class="card"><div class="rot">¿Para qué semana?</div>'
-    + '<select id="n-semana">'+semanas.map(s =>
-        '<option value="'+s+'"'+(s===nuevo.semana?' selected':'')+'>'+rotuloSemana(s)
-        + (s===semanaHoy()?' (esta semana)':'')+' · entrega '+rotuloEntrega(s)+'</option>').join('')
+    '<div class="card"><div class="rot">¿Para qué tanda?</div>'
+    + '<div class="tanda-sel"><b>'+numeroSemana(nuevo.semana)+'</b><i>/</i>'+diasSemana(nuevo.semana)
+    + '<i>/</i>tanda '+dos(Math.min(nuevo.entrega, entregasDe(nuevo.semana).length-1)+1)
+    + '<span>'+rotuloEntrega(nuevo.semana, nuevo.entrega)+'</span></div>'
+    + '<select id="n-semana" aria-label="semana">'+semanas.map(s =>
+        '<option value="'+s+'"'+(s===nuevo.semana?' selected':'')+'>'+numeroSemana(s)+' / '+diasSemana(s)
+        + (s===semanaHoy()?' · esta semana':'')+'</option>').join('')
     + '</select>'
-    + (entregasDe(nuevo.semana).length > 1
-        ? '<div class="dias" style="margin-top:10px">'
-          + entregasDe(nuevo.semana).map((e,i) => '<button data-nent="'+i+'" aria-pressed="'
-            + (nuevo.entrega===i)+'">'+diaCorto(nuevo.semana, i)+'</button>').join('')
-          + '</div>' : '')
+    + '<div class="dias tandas-n" style="margin-top:10px">'
+    + entregasDe(nuevo.semana).map((e,i) => '<button data-nent="'+i+'" aria-pressed="'
+        + (nuevo.entrega===i)+'"><b>tanda '+dos(i+1)+'</b>'+diaCorto(nuevo.semana, i)+'</button>').join('')
+    + '</div>'
     + '</div>'
 
     + '<div class="card"><label class="f" for="cli">Cliente</label>'

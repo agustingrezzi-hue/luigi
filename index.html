@@ -1168,7 +1168,7 @@ function insumosOrdenados(){
 const COLS = ['productos','insumos','clientes','tandas','pedidos','movimientos',
               'recetas','config','notas'];
 const API = {activo:false, base:'', pin:'', pidePin:false, version:0, cola:[],
-             enviando:false, cargando:false, falla:0, motivo:'', via:''};
+             apartados:[], enviando:false, cargando:false, falla:0, motivo:'', via:''};
 const guardaLocal = (k,v) => { try { localStorage.setItem(k,v); } catch(e){} };
 const leeLocal = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
 const guardaCola = () => guardaLocal('vl_cola', JSON.stringify(API.cola));
@@ -1223,8 +1223,10 @@ async function mandar(cuerpo){
   try {
     const r = await porPost(cuerpo);
     if (r && r.ok){ API.via = 'post'; guardaLocal('vl_via','post'); return r; }
-    if (r && r.error === 'pin') return r;
-    fallo = 'POST: ' + ((r && r.error) || 'sin respuesta');
+    /* el servidor contestó y dijo que no: llegó bien, así que por la otra vía
+       diría lo mismo. Solo probamos la dirección si el POST ni siquiera salió. */
+    if (r && typeof r.ok === 'boolean'){ API.via = 'post'; guardaLocal('vl_via','post'); return r; }
+    fallo = 'POST: sin respuesta';
   } catch(e){
     fallo = 'POST: ' + String((e && e.message) || e).slice(0, 90);
   }
@@ -1299,6 +1301,12 @@ function conectarApps(){
   API.pidePin = window.__VL_PIN === '1';
   API.pin = leeLocal('vl_pin') || '';
   try { API.cola = JSON.parse(leeLocal('vl_cola') || '[]') || []; } catch(e){ API.cola = []; }
+  try { API.apartados = JSON.parse(leeLocal('vl_apartados') || '[]') || []; } catch(e){ API.apartados = []; }
+  /* cada apertura les da otra oportunidad, al final de la fila */
+  if (API.apartados.length){
+    API.apartados.forEach(a => API.cola.push({op:a.op, ruta:a.ruta, datos:a.datos}));
+    API.apartados = []; guardaApartados(); guardaCola();
+  }
   API.via = leeLocal('vl_via') || '';
   ajustarEscala();
   window.addEventListener('resize', ajustarEscala);
@@ -1386,17 +1394,52 @@ function aplicarLocal(op, ruta, datos){
   if (p[0] === 'config') refrescarReglas();
 }
 
+/* Lo que el servidor rechaza no se tira: queda apartado, se ve en la ficha de
+   conexión y se vuelve a probar en la próxima apertura. Pero sale de la cola,
+   para no trabar a los demás. Así pasó el 21/9: una nota que el servidor viejo
+   no conocía dejó atrapados todos los cambios de pedidos que venían atrás. */
+const guardaApartados = () => guardaLocal('vl_apartados', JSON.stringify(API.apartados));
+function apartar(o, error){
+  API.apartados.push({op:o.op, ruta:o.ruta, datos:o.datos, error:String(error||'rechazada'),
+                      cuando:Date.now()});
+  guardaApartados();
+  API.motivo = 'No se pudo guardar ' + o.ruta.split('/')[0] + ': ' + error;
+}
+const aOp = o => { const p = partes(o.ruta); return {op:o.op, col:p[0], id:p[1], datos:o.datos}; };
+function sacarDeCola(o){ const k = API.cola.indexOf(o); if (k >= 0) API.cola.splice(k, 1); }
+
+/* El servidor viejo corta el lote entero en la primera que no puede. Si pasa,
+   las mandamos de a una: las buenas entran y la mala queda apartada. */
+async function deAUna(lote){
+  for (let i = 0; i < lote.length; i++){
+    const o = lote[i];
+    const r = await mandar({pin:API.pin, ops:[aOp(o)]});
+    if (r && r.error === 'pin') throw new Error('pin');
+    if (r && r.ok){
+      API.version = r.version;
+      if (r.rechazadas && r.rechazadas.length) apartar(o, r.rechazadas[0].error);
+    } else apartar(o, (r && r.error) || 'rechazada');
+    sacarDeCola(o); guardaCola();
+  }
+}
+
 async function vaciarCola(){
   if (!API.activo || API.enviando || !API.cola.length) return;
   API.enviando = true; pintarConex();
   const lote = API.cola.slice(0, 40);
   try {
-    const ops = lote.map(o => { const p = partes(o.ruta);
-      return {op:o.op, col:p[0], id:p[1], datos:o.datos}; });
-    const r = await mandar({pin:API.pin, ops:ops});
-    if (!r.ok) throw new Error(r.error || 'no pude guardar');
-    API.cola.splice(0, lote.length); guardaCola();
-    API.version = r.version; API.falla = 0;
+    const r = await mandar({pin:API.pin, ops:lote.map(aOp)});
+    if (r && r.ok){
+      /* el servidor nuevo aplica cada una por su cuenta y dice cuáles no pudo */
+      (r.rechazadas || []).forEach(x => { if (lote[x.i]) apartar(lote[x.i], x.error); });
+      lote.forEach(sacarDeCola); guardaCola();
+      API.version = r.version; API.falla = 0;
+    } else if (r && r.error && r.error !== 'pin'){
+      await deAUna(lote);
+      API.falla = 0;
+    } else {
+      throw new Error((r && r.error) || 'no pude guardar');
+    }
   } catch(e){
     API.falla++;
     API.motivo = String((e && e.message) || e || '').slice(0, 160);
@@ -1414,10 +1457,11 @@ function pintarConex(){
   if (!e) return;
   e.hidden = !API.activo;
   if (!API.activo) return;
-  const n = API.cola.length;
-  e.className = 'conex' + (API.falla ? ' mal' : (n || API.cargando) ? ' yendo' : '');
+  const n = API.cola.length, ap = API.apartados.length;
+  e.className = 'conex' + ((API.falla || ap) ? ' mal' : (n || API.cargando) ? ' yendo' : '');
   e.textContent = API.falla
       ? (n ? n + (n===1?' cambio sin guardar':' cambios sin guardar') : 'sin conexión')
+      : ap ? plu(ap, 'cambio rechazado', 'cambios rechazados')
       : n ? 'guardando…' : '';
 }
 
@@ -1435,6 +1479,16 @@ function hojaConexion(){
     + fila('Datos cargados', S.listo ? 'sí' : 'no')
     + fila('Vía para guardar', via)
     + fila('Cambios sin guardar', String(API.cola.length))
+    + (API.apartados.length
+        ? fila('Rechazados por el servidor', String(API.apartados.length))
+          + '<div class="aviso" style="margin-top:10px">'
+          + API.apartados.map(a => esc(a.ruta.split('/')[0]) + ': ' + esc(a.error)).join('<br>')
+          + '</div>'
+          + '<div class="tiles" style="margin:10px 0 0">'
+          + '<button class="guardar" id="cx-reint" style="padding:11px">Reintentar</button>'
+          + '<button class="guardar" id="cx-desc" style="padding:11px;background:var(--alerta-soft);'
+          + 'color:var(--alerta)">Descartar</button></div>'
+        : '')
     + (API.motivo ? '<div class="aviso" style="margin-top:12px">'+esc(API.motivo)+'</div>' : '')
     + '<button class="guardar" id="cx-probar" style="margin-top:12px">Probar guardado</button>'
     + '<button class="guardar" id="cx-cerrar" style="margin-top:8px;background:var(--sunken);color:var(--ink-2)">Cerrar</button>'
@@ -1442,6 +1496,17 @@ function hojaConexion(){
   document.body.appendChild(f);
   f.onclick = e => { if (e.target === f) f.remove(); };
   f.querySelector('#cx-cerrar').onclick = () => f.remove();
+  const reint = f.querySelector('#cx-reint');
+  if (reint) reint.onclick = () => {
+    API.apartados.forEach(a => API.cola.push({op:a.op, ruta:a.ruta, datos:a.datos}));
+    API.apartados = []; guardaApartados(); guardaCola();
+    API.falla = 0; API.motivo = ''; f.remove(); pintarConex(); vaciarCola();
+  };
+  const desc = f.querySelector('#cx-desc');
+  if (desc) desc.onclick = () => {
+    API.apartados = []; guardaApartados(); API.motivo = '';
+    f.remove(); pintarConex(); toast('Descartados');
+  };
   f.querySelector('#cx-probar').onclick = async () => {
     const b = f.querySelector('#cx-probar');
     b.textContent = 'Probando…'; b.disabled = true;

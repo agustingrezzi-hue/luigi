@@ -253,12 +253,17 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .tandas-strip{display:flex;gap:8px;overflow-x:auto;padding:0 12px;scroll-snap-type:x proximity}
 .tandas-strip::-webkit-scrollbar{height:0}
 .tchip{flex:0 0 auto;scroll-snap-align:center;background:var(--surface);
-  border:1px solid var(--line);border-radius:14px;padding:7px 11px;min-width:104px;
+  border:1px solid var(--line);border-radius:14px;padding:7px 11px;width:98px;overflow:hidden;
+  transition:width .18s ease, background .15s, border-color .15s;
   text-align:left;transition:.15s;user-select:none;-webkit-user-select:none;
   -webkit-touch-callout:none;touch-action:manipulation}
 .tchip.eligiendo{box-shadow:0 0 0 3px var(--marca-2)}
-.tchip .f{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:13.5px;
-  letter-spacing:-.01em;white-space:nowrap}
+.tchip .f{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:15px;
+  letter-spacing:.01em;white-space:nowrap}
+.tchip .f i{font-style:normal;font-family:"DM Mono",monospace;font-size:10px;font-weight:500;
+  opacity:.7;margin-left:5px;vertical-align:1px}
+.tchip.centro{width:148px}
+.tchip .u{overflow:hidden;text-overflow:ellipsis}
 .tchip .u{font-size:10.5px;color:var(--ink-3);margin-top:2px;font-family:"DM Mono",monospace;
   white-space:nowrap}
 .tchip[aria-pressed="true"]{background:var(--marca);border-color:var(--marca);color:#fff}
@@ -268,7 +273,7 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
 .tchip.pasada .u{color:var(--viejo);opacity:.75}
 .tchip.pasada[aria-pressed="true"]{background:var(--viejo);border-color:var(--viejo);color:var(--surface)}
 .tchip.pasada[aria-pressed="true"] .u{color:var(--surface);opacity:.85}
-.tchip.mas{min-width:46px;display:grid;place-items:center;font-size:20px;color:var(--marca-ink);
+.tchip.mas{width:46px;display:grid;place-items:center;font-size:20px;color:var(--marca-ink);
   border-style:dashed;border-color:var(--marca-2)}
 
 /* ---------- vistas ---------- */
@@ -689,6 +694,14 @@ details.lab .cuerpo{padding:0 0 10px 52px}
 .ftiempos{padding:8px 0 4px}
 .ftiempos div{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--ink-2)}
 .ftiempos b{font-family:"DM Mono",monospace;font-weight:500;color:var(--ink)}
+.agua-lista .rec-row{font-size:15px}
+.agua-lista .rec-row b{font-size:16px}
+.mandos.fin{grid-template-columns:1fr 1fr;margin-top:9px}
+.mandos .bolle{background:var(--horno);color:#fff}
+.mandos .bolle.hecho{background:var(--horno-soft);color:var(--horno-2);opacity:1}
+.mandos .stop{background:var(--ink);color:var(--surface)}
+.cancelar{width:100%;margin-top:8px;padding:9px;font-size:13px;color:var(--ink-3);
+  border-radius:var(--r-s);text-decoration:underline;text-underline-offset:3px}
 .mandos{display:grid;grid-template-columns:2fr 1fr;gap:9px;margin-top:12px}
 .mandos button{padding:14px 8px;border-radius:var(--r-s);font-weight:700;font-size:15px}
 .mandos .go{background:var(--marca);color:#fff}
@@ -1004,6 +1017,11 @@ const dos = n => ('0' + n).slice(-2);
 function numeroSemana(sem){
   const d = deIso(sem);
   return MES3[d.getMonth()] + ' ' + dos(Math.ceil(d.getDate()/7));
+}
+/* "03 SEP", para las tarjetas de las semanas */
+function semanaMes(sem){
+  const d = deIso(sem);
+  return dos(Math.ceil(d.getDate()/7)) + ' ' + MES3[d.getMonth()];
 }
 function diasSemana(sem){
   const a = deIso(sem), b = deIso(suma(sem, 5));
@@ -2075,11 +2093,17 @@ function pintarCal(){
   el.innerHTML = '<div class="cal-tira" role="button" aria-label="abrir el calendario">'+dias+'</div>' + mes;
 
   const tira = el.querySelector('.cal-tira');
-  if (ui.calEn !== sel || scroll == null){
-    ui.calEn = sel;
-    const lun = tira.querySelector('.dia.sel');
-    if (lun) tira.scrollLeft = Math.max(0, lun.offsetLeft - 64);
-  } else tira.scrollLeft = scroll;
+  /* la semana elegida queda centrada; solo se descentra si vos deslizás */
+  if (ui.calEn !== sel){ ui.calEn = sel; ui.calMovido = false; }
+  if (ui.calMovido && scroll != null) tira.scrollLeft = scroll;
+  else {
+    const d = tira.querySelectorAll('.dia.sel');
+    if (d.length){
+      const a = d[0].offsetLeft, b = d[d.length-1].offsetLeft + d[d.length-1].offsetWidth;
+      tira.scrollLeft = Math.max(0, (a + b)/2 - tira.clientWidth/2);
+    }
+  }
+  ['pointerdown','touchstart','wheel'].forEach(ev => tira.addEventListener(ev, () => { ui.calMovido = true; }, {passive:true}));
   tira.onclick = () => {
     ui.calAbierto = !ui.calAbierto;
     ui.calMes = S.semanaSel.slice(0,7);
@@ -2102,11 +2126,9 @@ function pintarStrip(){
     const n = entregasDe(sem).length;
     const est = estadoDe(c.pedidos, sem, c.bandejas);
     const clase = [sem===hoy?'esta':'', c.cerrada?'cerrada':esPasada(sem)?'pasada':'', est.cls].join(' ');
-    const dias = n > 1 ? Array.from({length:n}, (x,i) => diaCorto(sem, i)).join(' · ') : '';
     return '<button class="tchip '+clase+'" data-s="'+sem+'" aria-pressed="'+(sem===S.semanaSel)+'">'
-      + '<div class="f">'+rotuloSemana(sem)+'</div>'
-      + '<div class="u">'+esc(est.txt)+'</div>'
-      + (dias ? '<div class="e">'+dias+'</div>' : '')+'</button>';
+      + '<div class="f">'+semanaMes(sem)+(n > 1 ? '<i>×'+n+'</i>' : '')+'</div>'
+      + '<div class="u">'+esc(est.txt)+'</div></button>';
   }).join('');
   $('#tandas-strip').innerHTML = chips + '<button class="tchip mas" id="mas-tanda" title="Crear otra tanda">+</button>';
   $('#tandas-strip').querySelectorAll('[data-s]').forEach(b => {
@@ -2120,11 +2142,51 @@ function pintarStrip(){
     alMantener(b, () => hojaEntregas(b.dataset.s));
   });
   $('#mas-tanda').onclick = () => { ui.nuevaTanda = true; irA('tanda'); };
+  const tira = $('#tandas-strip');
+  if (!tira.dataset.enganchada){
+    tira.dataset.enganchada = '1';
+    let pend = false;
+    tira.addEventListener('scroll', () => {
+      if (pend) return; pend = true;
+      requestAnimationFrame(() => { pend = false; marcarCentro(); });
+    }, {passive:true});
+  }
   if (ui.tiraEn !== S.semanaSel){
     ui.tiraEn = S.semanaSel;
     const el = $('#tandas-strip [data-s="'+S.semanaSel+'"]');
-    if (el) el.scrollIntoView({inline:'center', block:'nearest'});
+    if (el){ marcarCentro(el); centrarEn(tira, el); }
   }
+  marcarCentro();
+}
+/* Las tarjetas tienen dos tamaños: la del centro es la grande y las demás se
+   achican. Al deslizar, la que llega al centro crece y la que se va se achica. */
+function marcarCentro(forzada){
+  const tira = $('#tandas-strip'); if (!tira) return;
+  const chips = [...tira.querySelectorAll('.tchip[data-s]')];
+  let mejor = forzada || null;
+  if (!mejor){
+    const medio = tira.scrollLeft + tira.clientWidth/2;
+    let dist = Infinity;
+    chips.forEach(c => { const d = Math.abs(c.offsetLeft + c.offsetWidth/2 - medio);
+      if (d < dist){ dist = d; mejor = c; } });
+  }
+  chips.forEach(c => c.classList.toggle('centro', c === mejor));
+}
+function centrarEn(tira, el){
+  const ancho = el.classList.contains('centro') ? 148 : el.offsetWidth;
+  tira.scrollLeft = Math.max(0, el.offsetLeft + ancho/2 - tira.clientWidth/2);
+}
+
+/* lo que salió de la masa menos lo pedido: lo que queda para vender */
+function focLibres(c){
+  const med = Math.max(0, c.salidos.med - c.med), gra = Math.max(0, c.salidos.gra - c.gra);
+  const tot = med + gra;
+  return '<div class="agua" style="background:var(--ok-soft);display:block">'
+    + '<span class="n" style="color:var(--ok)">'+tot+'</span> '
+    + '<span class="l">focaccia'+(tot===1?'':'s')+' libre'+(tot===1?'':'s')+' para ubicar</span>'
+    + (tot ? '<div class="l" style="margin-top:4px">'+[med ? plu(med,'mediana','medianas') : '',
+        gra ? plu(gra,'grande','grandes') : ''].filter(Boolean).join(' · ')+'</div>' : '')
+    + '</div>';
 }
 
 /* ------------------------------ TANDA ------------------------------ */
@@ -2203,7 +2265,8 @@ function vistaTanda(){
         + (c.gra?'<div class="rec-row"><span>Grandes de '+nGr(REGLA.grFocGrande)+'</span><b>'+plu(c.gra,'bollo','bollos')+'</b></div>':'')
         + '<div class="rec-row"><span>Masa que sobra</span><b>'
         + gr(Math.round((c.kgFoc-c.harinaFoc)*masaTotal('masa_focaccia')))
-        + (c.sobrantes.focDeMas?' · ~'+c.sobrantes.focDeMas+(c.sobrantes.focDeMas===1?' mediana':' medianas'):'')+'</b></div>' : '')
+        + (c.sobrantes.focDeMas?' · ~'+c.sobrantes.focDeMas+(c.sobrantes.focDeMas===1?' mediana':' medianas'):'')+'</b></div>'
+        + focLibres(c) : '')
       + '</div>' : '')
 
     + '<div class="card"><div class="rot">Espacio en heladera</div>'
@@ -2494,7 +2557,7 @@ function arrancarRodar(){ if (!CRONO.rodando){ CRONO.rodando = true; requestAnim
 
 function guardaCrono(){ guardaLocal('vl_crono', JSON.stringify({
   corriendo:CRONO.corriendo, desde:CRONO.desde, acumulado:CRONO.acumulado,
-  sonados:CRONO.sonados, marcas:CRONO.marcas})); }
+  sonados:CRONO.sonados, marcas:CRONO.marcas, bolle:CRONO.bolle})); }
 function cargaCrono(){
   try {
     const c = JSON.parse(leeLocal('vl_crono') || 'null');
@@ -2502,6 +2565,7 @@ function cargaCrono(){
     CRONO.corriendo = !!c.corriendo; CRONO.desde = Number(c.desde)||0;
     CRONO.acumulado = Number(c.acumulado)||0; CRONO.sonados = c.sonados || {};
     CRONO.marcas = Array.isArray(c.marcas) ? c.marcas : [];
+    CRONO.bolle = c.bolle || null;
   } catch(e){}
 }
 async function pantallaDespierta(){
@@ -2528,7 +2592,7 @@ function pausarCrono(){
 }
 function cerarCrono(){
   CRONO.corriendo = false; CRONO.acumulado = 0; CRONO.desde = 0;
-  CRONO.sonados = {}; CRONO.marcas = [];
+  CRONO.sonados = {}; CRONO.marcas = []; CRONO.bolle = null;
   guardaCrono(); soltarPantalla(); callar();
 }
 /* El reloj no para hasta que bollás: el descanso de la masa es parte del
@@ -2601,7 +2665,7 @@ function avisar(paso){
 function latidoCrono(){
   const ms = cronoMs();
   const el = document.getElementById('reloj');
-  if (el){ if (CRONO.corriendo) arrancarRodar(); else el.innerHTML = tcHtml(ms); }
+  if (el) el.textContent = tc(ms, true);
   if (!CRONO.corriendo || !S.listo) return;
   let sonoAlguno = false;
   pasos().forEach(paso => {
@@ -2676,7 +2740,7 @@ function vistaAmasado(){
     + '<div id="agua-linea">'+lineaAgua(aguaTot, obj, hi, m)+'</div></div>'
 
     + '<div class="card"><div class="rot">Cronómetro · todo el proceso</div>'
-    + '<div class="reloj'+(CRONO.corriendo?' corriendo':'')+'" id="reloj">'+tcHtml(cronoMs())+'</div>'
+    + '<div class="reloj'+(CRONO.corriendo?' corriendo':'')+'" id="reloj">'+tc(cronoMs(), true)+'</div>'
     + '<div class="mandos">'
     + '<button class="go'+(CRONO.corriendo?' pausa':'')+'" id="c-go">'
     + (CRONO.corriendo?'Pausar':(cronoMs()?'Seguir':'Arrancar'))+'</button>'
@@ -2688,15 +2752,23 @@ function vistaAmasado(){
         + '<input type="text" id="c-grados" inputmode="decimal" placeholder="°C de la masa" '
         + 'aria-label="temperatura de la masa">'
         + '<button id="c-grados-ok">Anotar</button></div>' : '')
-    + (enMarcha() ? '<button class="guardar" id="c-bolle" style="margin-top:9px">'
-        + 'Bollé · cerrar el proceso</button>' : '')
+    + (enMarcha() ? '<div class="mandos fin">'
+        + (CRONO.bolle
+            ? '<button class="bolle hecho" id="c-bolle" disabled>Bollé · '+tc(CRONO.bolle.ms, true)+'</button>'
+            : '<button class="bolle" id="c-bolle">Bollé</button>')
+        + '<button class="stop" id="c-stop">Stop · guardar</button></div>'
+        + (ui.cancelando
+            ? '<div class="confirm" style="margin-top:9px"><b>¿Descartar este cronómetro?</b>'
+              + '<button class="si" id="c-cancel-si">Sí, descartar</button>'
+              + '<button class="no" id="c-cancel-no">No</button></div>'
+            : '<button class="cancelar" id="c-cancel">Cancelar · falso comienzo</button>')
+        : '')
     + (CRONO.marcas.length ? '<div class="rec-sep"></div>'
         + CRONO.marcas.map((m,i) => '<div class="rec-row'+(m.temp!=null?' temp-l':'')+'"><span>'
           + esc(m.temp!=null ? 'Masa a '+cant(m.temp)+' °C' : (m.que||('Marca '+(i+1))))
           + '</span><b>'+tc(m.ms, true)+'</b></div>').join('') : '')
     + '<p class="hint" style="text-align:center">'
-    + (CRONO.corriendo ? 'No para hasta que bollás: el descanso también cuenta.'
-                       : 'Los avisos suenan aunque estés en otra pantalla de la app.')
+    + (CRONO.corriendo ? '' : 'Los avisos suenan aunque estés en otra pantalla de la app.')
     + '</p>'
     + (avisosSistema()
         ? '<p class="hint" style="text-align:center;color:var(--ok)">Avisos del sistema activados.</p>'
@@ -2759,29 +2831,42 @@ function vistaAmasado(){
     $('#c-grados-ok').onclick = anotar;
     $('#c-grados').onkeydown = e => { if (e.key === 'Enter') anotar(); };
   }
-  if ($('#c-bolle')) $('#c-bolle').onclick = async () => {
-    const min = Math.round(cronoMs()/60000);
+  /* Bollé marca el momento, el reloj sigue. Stop cierra y guarda. */
+  if ($('#c-bolle') && !CRONO.bolle) $('#c-bolle').onclick = () => {
+    CRONO.bolle = {ms: cronoMs(), cuando: ahoraLocal()};
+    CRONO.marcas.push({ms: CRONO.bolle.ms, que: 'Bollé'});
+    guardaCrono(); vistaAmasado(); toast('Bollado a las ' + CRONO.bolle.cuando.slice(11));
+  };
+  if ($('#c-cancel')) $('#c-cancel').onclick = () => { ui.cancelando = true; vistaAmasado(); };
+  if ($('#c-cancel-no')) $('#c-cancel-no').onclick = () => { ui.cancelando = false; vistaAmasado(); };
+  if ($('#c-cancel-si')) $('#c-cancel-si').onclick = () => {
+    ui.cancelando = false; ui.tempAbierta = false; cerarCrono(); vistaAmasado(); toast('Cronómetro descartado'); };
+  if ($('#c-stop')) $('#c-stop').onclick = async () => {
+    const total = cronoMs(), min = Math.round(total/60000);
     pausarCrono();
     /* todo lo del proceso queda guardado en la tanda: sirve para ir
-       cruzando temperaturas y tiempos más adelante */
+       cruzando temperaturas y tiempos más adelante. El momento de bollar es
+       el de "Bollé"; si no se tocó, el del Stop. */
     const tt = tempAgua(), A = aguasDe(ui.masa.cual, Number(ui.masa.kg)||0);
     const obj = Math.round(tt.t);
     const clima = await climaAhora();
-    const proceso = {fecha: hoyIso(), hora: new Date().toTimeString().slice(0,5),
-      id: 'P' + Date.now().toString(36), clima,
+    const bollado = CRONO.bolle ? CRONO.bolle.cuando : ahoraLocal();
+    const proceso = {fecha: bollado.slice(0,10), hora: bollado.slice(11,16),
+      fin: ahoraLocal(), id: 'P' + Date.now().toString(36), clima,
       masa: ui.masa.cual === 'masa_prepizza' ? 'prepizza' : 'focaccia',
-      kg: Number(ui.masa.kg)||0, minutos: min, biga: A.conBiga,
+      kg: Number(ui.masa.kg)||0, minutos: min,
+      minBolle: CRONO.bolle ? Math.round(CRONO.bolle.ms/60000) : null, biga: A.conBiga,
       ambiente: numONada(ui.masa.amb), harina: numONada(ui.masa.harina),
       prefermento: ui.masa.usaPref ? numONada(ui.masa.pref) : null,
       canilla: numONada(ui.masa.canilla), aguaObjetivo: obj,
       hielo: obj > 0 ? hielo(obj, Number(ui.masa.canilla)||0, A.ingreso) : 0,
       tdm: Number(REGLA.tdm)||null, friccion: Number(REGLA.friccion)||null,
-      marcas: CRONO.marcas.map(m => Object.assign({min: Math.round(m.ms/6000)/10, tc: tc(m.ms), que: m.que},
+      marcas: CRONO.marcas.map(m => Object.assign({min: Math.round(m.ms/6000)/10, tc: tc(m.ms, true), que: m.que},
                                                   m.temp != null ? {temp: m.temp} : {}))};
     const E = entregasDe(S.semanaSel)[S.entregaSel] || {};
     await escribirEntrega(S.semanaSel, S.entregaSel,
       {minutos:min, procesos:(E.procesos || []).concat([proceso])});
-    cerarCrono(); ui.tempAbierta = false; vistaAmasado();
+    cerarCrono(); ui.tempAbierta = false; ui.cancelando = false; vistaAmasado();
     toast('Proceso de ' + min + ' min, guardado en la tanda');
   };
   engancharFerm();
@@ -2953,30 +3038,15 @@ function engancharFerm(){
   };
 }
 function lineaAgua(aguaTot, obj, hi, m){
-  if (!aguaTot) return '<p class="hint" style="margin:0">Poné los kilos de harina de la tirada.</p>';
-  const nombre = m.cual === 'masa_prepizza' ? 'prepizza' : 'focaccia';
-  const can = Number(m.canilla)||0;
-  let nota;
-  if (obj <= 0){
-    nota = '<div class="l" style="margin-top:7px;color:var(--alerta)">Con esos números el agua '
-      + 'tendría que salir bajo cero, y eso no existe. Enfriá la harina, bajá la masa deseada '
-      + 'o hacé el amasado más corto.</div>';
-  } else if (obj > 60){
-    nota = '<div class="l" style="margin-top:7px;color:var(--alerta)">Te está pidiendo agua '
-      + 'casi hirviendo. Revisá los grados que cargaste.</div>';
-  } else if (hi > 0){
-    nota = '<div class="l" style="margin-top:7px;color:var(--alerta)">Con la canilla a '+can
-      + ' °C no llegás a '+obj+' °C: poné '+gr(hi)+' en hielo y el resto, '
-      + gr(aguaTot-hi)+', de agua.</div>';
-  } else {
-    nota = '<div class="l" style="margin-top:7px">La canilla a '+can
-      + ' °C ya está por debajo de '+obj+' °C: templala hasta ahí y listo, sin hielo.</div>';
-  }
+  if (!aguaTot) return '<p class="hint" style="margin:0">Poné los kilos de harina.</p>';
   const A = aguasDe(m.cual, Number(m.kg)||0);
-  return '<div class="agua" style="display:block">'
-    + '<div><span class="n">'+gr(aguaTot)+'</span> <span class="l">de agua de ingreso para '
-    + (Number(m.kg)||0)+' kg de harina · masa de '+nombre+(A.conBiga?' con biga':'')+'</span></div>' + nota
-    + (A.final ? '<div class="l" style="margin-top:7px">Y '+gr(A.final)+' de agua al final, aparte.</div>' : '')
+  const fila = (t, v, cls) => '<div class="rec-row'+(cls?' '+cls:'')+'"><span>'+t+'</span><b>'+v+'</b></div>';
+  return '<div class="agua-lista">'
+    + (hi > 0 && obj > 0 && obj <= 60
+        ? fila('Agua', gr(aguaTot - hi), 'agua-l') + fila('Hielo', gr(hi), 'agua-l')
+        : fila('Agua'+(A.conBiga?' (con biga)':''), gr(aguaTot), 'agua-l'))
+    + (A.final ? fila('Agua final', gr(A.final)) : '')
+    + (obj <= 0 || obj > 60 ? '<p class="hint" style="margin:6px 0 0;color:var(--alerta)">Revisá los grados.</p>' : '')
     + '</div>';
 }
 

@@ -215,8 +215,8 @@ const cerca = (a,b) => Math.abs(a-b) < 0.01;
   L('\n== 7b. tarjetas: "03 SEP", dos tamaños, calendario centrado ==');
   await pg.evaluate(()=>{ S.semanaSel = semanaHoy(); S.entregaSel = 0; render(); });
   await pg.waitForTimeout(500);
-  const fHoy = await pg.$eval('.tchip[data-s="'+(await pg.evaluate(()=>semanaHoy()))+'"] .f', e=>e.textContent);
-  ok(fHoy === await pg.evaluate(()=>semanaMes(semanaHoy())) && /^\d\d [A-Z]{3}$/.test(fHoy), 'la tarjeta dice "' + fHoy + '"');
+  const fHoy = limpio(await pg.$eval('.tchip[data-s="'+(await pg.evaluate(()=>semanaHoy()))+'"] .f', e=>e.textContent));
+  ok(fHoy === (await pg.evaluate(()=>semanaMes(semanaHoy()))) + 'esta semana', 'la tarjeta dice "' + fHoy + '"');
   const anchos = await pg.$$eval('.tchip[data-s]', e=>e.map(x=>({c:x.classList.contains('centro'), w:Math.round(x.getBoundingClientRect().width), s:x.dataset.s})));
   const centrales = anchos.filter(a=>a.c);
   ok(centrales.length === 1 && centrales[0].s === await pg.evaluate(()=>S.semanaSel), 'la del centro es la elegida');
@@ -225,10 +225,17 @@ const cerca = (a,b) => Math.abs(a-b) < 0.01;
   const centroTira = await pg.evaluate(()=>{ const t=document.getElementById('tandas-strip'), c=t.querySelector('.centro').getBoundingClientRect(), r=t.getBoundingClientRect();
     return Math.abs((c.left+c.width/2) - (r.left+r.width/2)); });
   ok(centroTira < 30, 'y está centrada (desvío ' + Math.round(centroTira) + ' px)');
-  await pg.evaluate(()=>{ const t=document.getElementById('tandas-strip'); t.scrollLeft += 240; });
-  await pg.waitForTimeout(500);
+  const antesSem = await pg.evaluate(()=>S.semanaSel);
+  await pg.evaluate(()=>{ const t=document.getElementById('tandas-strip'); t.scrollLeft += 340; });
+  await pg.waitForTimeout(900);
   const otra = await pg.$eval('.tchip.centro', e=>e.dataset.s);
-  ok(otra !== await pg.evaluate(()=>S.semanaSel), 'al deslizar crece la que llega al centro');
+  ok(otra !== antesSem && otra === await pg.evaluate(()=>S.semanaSel),
+     'al deslizar, la que queda en el centro se elige sola: ' + antesSem + ' → ' + otra);
+  ok(await pg.evaluate(()=>S.entregaSel) === 0, 'y arranca en la tanda 01');
+  const calSigue = await pg.evaluate(()=>{ const t=document.querySelector('.cal-tira'), d=[...t.querySelectorAll('.dia.sel')];
+    const r=t.getBoundingClientRect(), a=d[0].getBoundingClientRect().left, b=d[d.length-1].getBoundingClientRect().right;
+    return {desvio: Math.abs((a+b)/2 - (r.left+r.width/2)), sem: lunesDe(d[0].title || '') }; });
+  ok(calSigue.desvio < 25, 'el calendario la sigue y la centra (desvío ' + Math.round(calSigue.desvio) + ' px)');
   const calDesvio = await pg.evaluate(()=>{ const t=document.querySelector('.cal-tira'), d=[...t.querySelectorAll('.dia.sel')];
     const r=t.getBoundingClientRect(), a=d[0].getBoundingClientRect().left, b=d[d.length-1].getBoundingClientRect().right;
     return Math.abs((a+b)/2 - (r.left+r.width/2)); });
@@ -248,14 +255,15 @@ const cerca = (a,b) => Math.abs(a-b) < 0.01;
   await pg.evaluate(()=>escribirEntrega(S.semanaSel, 0, {salidos:{pre:5, med:5, gra:1}}));
   await pg.waitForTimeout(500);
   const libres = limpio(await pg.textContent('#v-tanda'));
-  ok(/3 medianas · 1 grande/.test(libres) && /libres? para ubicar/.test(libres),
+  ok(/3 focaccias medianas · 1 focaccia grande/.test(libres) && /libres? para ubicar/.test(libres),
      'cuenta las focaccias libres: ' + (libres.match(/\d+\s*libres? para ubicar[^A-Z]*/)||[''])[0]);
-  ok(/Focaccias medianas[^F]*3 libres/.test(libres), 'y lo dice en cada fila de bollos que salieron');
+  ok(/3 libres/.test(libres), 'y lo dice en la fila de bollos que salieron: '
+     + (libres.match(/Focaccias medianas[^A-Z]{0,40}/)||[''])[0]);
   const tarjetas = await pg.$$eval('#v-tanda .card .rot', e=>e.map(x=>x.textContent.trim()));
   ok(tarjetas.join(' | ') === 'Qué hay que hacer | Las masas | Bollos que salieron | Espacio en heladera',
      'las tarjetas en orden: ' + tarjetas.join(' | '));
   ok(!/Bolleo/.test(libres), 'la tarjeta de Bolleo ya no está');
-  ok(/Se perdieron en producción/.test(libres), 'y las pérdidas se cargan en la misma tarjeta');
+  ok(/Se perdieron/.test(libres), 'y las pérdidas se cargan en la misma tarjeta');
 
   L('\n== 7d. masa única ==');
   await pg.evaluate(()=>{ S.entregaSel = 0; render(); }); await pg.waitForTimeout(300);
@@ -414,6 +422,149 @@ const cerca = (a,b) => Math.abs(a-b) < 0.01;
   await pg.click('#mk-del'); await pg.waitForTimeout(800);
   ok(await pg.evaluate(()=>S.notas.filter(n=>n.tipo==='fecha').length) === 0, 'y se borra');
   await pg.screenshot({path:'n_marcas.png'});
+
+  L('\n== 12. entregado marca preparado ==');
+  await pg.click('#nav button[data-v="pedidos"]'); await pg.waitForTimeout(500);
+  await pg.evaluate(()=>{ S.semanaSel = lunesDe(window.__fechas.prox); S.entregaSel = 0; render(); });
+  await pg.waitForTimeout(400);
+  await pg.evaluate(()=>parchar('pedidos/PX2', {preparado:false, entregado:false, cobrado:false}));
+  await pg.waitForTimeout(500);
+  await pg.click('.ped .tog[data-k="entregado"]'); await pg.waitForTimeout(600);
+  let px2 = await pg.evaluate(()=>S.pedidos.find(p=>p.id==='PX2'));
+  ok(px2.entregado && px2.preparado, 'marcar entregado marca preparado solo');
+  await pg.evaluate(()=>parchar('pedidos/PX2', {preparado:false, entregado:false, cobrado:false}));
+  await pg.waitForTimeout(500);
+  await pg.click('.ped .tog[data-k="cobrado"]'); await pg.waitForTimeout(600);
+  px2 = await pg.evaluate(()=>S.pedidos.find(p=>p.id==='PX2'));
+  ok(px2.cobrado && !px2.entregado && !px2.preparado, 'cobrar no arrastra nada: a veces pagan al pedir');
+
+  L('\n== 13. stock: unidades, suspender ==');
+  await pg.click('#nav button[data-v="stock"]'); await pg.waitForTimeout(500);
+  const idBandeja = await pg.evaluate(()=>S.insumos.find(i=>i.nombre==='Bandeja de cartón').id);
+  await pg.click('[data-precio="'+idBandeja+'"]'); await pg.waitForTimeout(300);
+  await pg.click('[data-med="'+idBandeja+'"]'); await pg.waitForTimeout(700);
+  ok(await pg.evaluate(()=>window.__apps.store.insumos[S.insumos.find(i=>i.nombre==='Bandeja de cartón').id].medida) === 'u',
+     'un insumo se puede pasar a unidades');
+  const lineaB = limpio(await pg.$$eval('#v-stock .st', e=>{
+    const x = e.find(y=>/Bandeja de cartón/.test(y.textContent)); return x ? x.textContent : ''; }));
+  ok(/ u\b/.test(lineaB), 'y el stock se muestra en unidades: ' + lineaB);
+  await pg.click('[data-susp="'+idBandeja+'"]'); await pg.waitForTimeout(800);
+  ok(!/Bandeja de cartón/.test(await pg.textContent('#v-stock')), 'suspendido: desaparece de la lista');
+  ok(await pg.$$eval('#s-insumo option', e=>!e.some(o=>o.textContent==='Bandeja de cartón')), 'y de lo que se compra');
+  await pg.click('#s-versusp'); await pg.waitForTimeout(500);
+  ok(/suspendido/.test(await pg.textContent('#v-stock')), 'se pueden ver los suspendidos');
+  await pg.click('[data-precio="'+idBandeja+'"]'); await pg.waitForTimeout(300);
+  await pg.click('[data-susp="'+idBandeja+'"]'); await pg.waitForTimeout(700);
+  ok(await pg.evaluate(()=>!siNo(S.insumos.find(i=>i.nombre==='Bandeja de cartón').suspendido)), 'y se reactivan');
+
+  L('\n== 14. cronómetro de horneado ==');
+  await pg.click('#b-masa'); await pg.waitForTimeout(300);
+  await pg.click('[data-ama="crono"]'); await pg.waitForTimeout(400);
+  const cards = await pg.$$eval('#v-amasado .card .rot', e=>e.map(x=>x.textContent.trim()));
+  ok(cards[0] === 'Para qué tanda', 'la tanda se elige primero: ' + cards.slice(0,3).join(' | '));
+  ok(cards.indexOf('Horneado') > 0, 'y el horneado tiene su tarjeta');
+  await pg.click('#h-go'); await pg.waitForTimeout(1200);
+  ok(/^\d\d:\d\d:\d\d$/.test(await pg.textContent('#reloj-horno')), 'corre su propio reloj: ' + await pg.textContent('#reloj-horno'));
+  await pg.click('#h-fin'); await pg.waitForTimeout(900);
+  const horn = await pg.evaluate(()=>entregasDe(S.semanaSel)[S.entregaSel].horneadas);
+  ok(horn && horn.length === 1 && /T\d\d:\d\d$/.test(horn[0].inicio) && /T\d\d:\d\d$/.test(horn[0].fin) && horn[0].clima.temp === 17.3,
+     'y guarda inicio, fin y clima en la tanda: ' + JSON.stringify(horn[0]));
+  ok(/→/.test(limpio(await pg.textContent('#v-amasado'))), 'la horneada queda listada');
+  await pg.screenshot({path:'n_horno.png'});
+
+  L('\n== 15. insumos compuestos ==');
+  await pg.click('#nav button[data-v="stock"]'); await pg.waitForTimeout(500);
+  const idChimi = await pg.evaluate(async ()=>{
+    const id = nuevoId('I');
+    await guardar('insumos/'+id, {nombre:'Chimichurri', categoria:'Preparados',
+      unidad_compra:'receta', contenido_gr:500, medida:'g', precio_compra:0, suspendido:false});
+    return id; });
+  await pg.waitForTimeout(700); await pg.evaluate(()=>vistaStock()); await pg.waitForTimeout(300);
+  await pg.click('[data-precio="'+idChimi+'"]'); await pg.waitForTimeout(300);
+  await pg.click('[data-comp="'+idChimi+'"]'); await pg.waitForTimeout(700);
+  ok(await pg.evaluate(id=>esCompuesto(S.insumos.find(i=>i.id===id)), idChimi), 'un insumo se marca como preparado por nosotros');
+  await pg.click('#b-recetas'); await pg.waitForTimeout(600);
+  ok(/Chimichurri/.test(await pg.textContent('#v-recetas')), 'y aparece su receta en Recetas');
+  await pg.fill('[data-addsel="ins_'+idChimi+'"]', 'Albahaca');
+  await pg.fill('[data-addval="ins_'+idChimi+'"]', '100');
+  await pg.click('[data-addok="ins_'+idChimi+'"]'); await pg.waitForTimeout(600);
+  await pg.fill('[data-addsel="ins_'+idChimi+'"]', 'Aceite de oliva');
+  await pg.fill('[data-addval="ins_'+idChimi+'"]', '400');
+  await pg.click('[data-addok="ins_'+idChimi+'"]'); await pg.waitForTimeout(600);
+  await pg.fill('[data-rinde="'+idChimi+'"]', '500');
+  await pg.dispatchEvent('[data-rinde="'+idChimi+'"]', 'change'); await pg.waitForTimeout(700);
+  const costo = await pg.evaluate(()=>{ const pg2 = precioGr();
+    return {chimi: Math.round(pg2['Chimichurri']*1000)/1000,
+            alb: Math.round(pg2['Albahaca']*1000)/1000, ace: Math.round(pg2['Aceite de oliva']*1000)/1000}; });
+  ok(Math.abs(costo.chimi - (costo.alb*100 + costo.ace*400)/500) < 0.01,
+     'su precio por gramo sale de la receta: ' + JSON.stringify(costo));
+  await pg.click('#nav button[data-v="stock"]'); await pg.waitForTimeout(600);
+  const antesAlb = await pg.evaluate(()=>stockDe('Albahaca'));
+  await pg.selectOption('#s-comp', {label:'Chimichurri'}); await pg.waitForTimeout(400);
+  await pg.click('#s-prepa'); await pg.waitForTimeout(1200);
+  const desp = await pg.evaluate(()=>({alb: stockDe('Albahaca'), chimi: stockDe('Chimichurri')}));
+  ok(desp.chimi === 500 && desp.alb === antesAlb - 100,
+     'al prepararlo descuenta los componentes y suma el preparado: ' + JSON.stringify(desp));
+  ok(/preparación de Chimichurri/.test(await pg.textContent('#v-stock')), 'y queda el movimiento');
+
+  L('\n== 16. finanzas ==');
+  await pg.click('#b-plata'); await pg.waitForTimeout(600);
+  ok(await pg.evaluate(()=>S.vista) === 'plata', 'hay una pantalla de finanzas');
+  ok(!/Falta actualizar el servidor/.test(await pg.textContent('#v-plata')), 'el servidor de prueba ya la conoce');
+  const R0 = await pg.evaluate(()=>reserva());
+  ok(R0.costoCobrado > 0 && Math.round(R0.guardar) === Math.round(R0.costoCobrado),
+     'para guardar = el costo de lo cobrado: ' + Math.round(R0.guardar));
+  await pg.click('#g-nuevo'); await pg.waitForTimeout(400);
+  await pg.fill('#gf-det', 'Bolsa de harina'); await pg.fill('#gf-monto', '42000');
+  await pg.selectOption('#gf-cat', 'Insumos'); await pg.selectOption('#gf-quien', 'Luigi');
+  await pg.selectOption('#gf-medio', 'Transferencia'); await pg.click('#gf-ok'); await pg.waitForTimeout(900);
+  const R1 = await pg.evaluate(()=>reserva());
+  ok(Math.round(R1.guardar) === Math.round(R0.guardar - 42000), 'lo que paga Luigi baja la reserva');
+  await pg.click('#g-nuevo'); await pg.waitForTimeout(400);
+  await pg.fill('#gf-det', 'Heladera'); await pg.fill('#gf-monto', '600000');
+  await pg.selectOption('#gf-cat', 'Equipamiento'); await pg.selectOption('#gf-quien', 'Agus');
+  await pg.selectOption('#gf-medio', 'Tarjeta'); await pg.fill('#gf-cuotas', '6');
+  await pg.click('#gf-ok'); await pg.waitForTimeout(900);
+  const cAgus = await pg.evaluate(()=>cuentaCon('Agus'));
+  ok(Math.round(cAgus.esteMes) === 100000 && Math.round(cAgus.debe) === 100000,
+     'la tarjeta de Agus deja una cuota por mes: ' + JSON.stringify(cAgus));
+  const R2 = await pg.evaluate(()=>reserva());
+  ok(Math.round(R2.guardar) === Math.round(R1.guardar), 'y lo que pagó Agus todavía no toca la reserva');
+  await pg.click('[data-pagar="Agus"]'); await pg.waitForTimeout(400);
+  await pg.click('#pf-ok'); await pg.waitForTimeout(900);
+  const cAgus2 = await pg.evaluate(()=>cuentaCon('Agus'));
+  ok(Math.round(cAgus2.debe) === 0 && cAgus2.falta === 0, 'al pagarle la cuota, la cuenta queda en cero');
+  const R3 = await pg.evaluate(()=>reserva());
+  ok(Math.round(R3.guardar) === Math.round(R1.guardar - 100000), 'y ahí sí baja la reserva');
+  const mesQueViene = await pg.evaluate(()=>mesMas(mesHoy(), 1));
+  await pg.click('#v-plata [data-mm="1"]'); await pg.waitForTimeout(400);
+  const cAgus3 = await pg.evaluate(m=>cuentaCon('Agus', m), mesQueViene);
+  ok(Math.round(cAgus3.esteMes) === 100000 && Math.round(cAgus3.debe) === 100000,
+     'el mes que viene aparece la cuota siguiente');
+  await pg.screenshot({path:'n_plata.png'});
+  await pg.evaluate(()=>{ ui.mesPlata = mesHoy(); vistaPlata(); }); await pg.waitForTimeout(300);
+  ok(/Bolsa de harina/.test(await pg.textContent('#v-plata')), 'los gastos del mes se listan');
+
+  L('\n== 17. las tandas viejas vacías se van ==');
+  await pg.evaluate(async ()=>{
+    const vieja = suma(semanaHoy(), -21), conDatos = suma(semanaHoy(), -28);
+    window.__viejas = {vieja, conDatos};
+    await guardar('tandas/'+vieja, {semana:vieja, estado:'abierta', entregas:[{dia:5}]});
+    await guardar('tandas/'+conDatos, {semana:conDatos, estado:'abierta',
+      entregas:[{dia:5, minutos:42, procesos:[], horneadas:[]}]});
+    S.semanaSel = semanaHoy(); render();
+  });
+  await pg.waitForTimeout(1800);
+  const V = await pg.evaluate(()=>window.__viejas);
+  ok(await pg.evaluate(v=>!window.__apps.store.tandas[v], V.vieja), 'la tanda vieja sin nada se borró de la planilla');
+  ok(await pg.evaluate(v=>!!window.__apps.store.tandas[v], V.conDatos), 'la que tenía un amasado anotado queda');
+  const chips2 = await pg.$$eval('.tchip[data-s]', e=>e.map(x=>x.dataset.s));
+  ok(chips2.indexOf(V.vieja) < 0, 'y no aparece en la tira');
+  ok(chips2.indexOf(V.conDatos) >= 0, 'la que tiene datos sí');
+  ok(chips2.indexOf(await pg.evaluate(()=>suma(semanaHoy(), -7))) >= 0, 'la semana pasada con pedidos también');
+  ok(chips2.indexOf(await pg.evaluate(()=>semanaHoy())) >= 0
+     && chips2.indexOf(await pg.evaluate(()=>suma(semanaHoy(), 21))) >= 0,
+     'las que vienen siguen todas, aunque estén vacías');
 
   L('\nerrores:', errs.length ? errs : 'ninguno');
   if (errs.length) f++;

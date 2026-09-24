@@ -27,7 +27,7 @@ var CFG = {
 
 /** Una hoja por colección. El panel usa exactamente estos nombres. */
 var COLECCIONES = ['productos', 'insumos', 'clientes', 'tandas',
-                   'pedidos', 'movimientos', 'recetas', 'config', 'notas'];
+                   'pedidos', 'movimientos', 'recetas', 'config', 'notas', 'finanzas'];
 
 var PREFIJO = 'db_';
 var MARCA_JSON = '@json:';

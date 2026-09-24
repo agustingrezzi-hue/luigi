@@ -117,7 +117,7 @@ function ok(cond, msg){ if (!cond){ fallos++; L('  ✗ ' + msg); } else L('  ✓
 
 L('== inicializar ==');
 inicializar();
-ok(Object.keys(HOJAS).length === 9, 'crea las 9 hojas: ' + Object.keys(HOJAS).join(', '));
+ok(Object.keys(HOJAS).length === 10, 'crea las 10 hojas: ' + Object.keys(HOJAS).join(', '));
 
 L('\n== escribir documentos ==');
 let r = R(doPost({postData:{contents: JSON.stringify({op:'set', col:'productos', id:'PRE-TOM',

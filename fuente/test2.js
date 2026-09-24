@@ -30,9 +30,11 @@ const limpio = t => t.replace(/\s+/g,' ').trim();
   L('al pasar a una semana pasada →', await pg.getAttribute('#titulo-bar','class'),
     '· pill:', await pg.textContent('#pill'));
   L('color de la barra en semana cerrada:', await pg.$eval('#titulo-bar', e=>getComputedStyle(e).backgroundColor));
-  L('color del chip cerrado:', await pg.$$eval('.tchip.pasada', e=>getComputedStyle(e[0]).backgroundColor+' / texto '+getComputedStyle(e[0]).color));
+  L('color del chip pasado:', await pg.$$eval('.tchip.pasada', e=>e.length
+    ? getComputedStyle(e[0]).backgroundColor+' / texto '+getComputedStyle(e[0]).color
+    : 'no hay semanas pasadas en la tira (las vacías se esconden)'));
   await pg.screenshot({path:'v_cerrada.png', clip:{x:0,y:0,width:468,height:230}});
-  await pg.$$eval('.tchip.esta', e=>e[0].click()); await pg.waitForTimeout(250);
+  await pg.$$eval('.tchip.esta', e=>{ if (e[0]) e[0].click(); }); await pg.waitForTimeout(250);
   L('vuelta a la actual →', await pg.getAttribute('#titulo-bar','class'));
 
   L('\n===== 2. DÍA DE ENTREGA (manteniendo apretada la tanda) =====');
@@ -64,7 +66,7 @@ const limpio = t => t.replace(/\s+/g,' ').trim();
   L('vista previa:', limpio(await pg.textContent('#nt-vista')));
   await pg.click('#nt-ok'); await pg.waitForTimeout(400);
   L('tras crear, título:', await pg.textContent('#titulo'), '· pill:', await pg.textContent('#pill'));
-  await pg.$$eval('.tchip.esta', e=>e[0].click()); await pg.waitForTimeout(250);
+  await pg.$$eval('.tchip.esta', e=>{ if (e[0]) e[0].click(); }); await pg.waitForTimeout(250);
 
   L('\n===== 4. PEDIDO NORMAL =====');
   await pg.click('#nav button[data-v="nuevo"]'); await pg.waitForTimeout(250);

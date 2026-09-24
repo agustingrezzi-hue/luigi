@@ -2,7 +2,7 @@
    Reemplaza a appsmock.js ahora que el panel habla por fetch. */
 (function(){
   const COLS = ['productos','insumos','clientes','tandas','pedidos','movimientos',
-                'recetas','config', 'notas'];
+                'recetas','config', 'notas', 'finanzas'];
   /* el servidor falso sobrevive a que la página se recargue, como el de verdad */
   const store = {};
   COLS.forEach(c => store[c] = {});

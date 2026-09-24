@@ -1064,12 +1064,38 @@ function rotuloEntrega(sem, i){
 }
 const diaCorto = (sem, i) => { const d = deIso(fechaEntrega(sem, i));
   return NOM_DIA[diaEntrega(sem, i)-1]+' '+d.getDate(); };
+/* Una semana pasada sin pedidos ni nada anotado no tiene por qué ocupar lugar
+   en la tira: se esconde, y si además su documento está vacío, se borra. */
+function tandaVacia(sem){
+  if (S.pedidos.some(p => lunesDe(p.tanda) === sem)) return false;
+  const t = S.tandas.find(x => x.id === sem);
+  if (!t) return true;
+  const ents = entregasDe(sem);
+  if (ents.length > 1) return false;
+  const e = ents[0] || {};
+  const usada = (e.procesos || []).length || (e.horneadas || []).length
+    || e.minutos != null || e.salidos || e.kgPreManual != null || e.kgFocManual != null
+    || e.bandejasManual != null || e.perdidas || e.kgTirada != null
+    || (e.biga && (e.biga.pre || e.biga.foc || e.biga.uni))
+    || (e.unica && e.unica.activa);
+  return !usada;
+}
 function semanasVisibles(){
   const base = semanaHoy(), out = [];
-  for (let i=-3;i<=4;i++) out.push(suma(base, i*7));
+  for (let i=-3;i<=4;i++){ const s = suma(base, i*7);
+    if (s >= base || !tandaVacia(s)) out.push(s); }
   S.pedidos.forEach(p => { const s = lunesDe(p.tanda); if (out.indexOf(s)<0) out.push(s); });
-  S.tandas.forEach(t => { const s = lunesDe(t.id); if (out.indexOf(s)<0) out.push(s); });
+  S.tandas.forEach(t => { const s = lunesDe(t.id);
+    if (out.indexOf(s) < 0 && (s >= base || !tandaVacia(s))) out.push(s); });
+  if (out.indexOf(S.semanaSel) < 0 && S.semanaSel) out.push(S.semanaSel);
   return out.sort();
+}
+/* borra los documentos de tandas pasadas que quedaron sin nada adentro */
+function limpiarTandas(){
+  if (!S.listo || (!API.activo && !DB)) return;
+  const viejas = S.tandas.filter(t => esPasada(t.id) && t.id !== S.semanaSel && tandaVacia(t.id));
+  if (!viejas.length) return;
+  escribirVarias(viejas.map(t => ({op:'delete', ruta:'tandas/'+t.id})));
 }
 const esPasada = sem => sem < semanaHoy();
 const dos = n => ('0' + n).slice(-2);
@@ -1511,7 +1537,7 @@ function descontarSolo(){
 let _descuento = null;
 function programarDescuento(){
   clearTimeout(_descuento);
-  _descuento = setTimeout(descontarSolo, 700);
+  _descuento = setTimeout(() => { descontarSolo(); limpiarTandas(); }, 700);
 }
 const stockDe = nombre =>
   S.movimientos.reduce((a,m)=> a + (m.insumo===nombre ? Number(m.gramos)||0 : 0), 0);

@@ -12,6 +12,10 @@ const limpio = t => t.replace(/\s+/g,' ').trim();
   const errs = [];
   pg.on('pageerror', e => errs.push('PAGEERROR: '+(e&&e.message)+' @ '+(((e&&e.stack)||'').split('\n')[1]||'')));
   pg.on('console', m => { if (m.type()==='error' && !/TUNNEL|fonts|ERR_/.test(m.text())) errs.push(m.text()); });
+  if (!fs.existsSync('mockdb.js')){
+    console.log('— salteada: mockdb.js (el modo artifact) no está en esta copia de la fuente');
+    process.exit(0);
+  }
   await pg.addInitScript(fs.readFileSync('mockdb.js','utf8'));
   await pg.addInitScript(`window.__seed = ${JSON.stringify(SEED)};
     Object.assign(window.__store = window.__store||{}, window.__seed);`);
@@ -69,7 +73,7 @@ const limpio = t => t.replace(/\s+/g,' ').trim();
   await pg.$$eval('.tchip.esta', e=>{ if (e[0]) e[0].click(); }); await pg.waitForTimeout(250);
 
   L('\n===== 4. PEDIDO NORMAL =====');
-  await pg.click('#nav button[data-v="nuevo"]'); await pg.waitForTimeout(250);
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(250);
   await pg.fill('#cli','Cint'); await pg.waitForTimeout(200);
   await pg.click('#sug button'); await pg.waitForTimeout(250);
   L('orden de prepizzas en el formulario:', await pg.$$eval('#v-nuevo .step .t', e=>e.map(x=>x.textContent).join(' → ')));
@@ -81,7 +85,7 @@ const limpio = t => t.replace(/\s+/g,' ').trim();
   L('tiles:', limpio(await pg.$$eval('.tile', e=>e.map(x=>x.textContent).join(' | '))));
 
   L('\n===== 5. PEDIDO SIN CARGO (desde Nuevo) =====');
-  await pg.click('#nav button[data-v="nuevo"]'); await pg.waitForTimeout(250);
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(250);
   await pg.fill('#cli','Feli'); await pg.waitForTimeout(200);
   await pg.click('#sug button'); await pg.waitForTimeout(250);
   for (let i=0;i<2;i++) await pg.click('[data-sku="PRE-CEB"][data-d="1"]');

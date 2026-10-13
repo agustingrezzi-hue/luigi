@@ -301,7 +301,7 @@ const cerca = (a,b) => Math.abs(a-b) < 0.01;
   const tz = await pg.$$eval('.trozo', e=>e.map(x=>x.textContent.replace(/\s+/g,' ').trim()));
   ok(tz.length === 2 && /^01/.test(tz[0]) && /^02/.test(tz[1]), 'la cabecera marca 01 y 02: ' + tz.join(' | '));
   ok(tz.every(t => /bandeja|sin pedidos/.test(t)), 'con sus bandejas');
-  await pg.click('#nav button[data-v="nuevo"]'); await pg.waitForTimeout(400);
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(400);
   const ts = limpio(await pg.textContent('.tanda-sel'));
   const esperadoTs = await pg.evaluate(()=>numeroSemana(S.semanaSel)+' / '+diasSemana(S.semanaSel)+' / tanda 01');
   ok(ts.replace(/ /g,'').startsWith(esperadoTs.replace(/ /g,'')), 'Nuevo pedido dice "' + ts + '"');
@@ -565,6 +565,45 @@ const cerca = (a,b) => Math.abs(a-b) < 0.01;
   ok(chips2.indexOf(await pg.evaluate(()=>semanaHoy())) >= 0
      && chips2.indexOf(await pg.evaluate(()=>suma(semanaHoy(), 21))) >= 0,
      'las que vienen siguen todas, aunque estén vacías');
+
+  L('\n== 18. el botón flotante y el tono de Nuevo pedido ==');
+  await pg.evaluate(()=>irA('tanda')); await pg.waitForTimeout(400);
+  ok(await pg.$$eval('#nav button', e=>e.length) === 4, 'la botonera quedó con cuatro botones');
+  ok(await pg.$('#nav [data-v="nuevo"]') === null && await pg.$('#b-nuevo') !== null,
+     'Nuevo salió de la botonera y es un botón flotante');
+  const caja = await (await pg.$('#b-nuevo')).boundingBox();
+  const nav = await (await pg.$('#nav')).boundingBox();
+  ok(caja.x + caja.width > 360 - 30 && caja.y + caja.height <= nav.y + 1,
+     'flota abajo a la derecha, arriba de la botonera');
+  const fondoAntes = await pg.$eval('.cuerpo', e=>getComputedStyle(e).backgroundColor);
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(500);
+  ok(await pg.evaluate(()=>S.vista) === 'nuevo', 'abre Nuevo pedido');
+  ok(await pg.evaluate(()=>document.querySelector('.app').classList.contains('en-nuevo')), 'y la pantalla se tiñe');
+  const fondoNuevo = await pg.$eval('.cuerpo', e=>getComputedStyle(e).backgroundColor);
+  ok(fondoNuevo !== fondoAntes, 'el fondo cambia de tono: ' + fondoAntes + ' → ' + fondoNuevo);
+  await pg.screenshot({path:'n_nuevo_tono.png'});
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(400);
+  ok(await pg.evaluate(()=>S.vista) === 'tanda' && !(await pg.evaluate(()=>document.querySelector('.app').classList.contains('en-nuevo'))),
+     'y tocándolo de nuevo vuelve a la tanda, sin el tinte');
+
+  L('\n== 19. entrega finalizada en verde ==');
+  await pg.evaluate(()=>{ S.semanaSel = lunesDe(window.__fechas.prox); S.entregaSel = 0; render(); });
+  await pg.waitForTimeout(400);
+  await pg.evaluate(()=>parchar('pedidos/PX2', {preparado:true, entregado:true, cobrado:true}));
+  await pg.waitForTimeout(700);
+  const tz2 = await pg.$$eval('.trozo', e=>e.map(x=>({c:x.className, t:x.textContent.replace(/\s+/g,' ')})));
+  ok(/fin/.test(tz2[0].c) && /Finalizado/.test(tz2[0].t), 'la entrega entregada y cobrada dice Finalizado: ' + tz2[0].t);
+  const verde = await pg.$eval('.trozo.fin', e=>getComputedStyle(e).backgroundColor);
+  const tokenOk = await pg.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--ok').trim());
+  ok(verde !== 'rgba(0, 0, 0, 0)' && verde !== 'rgb(255, 255, 255)', 'y se pinta de verde: ' + verde + ' (--ok ' + tokenOk + ')');
+  ok(/fin/.test(await pg.$eval('.tchip[data-s="'+(await pg.evaluate(()=>S.semanaSel))+'"]', e=>e.className)),
+     'la tarjeta de la semana también');
+
+  L('\n== 20. el horno al final ==');
+  await pg.click('#b-masa'); await pg.waitForTimeout(300);
+  await pg.click('[data-ama="crono"]'); await pg.waitForTimeout(400);
+  const rots = await pg.$$eval('#v-amasado .card .rot', e=>e.map(x=>x.textContent.trim()));
+  ok(rots[rots.length-1] === 'Horneado', 'la tarjeta del horno quedó última: ' + rots.join(' | '));
 
   L('\nerrores:', errs.length ? errs : 'ninguno');
   if (errs.length) f++;

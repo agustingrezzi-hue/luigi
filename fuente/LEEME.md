@@ -25,3 +25,9 @@ El servidor va a Apps Script y se implementa con Administrar implementaciones �
 
 La explicación de todo lo demás está en el proyecto de Claude "Vamos Luigi",
 en `claude/la-app.md` y `claude/panel-y-modelo-de-datos.md`.
+
+## Ojo (12/10)
+
+- `logo.png` es el logo de la pantalla de arranque y **tiene que estar acá**: sin él `armar.py` no corre. En la primera subida se había quedado afuera.
+- `VL_DATOS.gs` (la semilla real de 170 documentos) volvió a la carpeta: lo usa la última sección de `test_api2.js`.
+- Sigue faltando `mockdb.js`, que solo necesitan `test2.js` y `test3.js` (el panel corriendo dentro de un artifact de Claude, un modo que ya no se usa). Esas dos pruebas se saltean solas y avisan; el resto corre igual.

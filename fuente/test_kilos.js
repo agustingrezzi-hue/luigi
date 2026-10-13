@@ -25,7 +25,7 @@ const limpio = t => t.replace(/\s+/g,' ').trim();
   await pg.waitForFunction(()=>{try{return S.listo===true}catch(e){return false}},null,{timeout:8000});
 
   // un pedido de 10 prepizzas y 2 focaccias medianas
-  await pg.click('#nav button[data-v="nuevo"]'); await pg.waitForTimeout(300);
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(300);
   await pg.fill('#cli','Cint'); await pg.waitForTimeout(250);
   await pg.click('#sug button'); await pg.waitForTimeout(250);
   for (let i=0;i<10;i++) await pg.click('[data-sku="PRE-TOM"][data-d="1"]');

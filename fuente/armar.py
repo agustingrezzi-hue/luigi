@@ -5,9 +5,26 @@
   panel2.html          -> el artefacto de Claude
   VL_PANEL.txt         -> el archivo 'panel' de Apps Script (red de contención)
 """
-import io, base64
+import io, base64, os, sys
 
 RAIZ = '/home/claude/vl/'
+
+# Control de la caja de herramientas: si falta alguno de estos, armar.py no
+# puede trabajar y conviene saberlo acá y no tres pantallas después. Pasó el
+# 12/10: la copia de `fuente/` en GitHub se había subido sin logo.png.
+NECESARIOS = ['panel_src.html', 'logo.png']
+OPCIONALES = {
+    'VL_DATOS.gs': 'la semilla de 170 documentos (la usa el final de test_api2.js)',
+    'mockdb.js':   'la base falsa del modo artifact (la usan test2.js y test3.js)',
+}
+faltan = [f for f in NECESARIOS if not os.path.exists(RAIZ + f)]
+if faltan:
+    print('FALTA(N): ' + ', '.join(faltan))
+    print('Están en el repo luigi, carpeta fuente/. Sin eso no se puede armar.')
+    sys.exit(1)
+for f, para in OPCIONALES.items():
+    if not os.path.exists(RAIZ + f):
+        print('aviso: falta ' + f + ' — ' + para)
 EXEC = ('https://script.google.com/macros/s/'
         'AKfycbzT2Kj19u7R72287obeTdvr2Zf3MPkWBG1YckWb1fihL7ulU5mpDGkemJHugaezAd4Z/exec')
 

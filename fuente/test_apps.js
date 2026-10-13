@@ -41,7 +41,7 @@ const ok = (c, m) => { if (!c){ fallos++; L('  ✗ '+m); } else L('  ✓ '+m); }
      'el logo se ve (no es una imagen rota)');
 
   L('\n== 2. cargar un pedido: se ve al toque y llega a la planilla ==');
-  await pg.click('#nav button[data-v="nuevo"]'); await pg.waitForTimeout(250);
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(250);
   await pg.fill('#cli','Cint'); await pg.waitForTimeout(250);
   await pg.click('#sug button'); await pg.waitForTimeout(250);
   for (let i=0;i<4;i++) await pg.click('[data-sku="PRE-TOM"][data-d="1"]');

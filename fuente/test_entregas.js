@@ -14,7 +14,7 @@ async function mantener(pg, sel){
   await pg.waitForTimeout(400);
 }
 async function pedido(pg, nombre, cuantas){
-  await pg.click('#nav button[data-v="nuevo"]'); await pg.waitForTimeout(300);
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(300);
   await pg.fill('#cli', nombre); await pg.waitForTimeout(300);
   await pg.click('#sug button'); await pg.waitForTimeout(250);
   for (let i=0;i<cuantas;i++) await pg.click('[data-sku="PRE-TOM"][data-d="1"]');

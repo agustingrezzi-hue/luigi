@@ -34,7 +34,7 @@ async function irA(pg, v){
 
   L('== el POST está bloqueado ==');
   ok(await pg.evaluate(()=>API.activo), 'igual conecta y lee');
-  await pg.click('#nav button[data-v="nuevo"]'); await pg.waitForTimeout(250);
+  await pg.click('#b-nuevo'); await pg.waitForTimeout(250);
   await pg.fill('#cli','Cint'); await pg.waitForTimeout(250);
   await pg.click('#sug button'); await pg.waitForTimeout(250);
   for (let i=0;i<4;i++) await pg.click('[data-sku="PRE-TOM"][data-d="1"]');
@@ -88,7 +88,7 @@ async function irA(pg, v){
       Object.keys(window.__semilla).forEach(k=>{const p=k.split('/'); s[p[0]][p[1]]=window.__semilla[k];});
   })();`);
   await p2.goto(url); await p2.waitForTimeout(900);
-  await p2.click('#nav button[data-v="nuevo"]'); await p2.waitForTimeout(250);
+  await p2.click('#b-nuevo'); await p2.waitForTimeout(250);
   await p2.fill('#cli','Cint'); await p2.waitForTimeout(250);
   await p2.click('#sug button'); await p2.waitForTimeout(250);
   for (let i=0;i<3;i++) await p2.click('[data-sku="PRE-TOM"][data-d="1"]');

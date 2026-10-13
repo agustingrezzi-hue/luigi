@@ -33,6 +33,10 @@ for (let w=9; w>=0; w--){
   const pg = await b.newPage({viewport:{width:468,height:940}});
   const errs = [];
   pg.on('pageerror', e => errs.push('PAGEERROR: '+e.message));
+  if (!fs.existsSync('mockdb.js')){
+    console.log('— salteada: mockdb.js (el modo artifact) no está en esta copia de la fuente');
+    process.exit(0);
+  }
   await pg.addInitScript(fs.readFileSync('mockdb.js','utf8'));
   await pg.addInitScript(`window.__seed = ${JSON.stringify(SEED)};
     Object.assign(window.__store = window.__store||{}, window.__seed);`);

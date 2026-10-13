@@ -407,6 +407,11 @@ ok(todo.datos.clientes.length === 2 && todo.datos.pedidos[0].lineas[0].cantidad 
 
 
 L('\n== VL_DATOS.gs: la semilla real ==');
+if (!fs.existsSync('VL_DATOS.gs')){
+  L('  — salteada: VL_DATOS.gs no está en esta copia de la fuente');
+  L('\n' + (fallos ? '✗ ' + fallos + ' fallos' : '✓ todo bien'));
+  process.exit(fallos ? 1 : 0);
+}
 Object.keys(HOJAS).forEach(k => delete HOJAS[k]);
 inicializar();
 eval(fs.readFileSync('VL_DATOS.gs','utf8').replace(/SpreadsheetApp\.getActiveSpreadsheet\(\)\.toast[\s\S]*?;/, ';'));

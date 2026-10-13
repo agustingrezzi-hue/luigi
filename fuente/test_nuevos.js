@@ -605,6 +605,40 @@ const cerca = (a,b) => Math.abs(a-b) < 0.01;
   const rots = await pg.$$eval('#v-amasado .card .rot', e=>e.map(x=>x.textContent.trim()));
   ok(rots[rots.length-1] === 'Horneado', 'la tarjeta del horno quedó última: ' + rots.join(' | '));
 
+  L('\n== 21. cobrar a costo y menos texto ==');
+  await pg.evaluate(()=>{ S.semanaSel = lunesDe(window.__fechas.prox); S.entregaSel = 0;
+    limpiarNuevo(); irA('nuevo'); });
+  await pg.waitForTimeout(600);
+  await pg.fill('#cli', 'Camila'); await pg.waitForTimeout(400);
+  await pg.click('#sug button'); await pg.waitForTimeout(300);
+  await pg.click('[data-sku="PRE-TOM"][data-d="1"]'); await pg.click('[data-sku="PRE-TOM"][data-d="1"]');
+  await pg.waitForTimeout(300);
+  const normal = await pg.evaluate(()=>({total: totalNuevo(), costo: costoNuevo()}));
+  ok(normal.costo > 0 && normal.costo < normal.total, 'el costo se calcula solo: ' + JSON.stringify(normal));
+  await pg.click('[data-nm="costo"]'); await pg.waitForTimeout(400);
+  ok(await pg.evaluate(()=>totalNuevo()) === normal.costo, 'con Costo, el total pasa a ser el costo');
+  ok(/es lo que cuesta hacerlo/.test(await pg.textContent('#v-nuevo')), 'y lo muestra en pantalla');
+  await pg.click('[data-sku="PRE-TOM"][data-d="1"]'); await pg.click('[data-sku="PRE-TOM"][data-d="1"]');
+  await pg.waitForTimeout(400);
+  const masGrande = await pg.evaluate(()=>({total: totalNuevo(), costo: costoNuevo()}));
+  ok(masGrande.total === masGrande.costo && masGrande.costo > normal.costo,
+     'si cambia el pedido, el monto se actualiza solo: ' + masGrande.costo);
+  await pg.click('#guardar'); await pg.waitForTimeout(1200);
+  const pedCosto = await pg.evaluate(()=>S.pedidos.slice().sort((a,b)=>String(b.creado||'').localeCompare(String(a.creado||'')))[0]);
+  ok(pedCosto.aCosto === true && pedCosto.totalManual == null, 'queda guardado como "a costo"');
+  ok(await pg.evaluate(id=>totalDe(S.pedidos.find(p=>p.id===id)), pedCosto.id) === Math.round(masGrande.costo),
+     'y el pedido se cobra al costo');
+  ok(/a costo/.test(await pg.textContent('#v-pedidos')), 'la tarjeta del pedido lo dice');
+
+  L('\n== 22. qué hay que hacer, más limpio ==');
+  await pg.click('#nav button[data-v="tanda"]'); await pg.waitForTimeout(600);
+  const hacer = limpio(await pg.textContent('#v-tanda .card'));
+  ok(!/de masa/.test(hacer) && !/×/.test(hacer), 'sin la línea de gramos: ' + hacer.slice(0, 80));
+  ok(!/única/i.test(hacer), 'y sin el cartel "única" en las prepizzas');
+  ok(await pg.evaluate(()=>badgeTam(productoDe('PRE-TOM'))) === ''
+     && /mediana/.test(await pg.evaluate(()=>badgeTam(productoDe('FOC-ROM-M')))),
+     'el tamaño queda solo para las focaccias');
+
   L('\nerrores:', errs.length ? errs : 'ninguno');
   if (errs.length) f++;
   await pg.screenshot({path:'s_nuevos.png'});

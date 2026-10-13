@@ -16,7 +16,7 @@
   --c-pre:#2589C8; --c-foc:#B96A15; --c-gan:#0F6E4A; --c-cos:#B7C3D1;
   --viejo:#8E4640; --viejo-soft:#F0E0DE; --viejo-linea:#D9BDB9;
   --sig:#6D4BC2;
-  --nuevo-fondo:#F4EFE3; --nuevo-tapa:#FBF8F1; --nuevo-linea:#E3D9C4;
+  --nuevo-fondo:#EFE4CB; --nuevo-tapa:#FAF4E6; --nuevo-linea:#DCCCA8;
   --sombra:0 1px 2px rgba(19,26,38,.05), 0 6px 20px -12px rgba(19,26,38,.25);
   --sombra-alta:0 2px 4px rgba(19,26,38,.06), 0 18px 40px -22px rgba(19,26,38,.45);
   --r:18px; --r-s:12px;
@@ -33,7 +33,7 @@
   --c-pre:#3E9BD8; --c-foc:#BA7F39; --c-gan:#35A073; --c-cos:#3B4657;
   --viejo:#C08A84; --viejo-soft:#2A1917; --viejo-linea:#4A2E2B;
   --sig:#A68AF0;
-  --nuevo-fondo:#161310; --nuevo-tapa:#1E1A15; --nuevo-linea:#2E2820;
+  --nuevo-fondo:#1E1710; --nuevo-tapa:#2A2118; --nuevo-linea:#3D3123;
   --sombra:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.9);
   --sombra-alta:0 2px 6px rgba(0,0,0,.55), 0 22px 48px -24px rgba(0,0,0,1);
 }}
@@ -49,7 +49,7 @@
   --c-pre:#3E9BD8; --c-foc:#BA7F39; --c-gan:#35A073; --c-cos:#3B4657;
   --viejo:#C08A84; --viejo-soft:#2A1917; --viejo-linea:#4A2E2B;
   --sig:#A68AF0;
-  --nuevo-fondo:#161310; --nuevo-tapa:#1E1A15; --nuevo-linea:#2E2820;
+  --nuevo-fondo:#1E1710; --nuevo-tapa:#2A2118; --nuevo-linea:#3D3123;
   --sombra:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.9);
   --sombra-alta:0 2px 6px rgba(0,0,0,.55), 0 22px 48px -24px rgba(0,0,0,1);
 }
@@ -261,11 +261,13 @@ h1,h2{font-family:"Bricolage Grotesque","Figtree",sans-serif;margin:0;letter-spa
   border-style:dashed;border-color:var(--marca-2)}
 
 /* ---------- Nuevo pedido: otro tono ---------- */
-.app.en-nuevo{background:var(--nuevo-fondo)}
-.app.en-nuevo .cuerpo{background:var(--nuevo-fondo)}
-.app.en-nuevo .titulo{background:var(--nuevo-tapa);border-color:var(--nuevo-linea)}
-.app.en-nuevo .card{border-color:var(--nuevo-linea)}
+.app.en-nuevo,.app.en-nuevo .cuerpo{background:var(--nuevo-fondo)}
+.app.en-nuevo .titulo,.app.en-nuevo .card{background:var(--nuevo-tapa);border-color:var(--nuevo-linea)}
 .app.en-nuevo .nav{background:var(--nuevo-tapa);border-color:var(--nuevo-linea)}
+.app.en-nuevo input,.app.en-nuevo select,.app.en-nuevo textarea{background:var(--nuevo-fondo);
+  border-color:var(--nuevo-linea)}
+.app.en-nuevo .seg{background:var(--nuevo-fondo)}
+.app.en-nuevo .step,.app.en-nuevo .linea{background:var(--nuevo-fondo)}
 
 /* ---------- vistas ---------- */
 .vista{display:none;padding:14px 12px 0}
@@ -476,6 +478,7 @@ input:focus,select:focus,textarea:focus{background:var(--surface)}
   color:var(--marca-ink);font-weight:600}
 .seg{display:flex;gap:4px;background:var(--sunken);padding:4px;border-radius:var(--r-s);
   margin-bottom:11px}
+.seg.cuatro{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .seg button{flex:1;padding:9px 6px;border-radius:9px;font-size:13.5px;font-weight:600;
   color:var(--ink-3)}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);
@@ -947,12 +950,12 @@ const S = {productos:[], insumos:[], clientes:[], tandas:[], pedidos:[], movimie
            recetas:[], config:[], notas:[], finanzas:[], semanaSel:null, entregaSel:0,
            vista:'tanda', listo:false, error:'', sembrado:{}, deGuardado:false};
 const nuevo = {cliente:null, items:{}, focaccias:[], conEnvio:true, direccion:'', dirOtra:'',
-               formaPago:'', obs:'', semana:null, entrega:0, sinCargo:false, totalManual:'',
+               formaPago:'', obs:'', semana:null, entrega:0, sinCargo:false, aCosto:false, totalManual:'',
                editando:null, preciosViejos:null};
 function limpiarNuevo(){
   nuevo.cliente = null; nuevo.items = {}; nuevo.focaccias = []; nuevo.obs = '';
   nuevo.direccion = ''; nuevo.dirOtra = ''; nuevo.formaPago = '';
-  nuevo.sinCargo = false; nuevo.totalManual = ''; nuevo.entrega = 0;
+  nuevo.sinCargo = false; nuevo.aCosto = false; nuevo.totalManual = ''; nuevo.entrega = 0;
   nuevo.editando = null; nuevo.preciosViejos = null;
   /* al volver a abrirlo arranca en la semana y la entrega que estés mirando */
   nuevo.semana = null;
@@ -971,7 +974,7 @@ function abrirEdicion(id){
   nuevo.direccion = p.direccion || '';
   nuevo.formaPago = p.formaPago || '';
   nuevo.obs = p.observaciones || '';
-  nuevo.sinCargo = !!p.sinCargo;
+  nuevo.sinCargo = !!p.sinCargo; nuevo.aCosto = siNo(p.aCosto);
   nuevo.totalManual = (p.totalManual == null) ? '' : String(p.totalManual);
   nuevo.preciosViejos = {};
   (p.lineas||[]).forEach(l => {
@@ -1228,7 +1231,8 @@ const envaseClave = p => p.tipo === 'Prepizza' ? 'env_prepizza'
   : (p.tamano === 'Grande' ? 'env_foc_grande' : 'env_foc_mediana');
 const envaseDe = sku => receta(envaseClave(productoDe(sku)));
 function badgeTam(p){
-  if (p.tipo === 'Prepizza') return '<span class="tam u">única</span>';
+  /* el tamaño solo importa en las focaccias: la prepizza es una sola */
+  if (p.tipo === 'Prepizza') return '';
   return p.tamano === 'Grande' ? '<span class="tam g">G · grande</span>'
                                : '<span class="tam m">M · mediana</span>';
 }
@@ -1237,6 +1241,8 @@ function badgeTam(p){
 const brutoDe = p => (p.lineas||[]).reduce((a,l)=>a+l.cantidad*l.precioUnit, Number(p.envio||0));
 function totalDe(p){
   if (p.sinCargo) return 0;
+  /* a costo: se cobra lo que costó hacerlo, y sigue solo los cambios del pedido */
+  if (siNo(p.aCosto)) return Math.round(costoDe(p));
   if (p.totalManual != null && p.totalManual !== '') return Number(p.totalManual);
   return brutoDe(p);
 }
@@ -1746,7 +1752,7 @@ async function mirarVersion(){
    empareja todo antes de que lo use nadie. */
 const siNo = v => v === true || v === 1 || v === '1'
   || v === 'true' || v === 'TRUE' || v === 'VERDADERO';
-const BANDERAS = ['preparado', 'entregado', 'cobrado', 'sinCargo'];
+const BANDERAS = ['preparado', 'entregado', 'cobrado', 'sinCargo', 'aCosto'];
 function normalizarDatos(){
   S.pedidos.forEach(p => {
     if (p.tanda) p.tanda = soloFecha(p.tanda);
@@ -2456,9 +2462,7 @@ function vistaTanda(){
     const p = productoDe(sku);
     const cls = p.tipo==='Prepizza' ? '' : (p.tamano==='Grande'?'gra':'med');
     return '<div class="fila '+cls+'"><div class="tira"></div>'
-      + '<div><div class="nom">'+esc(p.nombre)+' '+badgeTam(p)+'</div>'
-      + '<div class="sub">'+c.unidades[sku]+' × '+nGr(gramajeDe(p))+' = '
-      + gr(c.unidades[sku]*gramajeDe(p))+' de masa</div></div>'
+      + '<div><div class="nom">'+esc(p.nombre)+' '+badgeTam(p)+'</div></div>'
       + '<div class="q">'+c.unidades[sku]+'</div></div>';
   }).join('') : '<div class="vacio">Sin pedidos'+(c.unaSola?' en esta semana':' en esta entrega')+'.</div>';
 
@@ -3646,8 +3650,9 @@ function vistaPedidos(){
         + '<button class="no" data-no="1">Cancelar</button></div>' : '';
     const cobro = ui.editaCobro === p.id ? '<div class="panelito">'
         + '<div class="rot" style="margin-bottom:8px">Cuánto se cobra</div>'
-        + '<div class="seg"><button data-cm="normal" aria-pressed="'+(!p.sinCargo && (p.totalManual==null||p.totalManual===''))+'">Precio normal</button>'
-        + '<button data-cm="manual" aria-pressed="'+(!p.sinCargo && p.totalManual!=null && p.totalManual!=='')+'">Otro monto</button>'
+        + '<div class="seg cuatro"><button data-cm="normal" aria-pressed="'+(!p.sinCargo && !siNo(p.aCosto) && (p.totalManual==null||p.totalManual===''))+'">Precio normal</button>'
+        + '<button data-cm="costo" aria-pressed="'+(!p.sinCargo && siNo(p.aCosto))+'">Costo</button>'
+        + '<button data-cm="manual" aria-pressed="'+(!p.sinCargo && !siNo(p.aCosto) && p.totalManual!=null && p.totalManual!=='')+'">Otro monto</button>'
         + '<button data-cm="sin" aria-pressed="'+(!!p.sinCargo)+'">Sin cargo</button></div>'
         + '<div class="edit-precio"><input type="number" id="cm-'+p.id+'" placeholder="'+bruto+'" value="'+(p.totalManual!=null?p.totalManual:'')+'" step="100">'
         + '<button data-cmok="'+p.id+'">Guardar monto</button></div></div>' : '';
@@ -3660,6 +3665,7 @@ function vistaPedidos(){
       + '<div class="tot">'+(ajustado?'<span class="tachado">'+pesos(bruto)+'</span>':'')+pesos(tot)+'</div></div>'
       + '<div class="items">'+chips
       + (p.sinCargo?'<span class="chip regalo">sin cargo</span>'
+         : siNo(p.aCosto)?'<span class="chip regalo">a costo</span>'
          : ajustado?'<span class="chip regalo">bonificado '+pesos(bruto-tot)+'</span>':'')+'</div>'
       + (p.observaciones?'<div class="obs">'+esc(p.observaciones)+'</div>':'')
       + '<div class="acciones">'
@@ -3708,14 +3714,16 @@ function vistaPedidos(){
     ui.borrando = null; vistaPedidos(); });
   $('#v-pedidos').querySelectorAll('[data-cm]').forEach(b => b.onclick = async () => {
     const id = ui.editaCobro, m = b.dataset.cm;
-    if (m==='sin')    await parchar('pedidos/'+id, {sinCargo:true, totalManual:null});
-    if (m==='normal') await parchar('pedidos/'+id, {sinCargo:false, totalManual:null});
-    if (m==='manual') { vistaPedidos(); $('#cm-'+id) && $('#cm-'+id).focus(); return; }
-    toast(m==='sin'?'Queda sin cargo':'Vuelve al precio normal'); });
+    if (m==='sin')    await parchar('pedidos/'+id, {sinCargo:true, aCosto:false, totalManual:null});
+    if (m==='normal') await parchar('pedidos/'+id, {sinCargo:false, aCosto:false, totalManual:null});
+    if (m==='costo')  await parchar('pedidos/'+id, {sinCargo:false, aCosto:true, totalManual:null});
+    if (m==='manual') { await parchar('pedidos/'+id, {aCosto:false});
+      vistaPedidos(); $('#cm-'+id) && $('#cm-'+id).focus(); return; }
+    toast(m==='sin'?'Queda sin cargo':m==='costo'?'Se cobra el costo':'Vuelve al precio normal'); });
   $('#v-pedidos').querySelectorAll('[data-cmok]').forEach(b => b.onclick = async () => {
     const id = b.dataset.cmok, v = Number($('#cm-'+id).value);
     if (!(v >= 0)) return toast('Poné un monto válido');
-    await parchar('pedidos/'+id, {sinCargo:false, totalManual:v});
+    await parchar('pedidos/'+id, {sinCargo:false, aCosto:false, totalManual:v});
     ui.editaCobro = null; toast('Monto actualizado'); });
 }
 
@@ -3789,10 +3797,14 @@ function vistaNuevo(){
     + PAGOS.map(p=>'<option'+(nuevo.formaPago===p?' selected':'')+'>'+p+'</option>').join('')+'</select></div></div>'
 
     + '<div class="card"><div class="rot">Cuánto se cobra</div>'
-    + '<div class="seg"><button data-nm="normal" aria-pressed="'+(!nuevo.sinCargo && !nuevo.totalManual)+'">Precio normal</button>'
-    + '<button data-nm="manual" aria-pressed="'+(!nuevo.sinCargo && !!nuevo.totalManual)+'">Otro monto</button>'
+    + '<div class="seg cuatro">'
+    + '<button data-nm="normal" aria-pressed="'+(!nuevo.sinCargo && !nuevo.aCosto && !nuevo.totalManual)+'">Precio normal</button>'
+    + '<button data-nm="costo" aria-pressed="'+(!nuevo.sinCargo && nuevo.aCosto)+'">Costo</button>'
+    + '<button data-nm="manual" aria-pressed="'+(!nuevo.sinCargo && !nuevo.aCosto && !!nuevo.totalManual)+'">Otro monto</button>'
     + '<button data-nm="sin" aria-pressed="'+nuevo.sinCargo+'">Sin cargo</button></div>'
     + (nuevo.sinCargo ? ''
+       : nuevo.aCosto ? '<div class="agua" style="display:block"><span class="n">'+pesos(costoNuevo())+'</span> '
+           + '<span class="l">es lo que cuesta hacerlo' + (nuevo.conEnvio ? ', sin contar el envío' : '') + '</span></div>'
        : '<div><label class="f" for="n-monto">Total a cobrar</label>'
          + '<input type="number" id="n-monto" placeholder="'+Math.round(brutoNuevo())+'" value="'+esc(nuevo.totalManual)+'" step="100"></div>')+'</div>'
 
@@ -3834,6 +3846,7 @@ function vistaNuevo(){
   $('#v-nuevo').querySelectorAll('[data-nm]').forEach(b => b.onclick = () => {
     const m = b.dataset.nm;
     nuevo.sinCargo = m==='sin';
+    nuevo.aCosto = m==='costo';
     if (m!=='manual') nuevo.totalManual = '';
     vistaNuevo();
     if (m==='manual' && $('#n-monto')) $('#n-monto').focus(); });
@@ -3878,8 +3891,18 @@ function lineasNuevo(){
 }
 const brutoNuevo = () => lineasNuevo().reduce((a,l)=>a+l.cantidad*l.precioUnit, 0)
   + (nuevo.conEnvio ? REGLA.envio : 0);
+/* lo que cuesta hacer lo que lleva el pedido, con los costos congelados si ya
+   los tenía */
+function costoNuevo(){
+  const viejos = nuevo.preciosViejos || {};
+  return Math.round(lineasNuevo().reduce((a,l) => {
+    const v = viejos[l.sku];
+    return a + l.cantidad * ((v && v.costoUnit != null) ? v.costoUnit : l.costoUnit);
+  }, 0));
+}
 function totalNuevo(){
   if (nuevo.sinCargo) return 0;
+  if (nuevo.aCosto) return costoNuevo();
   if (nuevo.totalManual !== '' && nuevo.totalManual != null) return Number(nuevo.totalManual)||0;
   return brutoNuevo();
 }
@@ -3899,8 +3922,8 @@ async function guardarPedido(){
     clienteId:nuevo.cliente.id, cliente:nuevo.cliente.nombre,
     envio: nuevo.conEnvio ? REGLA.envio : 0, direccion: nuevo.conEnvio ? dir : '',
     formaPago:nuevo.formaPago, observaciones:nuevo.obs, lineas,
-    sinCargo: !!nuevo.sinCargo,
-    totalManual: (!nuevo.sinCargo && nuevo.totalManual !== '' && nuevo.totalManual != null)
+    sinCargo: !!nuevo.sinCargo, aCosto: !nuevo.sinCargo && !!nuevo.aCosto,
+    totalManual: (!nuevo.sinCargo && !nuevo.aCosto && nuevo.totalManual !== '' && nuevo.totalManual != null)
                  ? Number(nuevo.totalManual) : null};
   if (editando) await parchar('pedidos/'+id, campos);
   else await guardar('pedidos/'+id, Object.assign({}, campos,
